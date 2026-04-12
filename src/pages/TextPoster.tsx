@@ -1,5 +1,5 @@
-import { Text, View, type NodeStyles } from "@lightningtv/solid";
-import { Row } from "@lightningtv/solid/primitives";
+import { Text, View, type NodeStyles } from "@solidtv/solid";
+import { Row } from "@solidtv/solid/primitives";
 import { onMount } from "solid-js";
 import { setGlobalBackground } from "../state";
 

@@ -7,12 +7,12 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "jsx": "preserve",
-    "jsxImportSource": "@lightningtv/solid",
+    "jsxImportSource": "@solidtv/solid",
     "types": ["vite/client"],
     "noEmit": true,
     "isolatedModules": true,
     "noImplicitAny": false,
-    "customConditions": ["@lightningtv/source"],
+    "customConditions": ["@solidtv/source"],
     "paths": {
       "theme": ["./src/theme.ts"]
     }

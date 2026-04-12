@@ -6,11 +6,11 @@ import {
   Index,
   onMount
 } from "solid-js";
-import { type ElementNode, View, Text } from "@lightningtv/solid";
-import { Column, Row } from "@lightningtv/solid/primitives";
+import { type ElementNode, View, Text } from "@solidtv/solid";
+import { Column, Row } from "@solidtv/solid/primitives";
 import styles from "./gridStyles";
 import { setGlobalBackground } from "../state";
-import { createInfiniteItems } from "@lightningtv/solid/primitives";
+import { createInfiniteItems } from "@solidtv/solid/primitives";
 
 interface ProductsResponse {
   limit: number;

@@ -1,6 +1,6 @@
-import { Text, View } from "@lightningtv/solid";
+import { Text, View } from "@solidtv/solid";
 import { createSignal, onMount } from "solid-js";
-import { Column } from "@lightningtv/solid/primitives";
+import { Column } from "@solidtv/solid/primitives";
 import { setGlobalBackground } from "../state";
 import Input from "../components/Input";
 import { Keyboard } from "../components/Keyboard";

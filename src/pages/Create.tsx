@@ -4,7 +4,7 @@ import {
   View,
   combineStyles,
   hexColor
-} from "@lightningtv/solid";
+} from "@solidtv/solid";
 import { Show, children, createSignal, onMount } from "solid-js";
 import { setGlobalBackground } from "../state";
 

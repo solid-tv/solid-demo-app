@@ -1,8 +1,8 @@
 import { createSignal, createSelector, For, children, createEffect } from "solid-js";
-import { ElementNode, View, Text, assertTruthy } from "@lightningtv/solid";
-import { Column, Row, useFocusStack } from "@lightningtv/solid/primitives";
+import { ElementNode, View, Text, assertTruthy } from "@solidtv/solid";
+import { Column, Row, useFocusStack } from "@solidtv/solid/primitives";
 import { useNavigate } from "@solidjs/router";
-import { Announcer } from "@lightningtv/solid/primitives";
+import { Announcer } from "@solidtv/solid/primitives";
 import styles from "../styles";
 
 const Portal = (props) => {

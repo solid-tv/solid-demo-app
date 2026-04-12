@@ -1,15 +1,15 @@
 import { useLocation, useNavigate } from "@solidjs/router";
-import { View, Text, activeElement, renderer } from "@lightningtv/solid";
+import { View, Text, activeElement, renderer } from "@solidtv/solid";
 import {
   useAnnouncer,
   FPSCounter,
   setupFPS
-} from "@lightningtv/solid/primitives";
+} from "@solidtv/solid/primitives";
 import Background from "../components/Background";
 import NavDrawer from "../components/NavDrawer/NavDrawer";
 import { createEffect, createSignal, onCleanup } from "solid-js";
 
-declare module "@lightningtv/solid" {
+declare module "@solidtv/solid" {
   // Augment the FocusManager KeyMap interface with our custom keys
   interface KeyMap {
     Announcer: (string | number)[];

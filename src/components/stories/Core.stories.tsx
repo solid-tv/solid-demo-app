@@ -1,5 +1,5 @@
-import { View, Text, Show } from "@lightningtv/solid";
-import { Column } from "@lightningtv/solid/primitives";
+import { View, Text, Show } from "@solidtv/solid";
+import { Column } from "@solidtv/solid/primitives";
 import { Meta, StoryObj } from "storybook-solidjs-vite";
 import theme from "theme";
 import { customTheme } from "./Typography.stories";

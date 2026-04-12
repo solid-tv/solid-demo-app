@@ -4,7 +4,7 @@ import {
   type AnimationSettings,
   View,
   hexColor
-} from "@lightningtv/solid";
+} from "@solidtv/solid";
 import { createEffect, on, onMount } from "solid-js";
 import theme from "theme";
 

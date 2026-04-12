@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from "storybook-solidjs-vite";
-import { View } from "@lightningtv/solid";
-import { Row } from "@lightningtv/solid/primitives";
+import { View } from "@solidtv/solid";
+import { Row } from "@solidtv/solid/primitives";
 import { ActionKey, Key, Keyboard } from "../Keyboard";
 import { formats } from "../../pages/Login";
 

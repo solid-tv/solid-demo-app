@@ -1,8 +1,8 @@
 import {
   useFocusManager,
   useMouse,
-} from "@lightningtv/solid/primitives";
-import { KeyMap, KeyHoldMap } from "@lightningtv/solid/focusManager";
+} from "@solidtv/solid/primitives";
+import { KeyMap, KeyHoldMap } from "@solidtv/solid/focusManager";
 
 const App = (props) => {
   useFocusManager(

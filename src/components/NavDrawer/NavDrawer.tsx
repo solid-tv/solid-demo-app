@@ -1,6 +1,6 @@
 import { useMatch, useNavigate } from "@solidjs/router";
-import { View, Text, IntrinsicNodeProps, ElementNode } from "@lightningtv/solid";
-import { Column } from "@lightningtv/solid/primitives";
+import { View, Text, IntrinsicNodeProps, ElementNode } from "@solidtv/solid";
+import { Column } from "@solidtv/solid/primitives";
 import styles from "./NavDrawer.styles";
 import { createMemo } from "solid-js";
 import Icon from "../Icon";

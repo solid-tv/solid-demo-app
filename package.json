@@ -8,7 +8,7 @@
     "start": "vite --host --force",
     "start:dom": "VITE_LIGHTNING_DOM_RENDERING=true vite --host --force",
     "start:prod": "vite --host --force --mode production",
-    "storybook": "storybook dev -p 6006"
+    "storybook": "storybook dev -p 6006",
     "build": "vite build --sourcemap=true --emptyOutDir false",
     "build:tizen": "vite build --config vite.config.tizen.js --base=./ --outDir tizen --emptyOutDir false",
     "build:lg": "vite build --sourcemap=false --base=./ --outDir lg --emptyOutDir false && ares-package lg --outdir lg --no-minify",
@@ -29,8 +29,8 @@
   "dependencies": {
     "@capacitor/core": "^8.2.0",
     "@firebolt-js/sdk": "^1.7.0",
-    "@lightningjs/renderer": "npm:@lightningtv/renderer@3.3.0",
-    "@lightningtv/solid": "3.2.0",
+    "@solidtv/renderer": "1.0.0",
+    "@solidtv/solid": "1.0.0",
     "@solid-primitives/list": "^0.1.2",
     "@solid-primitives/scheduled": "^1.5.2",
     "@solidjs/router": "^0.15.3",

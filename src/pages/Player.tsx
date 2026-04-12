@@ -4,7 +4,7 @@ import {
   Text,
   View,
   hexColor
-} from "@lightningtv/solid";
+} from "@solidtv/solid";
 import { onMount } from "solid-js";
 import { setGlobalBackground } from "../state";
 import { init, load, play } from "../video";

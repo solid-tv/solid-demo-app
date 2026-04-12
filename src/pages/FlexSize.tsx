@@ -4,8 +4,8 @@ import {
   Text,
   View,
   hexColor
-} from "@lightningtv/solid";
-import { Column, Row } from "@lightningtv/solid/primitives";
+} from "@solidtv/solid";
+import { Column, Row } from "@solidtv/solid/primitives";
 import { createSignal, onMount } from "solid-js";
 import styles from "../styles";
 import { setGlobalBackground } from "../state";

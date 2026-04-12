@@ -1,5 +1,5 @@
-import { View } from "@lightningtv/solid";
-import { Column } from "@lightningtv/solid/primitives";
+import { View } from "@solidtv/solid";
+import { Column } from "@solidtv/solid/primitives";
 import { setGlobalBackground } from "../state";
 import { Button } from "../components/";
 import { createSignal } from "solid-js";

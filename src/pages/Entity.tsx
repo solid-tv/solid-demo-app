@@ -1,5 +1,5 @@
-import { ElementNode, Text, View, Show, assertTruthy, setActiveElement } from "@lightningtv/solid";
-import { Column, Row } from "@lightningtv/solid/primitives";
+import { ElementNode, Text, View, Show, assertTruthy, setActiveElement } from "@solidtv/solid";
+import { Column, Row } from "@solidtv/solid/primitives";
 
 import { createEffect, on, createSignal } from "solid-js";
 import { TileRow, Button } from "../components";

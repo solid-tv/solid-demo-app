@@ -5,8 +5,8 @@ import {
   View,
   Text,
   NodeProps
-} from "@lightningtv/solid";
-import { Grid } from "@lightningtv/solid/primitives";
+} from "@solidtv/solid";
+import { Grid } from "@solidtv/solid/primitives";
 import { setGlobalBackground } from "../state";
 import ContentBlock from "../components/ContentBlock";
 import { debounce } from "@solid-primitives/scheduled";

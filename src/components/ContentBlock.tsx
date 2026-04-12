@@ -1,5 +1,5 @@
-import { View, Text } from "@lightningtv/solid";
-import { Marquee } from "@lightningtv/solid/primitives";
+import { View, Text } from "@solidtv/solid";
+import { Marquee } from "@solidtv/solid/primitives";
 import { For, Show } from "solid-js";
 import theme from "theme";
 

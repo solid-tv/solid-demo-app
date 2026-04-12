@@ -1,5 +1,5 @@
-import { type IntrinsicNodeProps, View, Text, type NodeProps, Dynamic } from "@lightningtv/solid";
-import { Column, Row, VirtualRow, Image, useMouse } from "@lightningtv/solid/primitives";
+import { type IntrinsicNodeProps, View, Text, type NodeProps, Dynamic } from "@solidtv/solid";
+import { Column, Row, VirtualRow, Image, useMouse } from "@solidtv/solid/primitives";
 import { createEffect, createSignal, For, Index } from "solid-js";
 import styles, { buttonStyles } from "../styles";
 import { type Tile } from "../api/formatters/ItemFormatter";

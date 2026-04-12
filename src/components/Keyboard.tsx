@@ -1,6 +1,6 @@
 import { type Component, createMemo, createSignal, Index, Show, Signal, Switch, Match, Setter } from 'solid-js';
-import { View, Text, type NodeProps, type TextStyles, type NodeStyles } from '@lightningtv/solid';
-import { Row, Column, chainFunctions } from '@lightningtv/solid/primitives';
+import { View, Text, type NodeProps, type TextStyles, type NodeStyles } from '@solidtv/solid';
+import { Row, Column, chainFunctions } from '@solidtv/solid/primitives';
 import Input from './Input';
 
 const actionKeyContainerStyle: NodeStyles = {

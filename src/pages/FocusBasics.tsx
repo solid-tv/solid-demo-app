@@ -1,5 +1,5 @@
-import { View, activeElement } from "@lightningtv/solid";
-import { Row, Column } from "@lightningtv/solid/primitives";
+import { View, activeElement } from "@solidtv/solid";
+import { Row, Column } from "@solidtv/solid/primitives";
 import { setGlobalBackground } from "../state";
 import { createEffect, on } from "solid-js";
 import { Block } from "../components/";

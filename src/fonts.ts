@@ -1,4 +1,4 @@
-import { WebTrFontFaceOptions } from "@lightningtv/solid";
+import { WebTrFontFaceOptions } from "@solidtv/solid";
 
 const basePath = import.meta.env.BASE_URL;
 

@@ -1,4 +1,4 @@
-import { Text, View, IntrinsicNodeStyleProps, IntrinsicTextNodeStyleProps } from "@lightningtv/solid";
+import { Text, View, IntrinsicNodeStyleProps, IntrinsicTextNodeStyleProps } from "@solidtv/solid";
 import { createSignal, onMount } from "solid-js";
 import { setGlobalBackground } from "../state";
 

@@ -1,4 +1,4 @@
-import { Text } from "@lightningtv/solid";
+import { Text } from "@solidtv/solid";
 import { setGlobalBackground } from "../state";
 import { Block } from "../components";
 

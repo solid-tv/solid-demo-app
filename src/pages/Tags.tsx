@@ -1,5 +1,5 @@
-import { View, Text } from "@lightningtv/solid";
-import { createTag } from "@lightningtv/solid/primitives";
+import { View, Text } from "@solidtv/solid";
+import { createTag } from "@solidtv/solid/primitives";
 import { setGlobalBackground } from "../state";
 import { onCleanup } from "solid-js";
 

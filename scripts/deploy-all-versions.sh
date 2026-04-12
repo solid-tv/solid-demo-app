@@ -22,17 +22,17 @@ for VERSION in "${VERSIONS[@]}"; do
 
     // Special case for 3.0.0 (no alias)
     if (version === '3.0.0') {
-      pkg.dependencies['@lightningjs/renderer'] = '3.0.0';
+      pkg.dependencies['@solidtv/renderer'] = '3.0.0';
     } else {
-      pkg.dependencies['@lightningjs/renderer'] = 'npm:@lightningtv/renderer@' + version;
+      pkg.dependencies['@solidtv/renderer'] = 'npm:@lightningtv/renderer@' + version;
     }
 
-    // Logic for @lightningtv/solid: renderer < 3.3.0 -> 3.1.8, renderer >= 3.3.0 -> 3.2.0
+    // Logic for @solidtv/solid: renderer < 3.3.0 -> 3.1.8, renderer >= 3.3.0 -> 3.2.0
     const parts = version.split('.').map(Number);
     if (parts[0] < 3 || (parts[0] === 3 && parts[1] < 3)) {
-      pkg.dependencies['@lightningtv/solid'] = '3.1.8';
+      pkg.dependencies['@solidtv/solid'] = '3.1.8';
     } else {
-      pkg.dependencies['@lightningtv/solid'] = '3.2.0';
+      pkg.dependencies['@solidtv/solid'] = '3.2.0';
     }
     fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
   "

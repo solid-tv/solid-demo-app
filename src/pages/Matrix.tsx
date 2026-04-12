@@ -1,6 +1,6 @@
 import { For } from "solid-js";
-import { View } from "@lightningtv/solid";
-import { Column, Row } from "@lightningtv/solid/primitives";
+import { View } from "@solidtv/solid";
+import { Column, Row } from "@solidtv/solid/primitives";
 
 const blockStyle = {
   color: 0x5c4dffff,

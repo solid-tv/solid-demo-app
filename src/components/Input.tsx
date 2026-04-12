@@ -1,5 +1,5 @@
 import { createSignal, type Component, createEffect, on, createMemo, type Signal } from 'solid-js';
-import { View, Text, type NodeProps, NodeStyles, TextStyles } from '@lightningtv/solid';
+import { View, Text, type NodeProps, NodeStyles, TextStyles } from '@solidtv/solid';
 
 export interface InputProps extends NodeProps {
   /**

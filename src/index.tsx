@@ -1,15 +1,15 @@
 import "solid-devtools";
 import { setElementInterface } from "solid-devtools/setup";
-import { elementInterface } from "@lightningtv/solid/devtools";
+import { elementInterface } from "@solidtv/solid/devtools";
 
 setElementInterface(elementInterface);
 
-import { createRenderer, Config, loadFonts } from "@lightningtv/solid";
-import { WebGlCoreRenderer, SdfTextRenderer } from "@lightningjs/renderer/webgl";
-import { CanvasCoreRenderer, CanvasTextRenderer } from "@lightningjs/renderer/canvas";
+import { createRenderer, Config, loadFonts } from "@solidtv/solid";
+import { WebGlCoreRenderer, SdfTextRenderer } from "@solidtv/renderer/webgl";
+import { CanvasCoreRenderer, CanvasTextRenderer } from "@solidtv/renderer/canvas";
 
-import { Inspector } from "@lightningjs/renderer/inspector";
-import { HashRouter, FocusStackProvider, KeepAliveRoute, lazy } from "@lightningtv/solid/primitives";
+import { Inspector } from "@solidtv/renderer/inspector";
+import { HashRouter, FocusStackProvider, KeepAliveRoute, lazy } from "@solidtv/solid/primitives";
 import { Route, Navigate } from "@solidjs/router";
 import App from "./pages/App";
 import Browse from "./pages/Browse";
@@ -132,7 +132,7 @@ import {
   RadialGradient,
   LinearGradient,
   HolePunch
-} from "@lightningjs/renderer/webgl/shaders";
+} from "@solidtv/renderer/webgl/shaders";
 const shManager = renderer.stage.shManager;
 shManager.registerShaderType("rounded", Rounded);
 shManager.registerShaderType("roundedWithBorder", RoundedWithBorder);

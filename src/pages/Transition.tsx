@@ -1,5 +1,5 @@
-import { View, Text } from "@lightningtv/solid";
-import { Row } from "@lightningtv/solid/primitives";
+import { View, Text } from "@solidtv/solid";
+import { Row } from "@solidtv/solid/primitives";
 import { createSignal } from "solid-js";
 
 const Transition = () => {

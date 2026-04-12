@@ -1,5 +1,5 @@
 import { createEffect, createSignal, Show } from "solid-js";
-import { ElementNode, View, Text } from "@lightningtv/solid";
+import { ElementNode, View, Text } from "@solidtv/solid";
 import { Poster } from "../components";
 import { setGlobalBackground } from "../state";
 import { List } from "@solid-primitives/list";

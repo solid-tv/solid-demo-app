@@ -1,5 +1,5 @@
-import { Column } from "@lightningtv/solid/primitives";
-import { Text, View } from "@lightningtv/solid";
+import { Column } from "@solidtv/solid/primitives";
+import { Text, View } from "@solidtv/solid";
 import { setGlobalBackground } from "../state";
 
 const Box = (props) => {

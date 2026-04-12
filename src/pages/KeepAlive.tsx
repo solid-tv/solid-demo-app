@@ -1,5 +1,5 @@
 import * as s from "solid-js";
-import * as lng from "@lightningtv/solid";
+import * as lng from "@solidtv/solid";
 
 /**
  * Creates a presistant component to be reused between different layouts

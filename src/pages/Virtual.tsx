@@ -1,4 +1,4 @@
-import { LazyColumn } from "@lightningtv/solid/primitives";
+import { LazyColumn } from "@solidtv/solid/primitives";
 import { onMount } from "solid-js";
 import { setGlobalBackground } from "../state";
 import { TitleRow } from "../components";

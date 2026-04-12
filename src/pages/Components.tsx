@@ -1,5 +1,5 @@
-import { Text, View, Dynamic } from "@lightningtv/solid";
-import { Visible } from "@lightningtv/solid/primitives";
+import { Text, View, Dynamic } from "@solidtv/solid";
+import { Visible } from "@solidtv/solid/primitives";
 import { createSignal, For, onCleanup } from "solid-js";
 import { setGlobalBackground } from "../state";
 import { Button } from "../components";

@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from "storybook-solidjs-vite";
-import { View, Text } from "@lightningtv/solid";
-import { Row } from "@lightningtv/solid/primitives";
+import { View, Text } from "@solidtv/solid";
+import { Row } from "@solidtv/solid/primitives";
 
 const meta: Meta = {
   title: "Components/Flex",

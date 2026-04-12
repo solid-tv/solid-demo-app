@@ -1,5 +1,5 @@
 import { createEffect, on, createSignal, Show, onMount } from "solid-js";
-import { View } from "@lightningtv/solid";
+import { View } from "@solidtv/solid";
 import { Hero } from "../components";
 import { setGlobalBackground } from "../state";
 

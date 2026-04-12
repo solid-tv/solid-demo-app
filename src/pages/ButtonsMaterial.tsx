@@ -4,8 +4,8 @@ import {
   Text,
   View,
   hexColor
-} from "@lightningtv/solid";
-import { Row } from "@lightningtv/solid/primitives";
+} from "@solidtv/solid";
+import { Row } from "@solidtv/solid/primitives";
 
 import { MaterialButtonText } from "../styles";
 

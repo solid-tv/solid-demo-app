@@ -1,4 +1,4 @@
-import { View, Text, type NodeStyles, TextStyles } from "@lightningtv/solid";
+import { View, Text, type NodeStyles, TextStyles } from "@solidtv/solid";
 import { createSignal, onMount, For } from "solid-js";
 
 const TextureCompressionPerformance = () => {

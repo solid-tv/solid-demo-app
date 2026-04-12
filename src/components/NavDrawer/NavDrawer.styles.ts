@@ -1,4 +1,4 @@
-import { IntrinsicNodeStyleProps } from "@lightningtv/solid";
+import { IntrinsicNodeStyleProps } from "@solidtv/solid";
 import theme from "theme";
 
 export default {

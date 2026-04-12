@@ -1,4 +1,4 @@
-import { Text, View } from "@lightningtv/solid";
+import { Text, View } from "@solidtv/solid";
 import { createSignal, onCleanup } from "solid-js";
 import { setGlobalBackground } from "../state";
 

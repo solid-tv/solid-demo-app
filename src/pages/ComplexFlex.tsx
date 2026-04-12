@@ -1,5 +1,5 @@
-import { View, Text } from "@lightningtv/solid";
-import { Column, Row } from "@lightningtv/solid/primitives";
+import { View, Text } from "@solidtv/solid";
+import { Column, Row } from "@solidtv/solid/primitives";
 import { createSignal, For } from "solid-js";
 
 const Card = (props: { index: number }) => {

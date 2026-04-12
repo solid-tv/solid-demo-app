@@ -1,8 +1,8 @@
-import { Text, TextStyles, View } from "@lightningtv/solid";
+import { Text, TextStyles, View } from "@solidtv/solid";
 
 import { createSignal, createEffect } from "solid-js";
 import { setGlobalBackground } from "../state";
-import { Row } from "@lightningtv/solid/primitives";
+import { Row } from "@solidtv/solid/primitives";
 import { Lifecycle, Account, Device, Localization } from "@firebolt-js/sdk";
 export default function Firebolt() {
   const fireboltApis = ["Lifecycle", "Audio", "Make", "Model", "latlong"];

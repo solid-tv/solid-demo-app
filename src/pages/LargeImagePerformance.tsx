@@ -1,4 +1,4 @@
-import { View, Text, type NodeStyles } from "@lightningtv/solid";
+import { View, Text, type NodeStyles } from "@solidtv/solid";
 import { createSignal, onMount, For, Show } from "solid-js";
 import api, { getImageUrl } from "../api";
 

@@ -1,5 +1,5 @@
-import { ElementNode, Text, View, Show, assertTruthy } from "@lightningtv/solid";
-import { Column } from "@lightningtv/solid/primitives";
+import { ElementNode, Text, View, Show, assertTruthy } from "@solidtv/solid";
+import { Column } from "@solidtv/solid/primitives";
 import { useParams } from "@solidjs/router";
 import { createResource, onMount } from "solid-js";
 import { TileRow } from "../components";

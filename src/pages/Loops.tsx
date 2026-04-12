@@ -1,6 +1,6 @@
 import { createSignal, For, Index } from "solid-js";
-import { View, Text } from "@lightningtv/solid";
-import { LazyRow, Column, Row } from "@lightningtv/solid/primitives";
+import { View, Text } from "@solidtv/solid";
+import { LazyRow, Column, Row } from "@solidtv/solid/primitives";
 import { List } from "@solid-primitives/list";
 import { Poster } from "../components";
 import { setGlobalBackground } from "../state";

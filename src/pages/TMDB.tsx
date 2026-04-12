@@ -1,6 +1,6 @@
 import { createEffect, on, createSignal } from "solid-js";
-import { ElementNode, activeElement, View, Text } from "@lightningtv/solid";
-import { LazyRow, LazyColumn, useFocusStack, VirtualRow } from "@lightningtv/solid/primitives";
+import { ElementNode, activeElement, View, Text } from "@solidtv/solid";
+import { LazyRow, LazyColumn, useFocusStack, VirtualRow } from "@solidtv/solid/primitives";
 import { Hero, TitleRow, AssetPanel } from "../components";
 import styles from "../styles";
 import { setGlobalBackground } from "../state";

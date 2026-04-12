@@ -1,5 +1,5 @@
 import { Component } from "solid-js";
-import { IntrinsicTextNodeStyleProps, Text, View } from "@lightningtv/solid";
+import { IntrinsicTextNodeStyleProps, Text, View } from "@solidtv/solid";
 import type { Meta, StoryObj } from "storybook-solidjs-vite";
 
 export const customTheme = {

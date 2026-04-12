@@ -9,8 +9,8 @@ import {
   View,
   activeElement,
   assertTruthy
-} from "@lightningtv/solid";
-import { Column, VirtualGrid, Image } from "@lightningtv/solid/primitives";
+} from "@solidtv/solid";
+import { Column, VirtualGrid, Image } from "@solidtv/solid/primitives";
 import { useNavigate, usePreloadRoute } from "@solidjs/router";
 import { Thumbnail, TileRow } from "../components";
 import styles from "../styles";
