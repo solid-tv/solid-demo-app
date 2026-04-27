@@ -25,7 +25,7 @@ export default defineConfig(({ mode }) => ({
       locator: {
         jsxLocation: true,
         componentLocation: true,
-        targetIDE: "vscode"
+        targetIDE: "agy"
       }
     }),
     solidPlugin({
@@ -63,7 +63,7 @@ export default defineConfig(({ mode }) => ({
     alias: {
       theme: path.resolve(__dirname, "src/theme.ts")
     },
-    conditions: ["@solidtv/source"],
+    conditions: ["@solidtv/source", "browser", ...(mode !== "production" ? ["development"] : [])],
     dedupe: [
       "solid-js",
       "solid-js/universal",
@@ -74,7 +74,7 @@ export default defineConfig(({ mode }) => ({
     ]
   },
   optimizeDeps: {
-    exclude: ["@solidtv/solid", "@solidtv/renderer"]
+    exclude: ["@solidtv/solid", "@solidtv/renderer", "solid-devtools"]
   },
   server: {
     port: 5174,
