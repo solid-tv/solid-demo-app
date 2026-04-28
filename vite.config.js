@@ -19,16 +19,19 @@ export default defineConfig(({ mode }) => ({
     hexColorTransform({
       include: ["src/**/*.{ts,tsx,js,jsx}"]
     }),
-    devtools({
-      /* features options - all disabled by default */
-      autoname: true,
-      locator: {
-        jsxLocation: true,
-        componentLocation: true,
-        targetIDE: "agy"
-      }
-    }),
+    // devtools({
+    //   /* features options - all disabled by default */
+    //   autoname: true,
+    //   locator: {
+    //     jsxLocation: true,
+    //     componentLocation: true,
+    //     targetIDE: "agy"
+    //   }
+    // }),
     solidPlugin({
+      babel: {
+        plugins: ["@solidtv/solid/devtools/jsx-locator"]
+      },
       solid: {
         moduleName: "@solidtv/solid",
         generate: "universal",

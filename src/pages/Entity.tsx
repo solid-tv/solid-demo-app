@@ -71,16 +71,6 @@ const Entity = (props) => {
 
   let columnRef, backdropRef, entityActions;
 
-  const Button2 = () => {
-    return (
-      <View display="flex" height={29} width={300} color="#2c0c83" alignItems="center">
-        <Text fontSize={18} lineHeight={21} color="#fff" verticalAlign="bottom">
-          Font size 18
-        </Text>
-      </View>
-    );
-  };
-
   /**
    * I used to have keyed on Show - This would cause the entire tree to be destroyed and recreated. Without keyed, the data is diffed and the nodes are reused and passed in new props.
    * Only one element gets deleted and recreated - a text node for reviews.
@@ -111,7 +101,6 @@ const Entity = (props) => {
             Play
           </Button>
           <Button width={300}>Resume</Button>
-          <Button2 />
         </Row>
 
         <Column ref={columnRef} x={0} y={columnY} style={styles.Column} gap={80} height={880} scroll="none" zIndex={5}>

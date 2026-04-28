@@ -1,8 +1,8 @@
-import "solid-devtools";
-import { setElementInterface } from "solid-devtools/setup";
-import { elementInterface } from "@solidtv/solid/devtools";
+//import "solid-devtools";
+//import { setElementInterface } from "solid-devtools/setup";
+//import { elementInterface } from "@solidtv/solid/devtools";
 
-setElementInterface(elementInterface);
+//setElementInterface(elementInterface);
 
 import { createRenderer, Config, loadFonts } from "@solidtv/solid";
 import { WebGlCoreRenderer, SdfTextRenderer } from "@solidtv/renderer/webgl";
@@ -91,6 +91,7 @@ Config.fontSettings.fontFamily = "Roboto";
 Config.fontSettings.color = theme.textPrimary;
 Config.fontSettings.fontSize = 32;
 Config.domRendererEnabled = false;
+Config.focusHistoryDebug = 5;
 // Config.focusDebug = true;
 
 Config.rendererOptions = {
