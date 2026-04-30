@@ -1,10 +1,10 @@
 // @ts-nocheck
-import { Config, createRenderer, For, loadFonts, Text, View } from "@lightningtv/solid";
+import { Config, createRenderer, For, loadFonts, Text, View } from "@solidtv/solid";
 import type { Preview } from "storybook-solidjs-vite";
-import { Inspector } from "@lightningjs/renderer/inspector";
-import { SdfTextRenderer, WebGlCoreRenderer } from "@lightningjs/renderer/webgl";
+import { Inspector } from "@solidtv/renderer/inspector";
+import { SdfTextRenderer, WebGlCoreRenderer } from "@solidtv/renderer/webgl";
 import fonts from "../src/fonts";
-import { useMouse } from "@lightningtv/solid/primitives";
+import { useMouse } from "@solidtv/solid/primitives";
 import "dayjs/locale/fr";
 
 import { createSignal, Show } from "solid-js";
@@ -16,7 +16,7 @@ import {
   RoundedWithBorder,
   RoundedWithBorderAndShadow,
   RoundedWithShadow
-} from "@lightningjs/renderer/webgl/shaders";
+} from "@solidtv/renderer/webgl/shaders";
 
 Config.rendererOptions = {
   appWidth: 1920,
