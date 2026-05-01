@@ -59,7 +59,7 @@ const Entity = (props) => {
 
   function onEscape() {
     //closeVideo();
-    // Set focus back to lightning app
+    // Set focus back to SolidTV app
     document.getElementsByTagName("canvas")[0].focus();
     entityActions.setFocus();
     setBackdropAlpha(0);
@@ -112,7 +112,7 @@ const Entity = (props) => {
               onFocus={onRowFocus}
               onEnter={onEnter}
               announce={"Recommendations"}
-              group={'recommendation'}
+              group={"recommendation"}
               items={props.data.recommendations()}
               width={1620}
             />

@@ -44,7 +44,7 @@ const RendererVersionsPage = () => {
   };
 
   const onEnter = () => {
-    window.location.href = `https://lightning-tv.github.io/solid-demo-app/${version()}/#/benchmark`;
+    window.location.href = `https://solid-tv.github.io/solid-demo-app/${version()}/#/benchmark`;
     return true;
   };
 
