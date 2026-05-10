@@ -24,11 +24,11 @@ importers:
         specifier: ^0.15.3
         version: 0.15.3(solid-js@1.9.9)
       '@solidtv/renderer':
-        specifier: 1.0.5
-        version: 1.0.5
+        specifier: 1.0.8
+        version: 1.0.8
       '@solidtv/solid':
         specifier: 1.0.3
-        version: 1.0.3(@solidjs/router@0.15.3(solid-js@1.9.9))(@solidtv/renderer@1.0.5)(solid-js@1.9.9)
+        version: 1.0.3(@solidjs/router@0.15.3(solid-js@1.9.9))(@solidtv/renderer@1.0.8)(solid-js@1.9.9)
       browserlist:
         specifier: ^1.0.1
         version: 1.0.1
@@ -1270,8 +1270,8 @@ packages:
       '@solidjs/router':
         optional: true
 
-  '@solidtv/renderer@1.0.5':
-    resolution: {integrity: sha512-1O6/ikHayqBaJ/R1Y7R4/Aak9t3z7+lOOK/gp/wkZCl77yfvq5reNLtKYyhhfxAyS7UT7oXYhEXqx/VSx6Gz+Q==}
+  '@solidtv/renderer@1.0.8':
+    resolution: {integrity: sha512-K3vOZYafZ7qSnXR7wk+dTxh83+rrtJhZu0Cta7f8/Df2uPwdXig3jQmVo4YgB/E2nv0dEeW4trogsTVu3iG/aA==}
     engines: {node: '>= 18.0.0', npm: '>= 10.0.0', pnpm: '>= 10.17.0'}
 
   '@solidtv/solid@1.0.3':
@@ -4094,16 +4094,16 @@ snapshots:
     optionalDependencies:
       '@solidjs/router': 0.15.3(solid-js@1.9.9)
 
-  '@solidtv/renderer@1.0.5': {}
+  '@solidtv/renderer@1.0.8': {}
 
-  '@solidtv/solid@1.0.3(@solidjs/router@0.15.3(solid-js@1.9.9))(@solidtv/renderer@1.0.5)(solid-js@1.9.9)':
+  '@solidtv/solid@1.0.3(@solidjs/router@0.15.3(solid-js@1.9.9))(@solidtv/renderer@1.0.8)(solid-js@1.9.9)':
     dependencies:
       '@solid-primitives/event-listener': 2.4.5(solid-js@1.9.9)
       '@solid-primitives/list': 0.1.2(solid-js@1.9.9)
       '@solid-primitives/mouse': 2.1.6(solid-js@1.9.9)
       '@solid-primitives/scheduled': 1.5.2(solid-js@1.9.9)
       '@solidjs/router': 0.15.3(solid-js@1.9.9)
-      '@solidtv/renderer': 1.0.5
+      '@solidtv/renderer': 1.0.8
       solid-js: 1.9.9
 
   '@storybook/builder-vite@10.3.5(esbuild@0.25.11)(rollup@4.52.4)(storybook@10.3.1(@testing-library/dom@10.4.1)(prettier@3.6.2)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(vite@7.1.10(@types/node@25.5.0)(jiti@1.21.7)(terser@5.44.0)(yaml@2.8.1))':
