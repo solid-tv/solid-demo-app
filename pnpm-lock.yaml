@@ -24,11 +24,11 @@ importers:
         specifier: ^0.15.3
         version: 0.15.3(solid-js@1.9.9)
       '@solidtv/renderer':
-        specifier: 1.0.8
-        version: 1.0.8
+        specifier: 1.1.2
+        version: 1.1.2
       '@solidtv/solid':
-        specifier: 1.0.3
-        version: 1.0.3(@solidjs/router@0.15.3(solid-js@1.9.9))(@solidtv/renderer@1.0.8)(solid-js@1.9.9)
+        specifier: 1.1.0
+        version: 1.1.0(@solidjs/router@0.15.3(solid-js@1.9.9))(@solidtv/renderer@1.1.2)(solid-js@1.9.9)
       browserlist:
         specifier: ^1.0.1
         version: 1.0.1
@@ -1270,15 +1270,15 @@ packages:
       '@solidjs/router':
         optional: true
 
-  '@solidtv/renderer@1.0.8':
-    resolution: {integrity: sha512-K3vOZYafZ7qSnXR7wk+dTxh83+rrtJhZu0Cta7f8/Df2uPwdXig3jQmVo4YgB/E2nv0dEeW4trogsTVu3iG/aA==}
+  '@solidtv/renderer@1.1.2':
+    resolution: {integrity: sha512-mwb1htJjPxZIGVYCNb8gME0r3tY/v50gDs2iPYqBMKWwNO1074LCs2dAb+0Npgr92f+0JrM3jSapuxtcXEfAUQ==}
     engines: {node: '>= 18.0.0', npm: '>= 10.0.0', pnpm: '>= 10.17.0'}
 
-  '@solidtv/solid@1.0.3':
-    resolution: {integrity: sha512-B5U2uFR6rTu7u0LpynIyynzt1JHmTVPn7sfm4U4UctN0RNt088R7LdXeAHiRHo/1Sad/QN/I2ekHf31wtIjgxQ==}
+  '@solidtv/solid@1.1.0':
+    resolution: {integrity: sha512-rz0uUhpcJybbXvpEauaMowXTrKzcGgkd6gS9M6Xup40WVRMC3M603PtgTUeblA5r/wpD0qIXbKZGgurYU04ulw==}
     peerDependencies:
       '@solidjs/router': ^0.15.1
-      '@solidtv/renderer': ^1.0.0
+      '@solidtv/renderer': ^1.1.0
       solid-js: '*'
 
   '@storybook/builder-vite@10.3.5':
@@ -4094,16 +4094,16 @@ snapshots:
     optionalDependencies:
       '@solidjs/router': 0.15.3(solid-js@1.9.9)
 
-  '@solidtv/renderer@1.0.8': {}
+  '@solidtv/renderer@1.1.2': {}
 
-  '@solidtv/solid@1.0.3(@solidjs/router@0.15.3(solid-js@1.9.9))(@solidtv/renderer@1.0.8)(solid-js@1.9.9)':
+  '@solidtv/solid@1.1.0(@solidjs/router@0.15.3(solid-js@1.9.9))(@solidtv/renderer@1.1.2)(solid-js@1.9.9)':
     dependencies:
       '@solid-primitives/event-listener': 2.4.5(solid-js@1.9.9)
       '@solid-primitives/list': 0.1.2(solid-js@1.9.9)
       '@solid-primitives/mouse': 2.1.6(solid-js@1.9.9)
       '@solid-primitives/scheduled': 1.5.2(solid-js@1.9.9)
       '@solidjs/router': 0.15.3(solid-js@1.9.9)
-      '@solidtv/renderer': 1.0.8
+      '@solidtv/renderer': 1.1.2
       solid-js: 1.9.9
 
   '@storybook/builder-vite@10.3.5(esbuild@0.25.11)(rollup@4.52.4)(storybook@10.3.1(@testing-library/dom@10.4.1)(prettier@3.6.2)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(vite@7.1.10(@types/node@25.5.0)(jiti@1.21.7)(terser@5.44.0)(yaml@2.8.1))':

@@ -9,7 +9,8 @@ import { WebGlCoreRenderer, SdfTextRenderer } from "@solidtv/renderer/webgl";
 import { CanvasCoreRenderer, CanvasTextRenderer } from "@solidtv/renderer/canvas";
 
 import { Inspector } from "@solidtv/renderer/inspector";
-import { HashRouter, FocusStackProvider, KeepAliveRoute, lazy } from "@solidtv/solid/primitives";
+import { FocusStackProvider, lazy } from "@solidtv/solid/primitives";
+import { HashRouter, KeepAliveRoute } from "@solidtv/solid/primitives/router";
 import { Route, Navigate } from "@solidjs/router";
 import App from "./pages/App";
 import Browse from "./pages/Browse";

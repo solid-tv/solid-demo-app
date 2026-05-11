@@ -1,7 +1,7 @@
 import { defineConfig } from "vite";
 import solidPlugin from "vite-plugin-solid";
 import legacy from "@vitejs/plugin-legacy";
-import devtools from "solid-devtools/vite";
+// import devtools from "solid-devtools/vite";
 import hexColorTransform from "@lightningtv/vite-hex-transform";
 import { configDefaults } from "vitest/config";
 import path from "path";
@@ -30,7 +30,7 @@ export default defineConfig(({ mode }) => ({
     // }),
     solidPlugin({
       babel: {
-        plugins: ["@solidtv/solid/devtools/jsx-locator"]
+        plugins: [mode !== "production" ? "@solidtv/solid/devtools/jsx-locator" : null].filter(Boolean)
       },
       solid: {
         moduleName: "@solidtv/solid",

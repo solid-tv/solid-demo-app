@@ -1,4 +1,4 @@
-import { createEffect, on, createSignal, batch, Show } from "solid-js";
+import { createEffect, on, createSignal, batch, Show, onCleanup } from "solid-js";
 import { ElementNode, activeElement, View, Text, renderer } from "@solidtv/solid";
 import { LazyRow, LazyColumn, useFocusStack, VirtualRow, resetCounter } from "@solidtv/solid/primitives";
 import { Hero, TitleRow, AssetPanel } from "../components";
@@ -11,6 +11,11 @@ const TOTAL_CYCLES = 2;
 const NAV_DELAY_MS = 300; // delay between simulated key presses
 
 const Benchmark = (props) => {
+  let cancelled = false;
+  onCleanup(() => {
+    cancelled = true;
+  });
+
   const [heroContent, setHeroContent] = createSignal({});
   const [openPanel, setOpenPanel] = createSignal(false);
   const { storeFocus, restoreFocus } = useFocusStack();
@@ -83,8 +88,10 @@ const Benchmark = (props) => {
     await sleep(1500);
 
     for (let cycle = 0; cycle < TOTAL_CYCLES; cycle++) {
+      if (cancelled) return;
       // ── Navigate DOWN through all rows ──
       for (let i = 0; i < totalRows - 1; i++) {
+        if (cancelled) return;
         setBenchmarkStatus(
           `Cycle ${cycle + 1}/${TOTAL_CYCLES} - Down ${i + 1}/${totalRows - 1}`
         );
@@ -92,8 +99,10 @@ const Benchmark = (props) => {
         await sleep(NAV_DELAY_MS);
       }
 
+      if (cancelled) return;
       // ── Navigate UP through all rows ──
       for (let i = 0; i < totalRows - 1; i++) {
+        if (cancelled) return;
         setBenchmarkStatus(
           `Cycle ${cycle + 1}/${TOTAL_CYCLES} - Up ${i + 1}/${totalRows - 1}`
         );
@@ -101,6 +110,8 @@ const Benchmark = (props) => {
         await sleep(NAV_DELAY_MS);
       }
     }
+
+    if (cancelled) return;
 
     // Compute results
     batch(() => {
@@ -143,7 +154,10 @@ const Benchmark = (props) => {
         // Attach FPS listener early
         attachFpsListener();
         // Start the benchmark after a brief setup time
-        setTimeout(() => runBenchmark(), 2000);
+        const timeoutId = setTimeout(() => {
+          if (!cancelled) runBenchmark();
+        }, 2000);
+        onCleanup(() => clearTimeout(timeoutId));
       }
     }
   });
