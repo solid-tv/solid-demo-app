@@ -176,7 +176,6 @@ const posterTitleStyles = {
 } as const;
 
 export function PosterTitle(props: NodeProps & { title: string }) {
-  console.log(props.item?.title);
   return (
     <View
       {...props}
