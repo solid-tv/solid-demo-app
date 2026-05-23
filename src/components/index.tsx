@@ -107,10 +107,10 @@ const titleRowStyles = {
 export function TitleRow(props: TileRowProps) {
   const slug = () => props.title?.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '') || 'row';
   return (
-    <View height={props.height} forwardFocus={1} marginTop={30}>
-      <Text skipFocus style={titleRowStyles}>
+    <view height={props.height} forwardFocus={1} marginTop={30}>
+      <text skipFocus style={titleRowStyles}>
         {props.title}
-      </Text>
+      </text>
       <VirtualRow
         gap={20}
         displaySize={8}
@@ -120,12 +120,13 @@ export function TitleRow(props: TileRowProps) {
         scroll={props.scroll}
         wrap={props.wrap}
         selected={props.selected}
+        debugInfo
       >
         {(item, index) => (
           <Dynamic component={typeToComponent[props.rowType || props.row?.type]} index={index()} item={item()} group={slug()} />
         )}
       </VirtualRow>
-    </View>
+    </view>
   );
 }
 
@@ -143,7 +144,7 @@ const posterStyles = {
 
 export function Poster(props: NodeProps) {
   return (
-    <View
+    <view
       src={props.item?.src}
       title={props.item?.shortTitle}
       backdrop={props.item?.backdrop}

@@ -64,6 +64,7 @@ const TextureCompressionPerformance = lazy(() => import("./pages/TextureCompress
 const ComplexFlexPage = lazy(() => import("./pages/ComplexFlex"));
 const BenchmarkPage = lazy(() => import("./pages/Benchmark"));
 const RendererVersionsPage = lazy(() => import("./pages/RendererVersions"));
+const TextCenteringPage = lazy(() => import("./pages/TextCentering"));
 
 let numImageWorkers = 4;
 const urlParams = new URLSearchParams(window.location.search);
@@ -71,6 +72,12 @@ const numWorkers = urlParams.get("numImageWorkers");
 const screenSize = urlParams.get("size") || "default";
 const rendererMode = urlParams.get("mode") || "webgl";
 const animationsEnabled = urlParams.get("animate") || "true";
+const textBaseline = urlParams.get("textBaseline") as
+  | "optical"
+  | "cap"
+  | "x"
+  | "linebox"
+  | null;
 
 if (numWorkers) {
   numImageWorkers = parseInt(numWorkers);
@@ -112,6 +119,10 @@ Config.rendererOptions = {
   targetFPS: 0,
   enableClear: false
 };
+
+if (textBaseline) {
+  Config.rendererOptions.textBaselineMode = textBaseline;
+}
 
 // Ideally you'd do two separate builds for canvas and webgl to reduce bundle size.
 if (rendererMode === "canvas") {
@@ -165,6 +176,7 @@ render(() => (
         <Route path="login" component={LoginPage} />
         <Route path="nested" component={lazy(() => import("./pages/Nested"))} />
         <Route path="textposter" component={TextPosterPage} />
+        <Route path="textcentering" component={TextCenteringPage} />
         <Route path="positioning" component={PositioningPage} />
         <Route path="layout" component={LayoutPage} />
         <Route path="focusbasics" component={FocusBasicsPage} />

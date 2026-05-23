@@ -1,5 +1,5 @@
 import { createEffect, on, createSignal } from "solid-js";
-import { ElementNode, activeElement, View, Text } from "@solidtv/solid";
+import { ElementNode, activeElement } from "@solidtv/solid";
 import { LazyRow, LazyColumn, useFocusStack, VirtualRow } from "@solidtv/solid/primitives";
 import { Hero, TitleRow, AssetPanel } from "../components";
 import styles from "../styles";
@@ -49,18 +49,18 @@ const TMDB = (props) => {
   }
 
   return (
-    <View forwardFocus={2}>
-      <View ref={solidLogo} width={300} height={150} x={162} y={80} zIndex={105}>
-        <Text x={80} fontSize={28} color={0xf6f6f699}>
+    <view forwardFocus={2} autofocus>
+      <view ref={solidLogo} width={300} height={150} x={162} y={80} zIndex={105}>
+        <text x={80} fontSize={28} color={0xf6f6f699}>
           Built With:
-        </Text>
-        <View y={32} src="./assets/solidWord.png" width={280} height={52} />
+        </text>
+        <view y={32} src="./assets/solidWord.png" width={280} height={52} />
 
-        <View x={0} y={110} src="./assets/tmdb.png" width={80} height={41} />
-        <Text x={90} y={110} contain="width" width={160} fontSize={12} color={0xf6f6f699}>
+        <view x={0} y={110} src="./assets/tmdb.png" width={80} height={41} />
+        <text x={90} y={110} contain="width" width={160} fontSize={12} color={0xf6f6f699}>
           This product uses the TMDB API but is not endorsed or certified by TMDB.
-        </Text>
-      </View>
+        </text>
+      </view>
 
       <ContentBlock ref={contentBlock} y={300} x={162} content={heroContent()} />
       <LazyColumn
@@ -73,6 +73,7 @@ const TMDB = (props) => {
         autofocus={props.data.rows[0].items()}
         gap={40}
         throttleInput={250}
+        width={1760}
         style={styles.Column}
       >
         {(row) =>
@@ -104,7 +105,7 @@ const TMDB = (props) => {
         open={openPanel()}
         item={heroContent()}
       />
-    </View>
+    </view>
   );
 };
 

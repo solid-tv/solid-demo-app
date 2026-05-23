@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "vite",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["exec", "vite", "--force", "--port", "5176", "--strictPort"],
+      "port": 5176
+    }
+  ]
+}

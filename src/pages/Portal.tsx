@@ -51,12 +51,6 @@ const Portal = (props) => {
       id: "positioning",
       description: "Positioning Elements"
     },
-    { title: "Text", id: "text", description: "Text layout with flexbox" },
-    {
-      title: "TextPoster",
-      id: "textposter",
-      description: "Text layout with flex and Poster"
-    },
     {
       title: "Create Elements",
       id: "create",
@@ -71,6 +65,20 @@ const Portal = (props) => {
       title: "Viewport",
       id: "viewport",
       description: "Events going in and out of viewport"
+    }
+  ];
+
+  const textDemos = [
+    { title: "Text", id: "text", description: "Text layout with flexbox" },
+    {
+      title: "TextPoster",
+      id: "textposter",
+      description: "Text layout with flex and Poster"
+    },
+    {
+      title: "Text Centering",
+      id: "textcentering",
+      description: "verticalAlign, textBaselineMode, and flex alignment"
     }
   ];
 
@@ -253,6 +261,14 @@ const Portal = (props) => {
               </Text>
               <Row y={48} onEnter={onEnter} gap={40} height={320} flexBoundary="contain" scroll="always">
                 <For each={basicDemos}>{(demo, i) => <DemoTile index={i()} {...demo} />}</For>
+              </Row>
+            </View>
+            <View forwardFocus={1} height={400}>
+              <Text style={styles.RowTitle} fontSize={42}>
+                Text
+              </Text>
+              <Row y={48} onEnter={onEnter} gap={40} height={320} flexBoundary="contain" scroll="always">
+                <For each={textDemos}>{(demo, i) => <DemoTile index={i()} {...demo} />}</For>
               </Row>
             </View>
             <View forwardFocus={1} height={400}>

@@ -35,7 +35,7 @@ const DescriptionStyles = {
 
 const BadgeStyle = {
   fontSize: 16,
-  lineHeight: 38
+  lineHeight: 36
 };
 
 const Description = (props) => (
