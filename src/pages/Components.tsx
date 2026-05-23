@@ -1,4 +1,4 @@
-import { Text, View, Dynamic } from "@solidtv/solid";
+import { Dynamic } from "@solidtv/solid";
 import { Visible } from "@solidtv/solid/primitives";
 import { createSignal, For, onCleanup } from "solid-js";
 import { setGlobalBackground } from "../state";
@@ -7,7 +7,7 @@ import { Button } from "../components";
 // Define the Square component
 function Square(props) {
   return (
-    <View
+    <view
       {...props}
       width={props.size || 80}
       height={props.size || 80}
@@ -19,7 +19,7 @@ function Square(props) {
 // Define the Card component, which nests a Square
 function Card(props) {
   return (
-    <View
+    <view
       {...props}
       width={props.size === "large" ? 400 : 200}
       height={props.size === "large" ? 500 : 300}
@@ -28,7 +28,7 @@ function Card(props) {
     >
       <Square x={80} y={80} />
       <Square x={20} y={20} size={40} />
-    </View>
+    </view>
   );
 }
 
@@ -48,7 +48,7 @@ const PositioningPage = () => {
   onCleanup(() => clearInterval(interval));
 
   return (
-    <View x={150} autofocus>
+    <view x={150} autofocus>
       {/* Simple square components with different sizes */}
       <Visible when={size()}>
         <Square
@@ -75,8 +75,8 @@ const PositioningPage = () => {
       <Card x={500} y={500} size={size() ? "small" : "large"} />
 
       {/* Dynamic components */}
-      <View x={1000} y={100}>
-        <Text>Dynamic Components</Text>
+      <view x={1000} y={100}>
+        <text>Dynamic Components</text>
         <Dynamic component={Button} y={50} width={300} children="Button" />
         <For each={dynamicComponents()}>
           {(Component, index) => (
@@ -88,8 +88,8 @@ const PositioningPage = () => {
             />
           )}
         </For>
-      </View>
-    </View>
+      </view>
+    </view>
   );
 };
 

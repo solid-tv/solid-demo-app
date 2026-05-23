@@ -1,9 +1,4 @@
-import {
-  IntrinsicNodeStyleProps,
-  IntrinsicTextNodeStyleProps,
-  Text,
-  View
-} from "@solidtv/solid";
+import { IntrinsicNodeStyleProps, IntrinsicTextNodeStyleProps, Text } from "@solidtv/solid";
 import { For, onMount } from "solid-js";
 import { setGlobalBackground } from "../state";
 import theme from "theme";
@@ -56,7 +51,7 @@ const Caption = {
 
 function CenterLine(props: { y: number; width: number }) {
   return (
-    <View
+    <view
       flexItem={false}
       x={0}
       y={props.y}
@@ -72,18 +67,18 @@ function Section1(props: { active: BaselineMode }) {
   const boxH = 80;
   const wrapperH = 140;
   return (
-    <View y={80} x={200} autofocus>
-      <Text style={SectionTitle}>1. Per-line anchor: textBaselineMode</Text>
-      <Text style={SectionNote} y={38}>
+    <view y={80} x={200} autofocus>
+      <text style={SectionTitle}>1. Per-line anchor: textBaselineMode</text>
+      <text style={SectionNote} y={38}>
         Global renderer setting. Default is 'optical'. Reload with ?textBaseline=optical | cap | x | linebox to compare.
-      </Text>
-      <View y={80} display="flex" flexDirection="row" gap={40}>
+      </text>
+      <view y={80} display="flex" flexDirection="row" gap={40}>
         <For each={BASELINE_MODES}>
           {(mode) => {
             const isActive = mode === props.active;
             return (
-              <View width={boxW} height={wrapperH}>
-                <View
+              <view width={boxW} height={wrapperH}>
+                <view
                   {...BoxBase}
                   width={boxW}
                   height={boxH}
@@ -93,16 +88,16 @@ function Section1(props: { active: BaselineMode }) {
                   }}
                 >
                   {isActive ? (
-                    <Text
+                    <text
                       fontSize={40}
                       lineHeight={boxH}
                       centerX
                       color={theme.textPrimary}
                     >
                       Button
-                    </Text>
+                    </text>
                   ) : (
-                    <Text
+                    <text
                       x={boxW / 2}
                       mountX={0.5}
                       fontSize={18}
@@ -110,23 +105,23 @@ function Section1(props: { active: BaselineMode }) {
                       color={theme.textSecondary}
                     >
                       reload to view
-                    </Text>
+                    </text>
                   )}
                   <CenterLine y={boxH / 2} width={boxW} />
-                </View>
-                <Text
+                </view>
+                <text
                   style={Caption}
                   y={boxH + 14}
                   color={isActive ? theme.color.blue : theme.textSecondary}
                 >
                   {isActive ? `'${mode}' (active)` : `'${mode}'`}
-                </Text>
-              </View>
+                </text>
+              </view>
             );
           }}
         </For>
-      </View>
-    </View>
+      </view>
+    </view>
   );
 }
 
@@ -135,17 +130,17 @@ function Section2() {
   const boxW = 240;
   const boxH = 140;
   return (
-    <View y={330} x={200}>
-      <Text style={SectionTitle}>2. verticalAlign with maxHeight</Text>
-      <Text style={SectionNote} y={38}>
+    <view y={330} x={200}>
+      <text style={SectionTitle}>2. verticalAlign with maxHeight</text>
+      <text style={SectionNote} y={38}>
         {`Same text in ${boxW}x${boxH} boxes. Red line marks the visual center.`}
-      </Text>
-      <View y={80} display="flex" flexDirection="row" gap={40}>
+      </text>
+      <view y={80} display="flex" flexDirection="row" gap={40}>
         <For each={aligns}>
           {(align) => (
-            <View width={boxW} height={boxH + 40}>
-              <View {...BoxBase} width={boxW} height={boxH}>
-                <Text
+            <view width={boxW} height={boxH + 40}>
+              <view {...BoxBase} width={boxW} height={boxH}>
+                <text
                   width={boxW}
                   maxHeight={boxH}
                   fontSize={32}
@@ -155,17 +150,17 @@ function Section2() {
                   color={theme.textPrimary}
                 >
                   Centered
-                </Text>
+                </text>
                 <CenterLine y={boxH / 2} width={boxW} />
-              </View>
-              <Text style={Caption} y={boxH + 12}>
+              </view>
+              <text style={Caption} y={boxH + 12}>
                 verticalAlign: '{align}'
-              </Text>
-            </View>
+              </text>
+            </view>
           )}
         </For>
-      </View>
-    </View>
+      </view>
+    </view>
   );
 }
 
@@ -186,8 +181,8 @@ function Section3() {
     caption: string;
     useLineHeight: boolean;
   }) => (
-    <View y={props.y} height={rowHeight}>
-      <Text
+    <view y={props.y} height={rowHeight}>
+      <text
         x={0}
         y={rowHeight / 2}
         mountY={0.5}
@@ -198,8 +193,8 @@ function Section3() {
         width={labelW}
       >
         {props.label}
-      </Text>
-      <View
+      </text>
+      <view
         {...BoxBase}
         x={labelW}
         width={boxW}
@@ -212,39 +207,39 @@ function Section3() {
         <For each={letters}>
           {(l) =>
             props.useLineHeight ? (
-              <Text
+              <text
                 fontSize={l.size}
                 lineHeight={rowHeight}
                 color={theme.textPrimary}
               >
                 {l.ch}
-              </Text>
+              </text>
             ) : (
-              <Text fontSize={l.size} color={theme.textPrimary}>
+              <text fontSize={l.size} color={theme.textPrimary}>
                 {l.ch}
-              </Text>
+              </text>
             )
           }
         </For>
         <CenterLine y={rowHeight / 2} width={boxW} />
-      </View>
-      <Text
+      </view>
+      <text
         x={captionX}
         y={rowHeight / 2}
         mountY={0.5}
         style={{ ...Caption, width: 460 }}
       >
         {props.caption}
-      </Text>
-    </View>
+      </text>
+    </view>
   );
 
   return (
-    <View y={660} x={200}>
-      <Text style={SectionTitle}>3. alignItems vs lineHeight</Text>
-      <Text style={SectionNote} y={38}>
+    <view y={660} x={200}>
+      <text style={SectionTitle}>3. alignItems vs lineHeight</text>
+      <text style={SectionNote} y={38}>
         Both rows contain A/B/C at sizes 44/80/120 inside a flex row with alignItems: 'center'. Watch the cap-tops: only Row B aligns them.
-      </Text>
+      </text>
       <Row
         y={80}
         label="Row A: fontSize only"
@@ -257,7 +252,7 @@ function Section3() {
         caption={`Each line-box matches the row height; textBaselineMode: 'cap' cap-centers each glyph. Cap-tops align.`}
         useLineHeight={true}
       />
-    </View>
+    </view>
   );
 }
 
@@ -270,19 +265,19 @@ const TextCenteringPage = () => {
 
   return (
     <>
-      <Text style={PageTitle} x={200} y={20}>
+      <text style={PageTitle} x={200} y={20}>
         Text Centering
-      </Text>
+      </text>
       <Section1 active={active} />
       <Section2 />
       <Section3 />
-      <Text
+      <text
         style={{ ...Caption, width: 1600 }}
         x={200}
         y={1030}
       >
         Note: verticalAlign no longer requires maxHeight - it resolves against the parent's height. For single-line text, setting lineHeight to the container height is usually all you need.
-      </Text>
+      </text>
     </>
   );
 };

@@ -1,15 +1,7 @@
-import {
-  createMemo,
-  createSignal,
-  Show,
-  onCleanup
+import { createMemo, createSignal, Show, onCleanup
 } from "solid-js";
 import {
-  ElementNode,
-  View,
-  activeElement,
-  assertTruthy
-} from "@solidtv/solid";
+  ElementNode, activeElement, assertTruthy } from "@solidtv/solid";
 import { Column, VirtualGrid, Image } from "@solidtv/solid/primitives";
 import { useNavigate, usePreloadRoute } from "@solidjs/router";
 import { Thumbnail, TileRow } from "../components";
@@ -95,7 +87,7 @@ const Browse = (props) => {
   return (
     <Show when={provider().pages().length}>
       <ContentBlock y={360} x={162} content={heroContent()} forwardFocus={() => vgRef.setFocus()} />
-      <View clipping style={styles.itemsContainer}>
+      <view clipping style={styles.itemsContainer}>
         <VirtualGrid
           y={24}
           x={160}
@@ -118,7 +110,7 @@ const Browse = (props) => {
             <Thumbnail item={item()} />
           }
         </VirtualGrid>
-      </View>
+      </view>
     </Show>
   );
 };

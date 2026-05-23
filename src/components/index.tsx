@@ -1,4 +1,4 @@
-import { type IntrinsicNodeProps, View, Text, type NodeProps, Dynamic } from "@solidtv/solid";
+import { type IntrinsicNodeProps, type NodeProps, Dynamic } from "@solidtv/solid";
 import { Column, Row, VirtualRow, Image, useMouse } from "@solidtv/solid/primitives";
 import { createEffect, createSignal, For, Index } from "solid-js";
 import styles, { buttonStyles } from "../styles";
@@ -6,7 +6,7 @@ import { type Tile } from "../api/formatters/ItemFormatter";
 
 export function Thumbnail(props: IntrinsicNodeProps & { item: Tile }) {
   return (
-    <View
+    <view
       {...props}
       id="thumbnail"
       src={props.item.src}
@@ -19,7 +19,7 @@ export function Thumbnail(props: IntrinsicNodeProps & { item: Tile }) {
 }
 
 export function FocusRing(props: IntrinsicNodeProps) {
-  return <View {...props} style={styles.FocusRing} />;
+  return <view {...props} style={styles.FocusRing} />;
 }
 
 export interface TileRowProps extends IntrinsicNodeProps {
@@ -45,9 +45,9 @@ export function TileRow(props: TileRowProps) {
 
 export function Button(props) {
   return (
-    <View {...props} announce={[props.children, "button"]} forwardStates style={buttonStyles.container}>
-      <Text style={buttonStyles.text}>{props.children || props.title}</Text>
-    </View>
+    <view {...props} announce={[props.children, "button"]} forwardStates style={buttonStyles.container}>
+      <text style={buttonStyles.text}>{props.children || props.title}</text>
+    </view>
   );
 }
 
@@ -78,17 +78,17 @@ export function AssetPanel(props) {
   });
 
   return (
-    <View {...props} x={1920} ref={panelRef} color={"#000000"} width={450} height={1080} zIndex={5}>
-      <Text x={75} y={50} fontSize={32}>
+    <view {...props} x={1920} ref={panelRef} color={"#000000"} width={450} height={1080} zIndex={5}>
+      <text x={75} y={50} fontSize={32}>
         {props.item?.title}
-      </Text>
+      </text>
 
       <Column ref={actionRef} onLeft={props.close} onBack={props.close} x={75} y={200}>
         <Button onEnter={props.close}>Record</Button>
         <Button onEnter={props.close}>Watch</Button>
         <Button onEnter={props.close}>Close</Button>
       </Column>
-    </View>
+    </view>
   );
 }
 
@@ -178,7 +178,7 @@ const posterTitleStyles = {
 
 export function PosterTitle(props: NodeProps & { title: string }) {
   return (
-    <View
+    <view
       {...props}
       src={props.item?.src}
       backdrop={props.item?.backdrop}
@@ -186,8 +186,8 @@ export function PosterTitle(props: NodeProps & { title: string }) {
       style={posterStyles}
       forwardStates
     >
-      <Text style={posterTitleStyles}>{props.item?.title}</Text>
-    </View>
+      <text style={posterTitleStyles}>{props.item?.title}</text>
+    </view>
   );
 }
 
@@ -222,13 +222,13 @@ export function Hero(
 ) {
   const [hasFocus, setHasFocus] = createSignal(false);
   return (
-    <View {...props} src={props.item.backdrop} style={heroStyles} onFocusChanged={setHasFocus} forwardStates>
-      <View transition={{ alpha: heroTransition }} alpha={hasFocus() ? 1 : 0}>
-        <View width={185} height={278} x={54} y={220} src={props.item.src} />
-        <Text y={520} x={54} fontSize={64} width={1000} maxLines={1} style={heroTextStyles}>
+    <view {...props} src={props.item.backdrop} style={heroStyles} onFocusChanged={setHasFocus} forwardStates>
+      <view transition={{ alpha: heroTransition }} alpha={hasFocus() ? 1 : 0}>
+        <view width={185} height={278} x={54} y={220} src={props.item.src} />
+        <text y={520} x={54} fontSize={64} width={1000} maxLines={1} style={heroTextStyles}>
           {props.item.title}
-        </Text>
-        <Text
+        </text>
+        <text
           y={620}
           x={60}
           fontSize={21}
@@ -239,9 +239,9 @@ export function Hero(
           style={heroTextStyles}
         >
           {props.item.overview}
-        </Text>
-      </View>
-    </View>
+        </text>
+      </view>
+    </view>
   );
 }
 
@@ -260,5 +260,5 @@ const BlockStyle = {
   }
 };
 export function Block(props) {
-  return <View {...props} width={100} height={100} style={BlockStyle} color={props.color || "#e0e0e0"} />;
+  return <view {...props} width={100} height={100} style={BlockStyle} color={props.color || "#e0e0e0"} />;
 }

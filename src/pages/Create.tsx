@@ -1,10 +1,4 @@
-import {
-  IntrinsicNodeStyleProps,
-  Text,
-  View,
-  combineStyles,
-  hexColor
-} from "@solidtv/solid";
+import { IntrinsicNodeStyleProps, Text, combineStyles, hexColor } from "@solidtv/solid";
 import { Show, children, createSignal, onMount } from "solid-js";
 import { setGlobalBackground } from "../state";
 
@@ -77,38 +71,38 @@ const CreatePage = () => {
     // This causes a parent not rendered error since we're rendering it twice in the template
     const resolved = children(() => props.children);
     return (
-      <View
+      <view
         {...props}
         style={combineStyles(someOtherStyle, props.style, styleChild)}
       >
-        <View id="child1" width={100} height={100} color={"#ff0000"} y={25}>
+        <view id="child1" width={100} height={100} color={"#ff0000"} y={25}>
           {resolved()}
-          <View
+          <view
             id="subChild"
             x={150}
             width={100}
             height={100}
             color={"#00ff00"}
           />
-          <Text>{props.title}</Text>
-        </View>
-        <View width={100} height={100} color={"#ffff00"} y={175}>
+          <text>{props.title}</text>
+        </view>
+        <view width={100} height={100} color={"#ffff00"} y={175}>
           {resolved()}
-        </View>
-      </View>
+        </view>
+      </view>
     );
   }
 
   function PosTest(props) {
     return (
-      <View {...props} width={400} height={400} color={"#0000ff"}>
-        <View width={50} height={50} color={"#ff0000"} right={0}>
-          <Text fontSize={18}>Right</Text>
-        </View>
-        <View width={50} height={50} color={"#ff0000"} bottom={0}>
-          <Text fontSize={18}>Bottom</Text>
-        </View>
-        <View
+      <view {...props} width={400} height={400} color={"#0000ff"}>
+        <view width={50} height={50} color={"#ff0000"} right={0}>
+          <text fontSize={18}>Right</text>
+        </view>
+        <view width={50} height={50} color={"#ff0000"} bottom={0}>
+          <text fontSize={18}>Bottom</text>
+        </view>
+        <view
           width={50}
           height={50}
           color={"#ff0000"}
@@ -116,9 +110,9 @@ const CreatePage = () => {
           right={0}
           data={{ id: "BR" }}
         >
-          <Text fontSize={18}>BR</Text>
-        </View>
-      </View>
+          <text fontSize={18}>BR</text>
+        </view>
+      </view>
     );
   }
 
@@ -155,24 +149,24 @@ const CreatePage = () => {
 
   return (
     <>
-    <View style={OverviewContainer}>
-      <Text style={Title}>Title of the Page</Text>
-      <View style={SublineContainer}>
-        <Text>{emptyTest()}</Text>
-        <Text style={Subline}>Sub {insertTest()} Text</Text>
+    <view style={OverviewContainer}>
+      <text style={Title}>Title of the Page</text>
+      <view style={SublineContainer}>
+        <text>{emptyTest()}</text>
+        <text style={Subline}>Sub {insertTest()} Text</text>
         <Show when={insertTest()}>
-          <View width={28} height={28} src={"./assets/rt-popcorn.png"}></View>
+          <view width={28} height={28} src={"./assets/rt-popcorn.png"}></view>
         </Show>
-        <Text style={Subline}>More Text</Text>
-      </View>
+        <text style={Subline}>More Text</text>
+      </view>
       <ChildTest
         autofocus
         ref={childRef}
         style={combineStyles(childTestPassedStyles2, childTestPassedStyles)}
       >
-        <Text>Child Test</Text>
+        <text>Child Test</text>
       </ChildTest>
-      <View
+      <view
         ref={myBox}
         style={borderStyles}
         width={100}
@@ -182,13 +176,13 @@ const CreatePage = () => {
         y={400}
       />
       <PosTest x={100} y={100} />
-    </View>
-    <View x={1100} y={50} width={200} height={200} linearGradient={{
+    </view>
+    <view x={1100} y={50} width={200} height={200} linearGradient={{
         colors: [0xffc107ff, 0xff9800ff, 0xff5252ff],
         angle: 4.1,
         stops: [0, 0.5, 1]
       }}>
-      </View>
+      </view>
     </>
   );
 };

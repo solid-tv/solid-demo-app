@@ -1,9 +1,4 @@
-import {
-  ElementNode,
-  IntrinsicNodeStyleProps,
-  Text,
-  View
-} from "@solidtv/solid";
+import { ElementNode, IntrinsicNodeStyleProps } from "@solidtv/solid";
 import { Column, Row } from "@solidtv/solid/primitives";
 import { createSignal, onMount } from "solid-js";
 import styles from "../styles";
@@ -36,7 +31,7 @@ const FlexGrow = () => {
       y: 5
     };
 
-    return <View {...props} style={styles} />;
+    return <view {...props} style={styles} />;
   }
 
   const [columnY, setColumnY] = createSignal(50);
@@ -61,21 +56,21 @@ const FlexGrow = () => {
         width={RowStyles.width}
         style={styles.Column}
       >
-        <Text style={rowTitle}>Flex Start RTL</Text>
+        <text style={rowTitle}>Flex Start RTL</text>
         <Row gap={gap} direction={"rtl"} style={RowStyles} onFocus={onFocus}>
           <Block flexGrow={1} autofocus color={red} />
           <Block flexGrow={2} color={darkorange} />
           <Block color={green} />
         </Row>
 
-        <Text style={rowTitle}>Flex End with Flex Grow</Text>
+        <text style={rowTitle}>Flex End with Flex Grow</text>
         <Row gap={gap} style={RowStyles} onFocus={onFocus}>
           <Block color={green} />
           <Block flexGrow={1} color={red} />
           <Block flexGrow={2} color={darkorange} />
         </Row>
 
-        <Text style={rowTitle}>Space Between with Flex Grow</Text>
+        <text style={rowTitle}>Space Between with Flex Grow</text>
         <Row
           gap={gap}
           justifyContent={"spaceBetween"}

@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from "storybook-solidjs-vite";
-import { View } from "@solidtv/solid";
+
 import { Row } from "@solidtv/solid/primitives";
 import { ActionKey, Key, Keyboard } from "../Keyboard";
 import { formats } from "../../pages/Login";
@@ -32,19 +32,19 @@ export const Autofocus: Story = {
 
 export const ActionKeysPreview: Story = {
   render: () => (
-    <View>
+    <view>
       <Row gap={12}>
         <ActionKey key={{ title: "Delete", size: "md", keyId: "delete" }} />
         <ActionKey key={{ title: "shift", size: "md", keyId: "shift" }} />
         <ActionKey key={{ title: "Save", size: "lg", keyId: "save" }} />
       </Row>
-    </View>
+    </view>
   )
 };
 
 export const CharacterKeysPreview: Story = {
   render: () => (
-    <View>
+    <view>
       <Row gap={12}>
         <Key key="a" />
         <Key key="b" />
@@ -52,6 +52,6 @@ export const CharacterKeysPreview: Story = {
         <Key key="1" />
         <Key key="@" />
       </Row>
-    </View>
+    </view>
   )
 };

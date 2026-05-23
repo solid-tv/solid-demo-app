@@ -1,4 +1,4 @@
-import { View, Text, Show } from "@solidtv/solid";
+import { Show } from "@solidtv/solid";
 import { Column } from "@solidtv/solid/primitives";
 import { Meta, StoryObj } from "storybook-solidjs-vite";
 import theme from "theme";
@@ -14,171 +14,171 @@ const meta: Meta = {
 };
 
 export const BorderRadiusSmall: Story = {
-  render: () => <View width={200} height={75} color={theme.color.white} borderRadius={10}></View>
+  render: () => <view width={200} height={75} color={theme.color.white} borderRadius={10}></view>
 };
 
 export const BorderRadiusRound: Story = {
-  render: () => <View width={50} height={50} color={theme.color.white} borderRadius={25}></View>
+  render: () => <view width={50} height={50} color={theme.color.white} borderRadius={25}></view>
 };
 
 export const BorderAlignOutside: Story = {
   render: () => (
-    <View
+    <view
       width={200}
       height={100}
       color={theme.color.white}
       border={{ w: 4, gap: 5, color: theme.color.red, align: "outside" }}
-    ></View>
+    ></view>
   )
 };
 
 export const BorderAlignInside: Story = {
   render: () => (
-    <View
+    <view
       width={200}
       height={100}
       color={theme.color.white}
       border={{ w: 4, color: theme.color.red, align: "inside" }}
-    ></View>
+    ></view>
   )
 };
 
 export const BorderAlignCenter: Story = {
   render: () => (
-    <View
+    <view
       width={200}
       height={100}
       color={theme.color.white}
       border={{ w: 4, gap: 5, color: theme.color.red, align: "center" }}
-    ></View>
+    ></view>
   )
 };
 
 export const BorderWithTransparentColor: Story = {
   render: () => (
-    <View
+    <view
       width={200}
       height={100}
       color={theme.color.white}
       border={{ w: 4, gap: 10, color: theme.color.greyscaleWhite50 }}
-    ></View>
+    ></view>
   )
 };
 
 export const TextContainWidthMaxline1: Story = {
   render: () => (
-    <View width={300} height={100} color={theme.color.white}>
-      <Text color={theme.color.black} contain="width" maxLines={1}>
+    <view width={300} height={100} color={theme.color.white}>
+      <text color={theme.color.black} contain="width" maxLines={1}>
         {FAKE_TEXT}
-      </Text>
-    </View>
+      </text>
+    </view>
   )
 };
 
 export const TextContainBoth: Story = {
   render: () => (
-    <View width={300} height={300} color={theme.color.white}>
-      <Text color={theme.color.black} contain="both">
+    <view width={300} height={300} color={theme.color.white}>
+      <text color={theme.color.black} contain="both">
         {FAKE_TEXT}
-      </Text>
-    </View>
+      </text>
+    </view>
   )
 };
 
 export const TextContainWithMaxline5: Story = {
   render: () => (
-    <View width={300} height={300} color={theme.color.white}>
-      <Text color={theme.color.black} contain="both" maxLines={5}>
+    <view width={300} height={300} color={theme.color.white}>
+      <text color={theme.color.black} contain="both" maxLines={5}>
         {FAKE_TEXT}
-      </Text>
-    </View>
+      </text>
+    </view>
   )
 };
 
 export const CenterY: Story = {
   render: () => (
-    <View width={300} height={120} color={theme.color.white}>
-      <Text centerY color={theme.color.black}>
+    <view width={300} height={120} color={theme.color.white}>
+      <text centerY color={theme.color.black}>
         CenterY
-      </Text>
-    </View>
+      </text>
+    </view>
   )
 };
 
 export const CenterX: Story = {
   render: () => (
-    <View width={300} height={120} color={theme.color.white}>
-      <Text centerX color={theme.color.black}>
+    <view width={300} height={120} color={theme.color.white}>
+      <text centerX color={theme.color.black}>
         CenterX
-      </Text>
-    </View>
+      </text>
+    </view>
   )
 };
 
 export const Center: Story = {
   render: () => (
-    <View width={300} height={120} color={theme.color.white}>
-      <Text center color={theme.color.black}>
+    <view width={300} height={120} color={theme.color.white}>
+      <text center color={theme.color.black}>
         Center
-      </Text>
-    </View>
+      </text>
+    </view>
   )
 };
 
 export const CenterWithIcon: Story = {
   render: () => (
-    <View width={300} height={100} color={theme.color.white} display="flex" alignItems="center">
-      <View width={50} height={50} borderRadius={50} src={"/assets/ktx/image-8.ktx"} />
-      <Text color={theme.color.black}>Center with Icon</Text>
-    </View>
+    <view width={300} height={100} color={theme.color.white} display="flex" alignItems="center">
+      <view width={50} height={50} borderRadius={50} src={"/assets/ktx/image-8.ktx"} />
+      <text color={theme.color.black}>Center with Icon</text>
+    </view>
   )
 };
 
 export const RowWithCenterItems: Story = {
   render: () => (
-    <View display="flex">
-      <View flexItem={false} height={250} width={300}>
+    <view display="flex">
+      <view flexItem={false} height={250} width={300}>
         <Column>
-          <View height={120} color={theme.color.white}>
-            <Text center style={{ ...customTheme.body, color: theme.color.black }}>
+          <view height={120} color={theme.color.white}>
+            <text center style={{ ...customTheme.body, color: theme.color.black }}>
               Center 1
-            </Text>
-          </View>
-          <View width={300} height={120} color={theme.color.white}>
-            <Text center style={{ ...customTheme.body, color: theme.color.black }}>
+            </text>
+          </view>
+          <view width={300} height={120} color={theme.color.white}>
+            <text center style={{ ...customTheme.body, color: theme.color.black }}>
               Center 2
-            </Text>
-          </View>
+            </text>
+          </view>
         </Column>
-      </View>
-    </View>
+      </view>
+    </view>
   )
 };
 
 export const RowWithCenterItemsAndBorderRadiusAndFocus: Story = {
   render: () => (
-    <View display="flex">
-      <View flexItem={false} height={250} width={300}>
+    <view display="flex">
+      <view flexItem={false} height={250} width={300}>
         <Column>
-          <View
+          <view
             height={120}
             color={theme.color.greyscaleWhite50}
             style={{ $focus: { color: theme.color.red } }}
             autofocus
             borderRadius={20}
           >
-            <Text center color={theme.color.black}>
+            <text center color={theme.color.black}>
               Center 1
-            </Text>
-          </View>
-          <View width={300} height={120} color={theme.color.greyscaleWhite50} borderRadius={20}>
-            <Text center color={theme.color.black}>
+            </text>
+          </view>
+          <view width={300} height={120} color={theme.color.greyscaleWhite50} borderRadius={20}>
+            <text center color={theme.color.black}>
               Center 2
-            </Text>
-          </View>
+            </text>
+          </view>
         </Column>
-      </View>
-    </View>
+      </view>
+    </view>
   )
 };
 

@@ -1,4 +1,4 @@
-import { For, IntrinsicNodeProps, View } from "@solidtv/solid";
+import { For, IntrinsicNodeProps } from "@solidtv/solid";
 import { createSpriteMap } from "@solidtv/solid/primitives";
 // Icons from https://uxwing.com/
 
@@ -22,24 +22,24 @@ function Icon(props: IconProps) {
 
   if (props.name === "perf") {
     return (
-      <View
+      <view
         {...props}
         src={`${basePath}assets/perficon.png`}
         width={100}
         y={25}
         height={50}
-      ></View>
+      ></view>
     );
   }
   return (
-    <View
+    <view
       {...props}
       texture={sprite[props.name]}
       width={sprite[props.name].props.w}
       height={sprite[props.name].props.h}
       x={(100 - (sprite[props.name].props.w || 0)) / 2}
       y={(100 - (sprite[props.name].props.h || 0)) / 2}
-    ></View>
+    ></view>
   );
 }
 
@@ -47,7 +47,7 @@ export default Icon;
 export function PreviewIcons() {
   return (
     <>
-      <View
+      <view
         src={`${basePath}assets/icons.png`}
         width={375}
         height={100}

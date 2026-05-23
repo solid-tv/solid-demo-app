@@ -1,5 +1,5 @@
 import { For } from "solid-js";
-import { View } from "@solidtv/solid";
+
 import { Column, Row } from "@solidtv/solid/primitives";
 
 const blockStyle = {
@@ -13,17 +13,17 @@ const Matrix = () => {
   const blocks = Array.from({ length: 6 });
 
   return (
-    <View color={0x1e1e1eff} width={1920} height={1080}>
+    <view color={0x1e1e1eff} width={1920} height={1080}>
       <Column x={160} y={100} gap={50} autofocus>
         <For each={rows}>
           {() => (
             <Row gap={30} height={250}>
-              <For each={blocks}>{() => <View width={150} height={250} style={blockStyle} />}</For>
+              <For each={blocks}>{() => <view width={150} height={250} style={blockStyle} />}</For>
             </Row>
           )}
         </For>
       </Column>
-    </View>
+    </view>
   );
 };
 

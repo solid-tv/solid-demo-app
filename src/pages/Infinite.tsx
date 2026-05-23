@@ -1,5 +1,5 @@
 import { createEffect, createSignal, Show } from "solid-js";
-import { ElementNode, View, Text } from "@solidtv/solid";
+import { ElementNode } from "@solidtv/solid";
 import { Poster } from "../components";
 import { setGlobalBackground } from "../state";
 import { List } from "@solid-primitives/list";
@@ -82,7 +82,7 @@ const Loops = (props) => {
 
   return (
     <>
-      <View
+      <view
         ref={solidLogo}
         width={300}
         height={150}
@@ -90,12 +90,12 @@ const Loops = (props) => {
         y={80}
         zIndex={105}
       >
-        <Text x={80} fontSize={28} color={0xf6f6f699}>
+        <text x={80} fontSize={28} color={0xf6f6f699}>
           Built With:
-        </Text>
-        <View y={32} src="./assets/solidWord.png" width={280} height={52} />
-        <View x={0} y={110} src="./assets/tmdb.png" width={80} height={41} />
-        <Text
+        </text>
+        <view y={32} src="./assets/solidWord.png" width={280} height={52} />
+        <view x={0} y={110} src="./assets/tmdb.png" width={80} height={41} />
+        <text
           x={90}
           y={110}
           contain="width"
@@ -105,13 +105,13 @@ const Loops = (props) => {
         >
           This product uses the TMDB API but is not endorsed or certified by
           TMDB.
-        </Text>
-      </View>
+        </text>
+      </view>
 
-      <View x={160} y={300} height={300}>
-        <Text style={titleRowStyles}>Infinite Item List</Text>
+      <view x={160} y={300} height={300}>
+        <text style={titleRowStyles}>Infinite Item List</text>
         <Show when={resetCounter()} keyed>
-          <View
+          <view
             autofocus={allItems()}
             onDestroy={animateOut}
             onCreate={animateIn}
@@ -136,9 +136,9 @@ const Loops = (props) => {
                 );
               }}
             </List>
-          </View>
+          </view>
         </Show>
-      </View>
+      </view>
     </>
   );
 };

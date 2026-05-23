@@ -1,5 +1,5 @@
 import { Component } from "solid-js";
-import { IntrinsicTextNodeStyleProps, Text, View } from "@solidtv/solid";
+import { IntrinsicTextNodeStyleProps } from "@solidtv/solid";
 import type { Meta, StoryObj } from "storybook-solidjs-vite";
 
 export const customTheme = {
@@ -91,7 +91,7 @@ export const customTheme = {
 
 const TypographyStory: Component = (props: any) => {
   return (
-    <View
+    <view
       style={{
         height: 100,
         display: "flex",
@@ -100,7 +100,7 @@ const TypographyStory: Component = (props: any) => {
         border: { color: 0xffffff66, width: 3 }
       }}
     >
-      <Text
+      <text
         style={{
           fontFamily: props.theme.fontFamily,
           fontSize: props.theme.fontSize,
@@ -110,8 +110,8 @@ const TypographyStory: Component = (props: any) => {
         }}
       >
         {props.title}
-      </Text>
-    </View>
+      </text>
+    </view>
   );
 };
 

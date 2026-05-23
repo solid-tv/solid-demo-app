@@ -1,4 +1,4 @@
-import { Text, View } from "@solidtv/solid";
+
 import { createSignal, onCleanup } from "solid-js";
 import { setGlobalBackground } from "../state";
 
@@ -21,9 +21,9 @@ const Default = () => {
   }
 
   return (
-    <View x={150} autofocus>
+    <view x={150} autofocus>
       {/* simple, default transition */}
-      <View
+      <view
         width={200}
         height={200}
         x={50}
@@ -33,7 +33,7 @@ const Default = () => {
       />
 
       {/* simple, default transition with object syntax */}
-      <View
+      <view
         width={200}
         height={200}
         x={300}
@@ -43,7 +43,7 @@ const Default = () => {
       />
 
       {/* transition with custom duration */}
-      <View
+      <view
         width={200}
         height={200}
         x={550}
@@ -58,7 +58,7 @@ const Default = () => {
       />
 
       {/* transition with custom duration and wait */}
-      <View
+      <view
         width={200}
         height={200}
         x={800}
@@ -72,7 +72,7 @@ const Default = () => {
       />
 
       {/* transition with built-in easing function */}
-      <View
+      <view
         width={200}
         height={200}
         x={1050}
@@ -85,7 +85,7 @@ const Default = () => {
       />
 
       {/* transition with custom duration and a built-in easing function */}
-      <View
+      <view
         width={200}
         height={200}
         x={1300}
@@ -98,7 +98,7 @@ const Default = () => {
       />
 
       {/* transition with custom duration and a custom bezier function */}
-      <View
+      <view
         width={200}
         height={200}
         x={1550}
@@ -108,7 +108,7 @@ const Default = () => {
           y: { duration: 800, easing: "cubic-bezier(1,-0.64,.39,1.44)" }
         }}
       />
-    </View>
+    </view>
   );
 };
 

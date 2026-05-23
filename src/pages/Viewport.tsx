@@ -1,4 +1,4 @@
-import { Text, View, hexColor } from "@solidtv/solid";
+import { hexColor } from "@solidtv/solid";
 import { onMount, onCleanup, createSignal } from "solid-js";
 import { setGlobalBackground } from "../state";
 
@@ -57,9 +57,9 @@ export default () => {
   });
 
   return (
-    <View>
-      <Text style={Title}>{ballStatus().join("\n")}</Text>
-      <View
+    <view>
+      <text style={Title}>{ballStatus().join("\n")}</text>
+      <view
         autofocus
         style={styleBall}
         ref={ball}
@@ -70,6 +70,6 @@ export default () => {
           outOfViewport: (elm) => logEvent("outOfViewport", elm)
         }}
       />
-    </View>
+    </view>
   );
 };

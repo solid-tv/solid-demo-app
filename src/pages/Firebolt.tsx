@@ -1,4 +1,4 @@
-import { Text, TextStyles, View } from "@solidtv/solid";
+import { TextStyles } from "@solidtv/solid";
 
 import { createSignal, createEffect } from "solid-js";
 import { setGlobalBackground } from "../state";
@@ -49,16 +49,16 @@ export default function Firebolt() {
   };
 
   return (
-    <View>
-      <Text y={-120} fontSize={24} center>
+    <view>
+      <text y={-120} fontSize={24} center>
         Press Right and Left to change API
-      </Text>
+      </text>
       <Row autofocus center y={-60} onSelectedChanged={setActiveIndex}>
         {fireboltApis.map((api, index) => (
-          <Text style={apiStyle}>{api}</Text>
+          <text style={apiStyle}>{api}</text>
         ))}
       </Row>
-      <Text center>{data()}</Text>
-    </View>
+      <text center>{data()}</text>
+    </view>
   );
 }

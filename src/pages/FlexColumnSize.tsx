@@ -1,10 +1,4 @@
-import {
-  ElementNode,
-  IntrinsicNodeStyleProps,
-  Text,
-  View,
-  hexColor
-} from "@solidtv/solid";
+import { ElementNode, IntrinsicNodeStyleProps, hexColor } from "@solidtv/solid";
 import { Column, Row } from "@solidtv/solid/primitives";
 import { createSignal, onMount } from "solid-js";
 import { setGlobalBackground } from "../state";
@@ -42,7 +36,7 @@ const FlexColumnPage = () => {
       color: "#1769aa"
     };
 
-    return <View {...props} style={styles} />;
+    return <view {...props} style={styles} />;
   }
 
   function randSize() {
@@ -64,9 +58,9 @@ const FlexColumnPage = () => {
 
   return (
     <>
-      <Text style={rowTitle}>
+      <text style={rowTitle}>
         Start, MarginTop, End, MarginBottom, Center, Between, Evenly
-      </Text>
+      </text>
       <Row gap={gap} style={RowStyles} onFocus={onFocus}>
         <Column gap={30} style={ColumnStyles} alignItems="center">
           <Block autofocus />

@@ -1,12 +1,6 @@
-import {
-  createEffect,
-  on,
-  createSignal,
-  createSelector,
-  Index,
-  onMount
+import { createEffect, on, createSignal, createSelector, Index, onMount
 } from "solid-js";
-import { type ElementNode, View, Text } from "@solidtv/solid";
+import { type ElementNode } from "@solidtv/solid";
 import { Column, Row } from "@solidtv/solid/primitives";
 import styles from "./gridStyles";
 import { setGlobalBackground } from "../state";
@@ -35,16 +29,16 @@ interface Product {
 
 function ProductRow(props) {
   return (
-    <View
+    <view
       y={props.y}
       autofocus={props.autofocus}
       style={styles.ProductRow}
       forwardStates
     >
-      <Text style={styles.ProductText}>{props.item.id}</Text>
-      <Text style={styles.ProductText}>{props.item.title}</Text>
-      <Text style={styles.ProductText}>{props.item.price}</Text>
-    </View>
+      <text style={styles.ProductText}>{props.item.id}</text>
+      <text style={styles.ProductText}>{props.item.title}</text>
+      <text style={styles.ProductText}>{props.item.price}</text>
+    </view>
   );
 }
 
@@ -91,7 +85,7 @@ const Grid = () => {
   }
 
   return (
-    <View clipping style={styles.itemsContainer}>
+    <view clipping style={styles.itemsContainer}>
       <Column plinko y={columnY()} scroll="none" onSelectedChanged={changeRow}>
         <Index each={items()}>
           {(item, i) => (
@@ -99,7 +93,7 @@ const Grid = () => {
           )}
         </Index>
       </Column>
-    </View>
+    </view>
   );
 };
 

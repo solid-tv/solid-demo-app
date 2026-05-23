@@ -1,4 +1,4 @@
-import { Text } from "@solidtv/solid";
+
 import { setGlobalBackground } from "../state";
 import { Block } from "../components";
 
@@ -8,11 +8,11 @@ const KeyHandling = () => {
 
   return (
     <>
-      <Text x={400} y={200} contain="both" width={900}>
+      <text x={400} y={200} contain="both" width={900}>
         Move the block with the arrow keys, enter to change color, enterHold to
         reset color. Open inspector to see console log messages. Use M to test
         release.
-      </Text>
+      </text>
       <Block
         ref={myBlock}
         autofocus

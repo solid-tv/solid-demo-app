@@ -1,4 +1,4 @@
-import { Text, View } from "@solidtv/solid";
+
 import { setGlobalBackground } from "../state";
 import { Block } from "../components";
 
@@ -11,7 +11,7 @@ const LayoutPage = () => {
   } as const;
 
   return (
-    <View
+    <view
       x={150}
       y={10}
       width={1000}
@@ -20,7 +20,7 @@ const LayoutPage = () => {
     >
       <Block center color="#ffff00" />
 
-      <View
+      <view
         x={500}
         y={140}
         display="flex"
@@ -33,9 +33,9 @@ const LayoutPage = () => {
         <Block color="#ff0000" />
         <Block color="#00ff08" />
         <Block color="#0000ff" />
-      </View>
+      </view>
 
-      <View
+      <view
         x={500}
         y={100}
         width={200}
@@ -43,7 +43,7 @@ const LayoutPage = () => {
         height={36}
         border={{ color: "#ffffff", width: 5 }}
       >
-        <Text
+        <text
           contain="both"
           textAlign="left"
           lineHeight={36}
@@ -51,10 +51,10 @@ const LayoutPage = () => {
           fontSize={28}
         >
           Hello World
-        </Text>
-      </View>
+        </text>
+      </view>
 
-      <View
+      <view
         display="flex"
         flexDirection="column"
         gap={50}
@@ -65,27 +65,27 @@ const LayoutPage = () => {
         border={{ color: "#00ff00", width: 5 }}
         onLayout={(e) => (e.height += 5)}
       >
-        <View color={"#0000FF"} marginTop={5} display="flex">
-          <Text fontSize={24} contain="width" width={450}>
+        <view color={"#0000FF"} marginTop={5} display="flex">
+          <text fontSize={24} contain="width" width={450}>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
             eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
             ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
             aliquip ex ea commodo consequat. Duis aute irure dolor in
             reprehenderit in voluptate velit esse cillum dolore eu.
-          </Text>
-        </View>
+          </text>
+        </view>
 
-        <View color={"#0000FF"} display="flex">
-          <Text fontSize={24} contain="width" width={450}>
+        <view color={"#0000FF"} display="flex">
+          <text fontSize={24} contain="width" width={450}>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
             eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
             ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
             aliquip ex ea commodo consequat. Duis aute irure dolor in
             reprehenderit in voluptate velit esse cillum dolore eu.
-          </Text>
-        </View>
-      </View>
-    </View>
+          </text>
+        </view>
+      </view>
+    </view>
   );
 };
 

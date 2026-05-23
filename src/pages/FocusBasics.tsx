@@ -1,4 +1,4 @@
-import { View, activeElement } from "@solidtv/solid";
+import { activeElement } from "@solidtv/solid";
 import { Row, Column } from "@solidtv/solid/primitives";
 import { setGlobalBackground } from "../state";
 import { createEffect, on } from "solid-js";
@@ -19,7 +19,7 @@ const FocusPage = () => {
   );
 
   return (
-    <View x={250} y={200} onUp={() => myBlock.setFocus()}>
+    <view x={250} y={200} onUp={() => myBlock.setFocus()}>
       {/* Autofocus sets focus on this element when it's created */}
       <Block
         ref={myBlock}
@@ -33,7 +33,7 @@ const FocusPage = () => {
         <Block color="#286e17" />
         <Block color="#1c1c97" />
       </Row>
-    </View>
+    </view>
   );
 };
 

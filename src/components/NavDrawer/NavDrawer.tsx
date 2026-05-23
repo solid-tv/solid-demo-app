@@ -1,5 +1,5 @@
 import { useMatch, useNavigate } from "@solidjs/router";
-import { View, Text, IntrinsicNodeProps, ElementNode } from "@solidtv/solid";
+import { IntrinsicNodeProps, ElementNode } from "@solidtv/solid";
 import { Column } from "@solidtv/solid/primitives";
 import styles from "./NavDrawer.styles";
 import { createMemo } from "solid-js";
@@ -25,12 +25,12 @@ const NavButtonTextStyles = {
 
 function NavButton(props: NavButtonProps) {
   return (
-    <View {...props} forwardStates style={styles.NavButton}>
-      <View y={-16}>
+    <view {...props} forwardStates style={styles.NavButton}>
+      <view y={-16}>
         <Icon color={props.iconColor} scale={0.5} name={props.icon} />
-      </View>
-      <Text style={NavButtonTextStyles}>{props.children}</Text>
-    </View>
+      </view>
+      <text style={NavButtonTextStyles}>{props.children}</text>
+    </view>
   );
 }
 
@@ -70,7 +70,7 @@ export default function NavDrawer(props) {
 
   return (
     <>
-      <View
+      <view
         id="NavDrawer"
         flexItem={false}
         width={300}
@@ -80,10 +80,10 @@ export default function NavDrawer(props) {
         zIndex={105}
         alpha={props.showWidgets ? 1 : 0}
       >
-        <Text y={8} x={80} fontSize={28} color={theme.textSecondary}>
+        <text y={8} x={80} fontSize={28} color={theme.textSecondary}>
           Built With:
-        </Text>
-        <View
+        </text>
+        <view
           y={10}
           src="./assets/solidWord.png"
           width={280}
@@ -92,7 +92,7 @@ export default function NavDrawer(props) {
           }}
         />
 
-        <View
+        <view
           x={0}
           y={100}
           src="./assets/tmdb.png"
@@ -101,10 +101,10 @@ export default function NavDrawer(props) {
           textureOptions={{
           }}
         />
-        <Text x={90} y={104} contain="width" width={160} fontSize={12} color={theme.textSecondary}>
+        <text x={90} y={104} contain="width" width={160} fontSize={12} color={theme.textSecondary}>
           This product uses the TMDB API but is not endorsed or certified by TMDB.
-        </Text>
-      </View>
+        </text>
+      </view>
       <Column {...props} onFocus={onFocus} onBlur={onBlur} style={styles.Column} announce={"Main Menu"} scroll="none">
         <NavButton
           onEnter={() => handleNavigate("/browse/all")}
@@ -147,8 +147,8 @@ export default function NavDrawer(props) {
           Benchmark
         </NavButton>
       </Column>
-      <View skipFocus ref={backdrop} style={styles.Gradient} />
-      <View width={4} height={56} color={"#FFF"} x={22} y={selectedButton()} zIndex={100} />
+      <view skipFocus ref={backdrop} style={styles.Gradient} />
+      <view width={4} height={56} color={"#FFF"} x={22} y={selectedButton()} zIndex={100} />
     </>
   );
 }

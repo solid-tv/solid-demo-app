@@ -1,4 +1,4 @@
-import { View, Text } from "@solidtv/solid";
+
 import { Column, Row } from "@solidtv/solid/primitives";
 import { createSignal, For } from "solid-js";
 
@@ -6,7 +6,7 @@ const Card = (props: { index: number }) => {
   const [focused, setFocused] = createSignal(false);
 
   return (
-    <View
+    <view
       width={180}
       height={100}
       color={focused() ? "#33333399" : "#333333ff"}
@@ -17,15 +17,15 @@ const Card = (props: { index: number }) => {
       padding={10}
       onFocusChanged={setFocused}
     >
-      <Text fontSize={20} color="#ffffffff">
+      <text fontSize={20} color="#ffffffff">
         Item {String(props.index)}
-      </Text>
-      <View color="#0000ffff" padding={8} borderRadius={4} height={40} display="flex" alignItems="center">
-        <Text fontSize={16} color="#ffffffff">
+      </text>
+      <view color="#0000ffff" padding={8} borderRadius={4} height={40} display="flex" alignItems="center">
+        <text fontSize={16} color="#ffffffff">
           Button
-        </Text>
-      </View>
-    </View>
+        </text>
+      </view>
+    </view>
   );
 };
 
@@ -46,9 +46,9 @@ export default function ComplexFlex() {
       scroll="none"
       selected={1}
     >
-      <Text skipFocus fontSize={40} color="#ffffffff" marginBottom={20}>
+      <text skipFocus fontSize={40} color="#ffffffff" marginBottom={20}>
         Complex Flex Layout
-      </Text>
+      </text>
       <Row width={1400} gap={20} scroll="none">
         <For each={items}>{(item) => <Card index={item} />}</For>
       </Row>

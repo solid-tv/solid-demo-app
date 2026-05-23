@@ -1,4 +1,4 @@
-import { ElementNode, Text, View, Show, assertTruthy } from "@solidtv/solid";
+import { ElementNode, Show, assertTruthy } from "@solidtv/solid";
 import { Column } from "@solidtv/solid/primitives";
 import { useParams } from "@solidjs/router";
 import { createResource, onMount } from "solid-js";
@@ -39,7 +39,7 @@ const People = () => {
 
   return (
     <Show when={data()} keyed>
-      <View
+      <view
         src={data().backgroundImage}
         height={1000}
         width={1000}
@@ -51,20 +51,20 @@ const People = () => {
         y={40}
         right={400}
       />
-      <View x={150} y={200} width={800} gap={24} style={styles.Column} zIndex={3}>
-        <Text contain="width" fontFamily={"Roboto"} style={theme.typography.display2}>
+      <view x={150} y={200} width={800} gap={24} style={styles.Column} zIndex={3}>
+        <text contain="width" fontFamily={"Roboto"} style={theme.typography.display2}>
           {data().name}
-        </Text>
-        <Text contain="both" style={styles.peopleBio}>
+        </text>
+        <text contain="both" style={styles.peopleBio}>
           {data().biography}
-        </Text>
-      </View>
-      <View style={Backdrop} />
+        </text>
+      </view>
+      <view style={Backdrop} />
       <Column y={670} x={140} style={styles.Column} scroll="none">
         <Show when={credits()}>
-          <Text skipFocus style={styles.RowTitle}>
+          <text skipFocus style={styles.RowTitle}>
             Credits
-          </Text>
+          </text>
           <TileRow autofocus onEnter={onEnter} items={credits()} />
         </Show>
       </Column>

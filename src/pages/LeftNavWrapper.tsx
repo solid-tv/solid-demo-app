@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "@solidjs/router";
-import { View, Text, activeElement, renderer } from "@solidtv/solid";
+import { activeElement, renderer } from "@solidtv/solid";
 import {
   useAnnouncer,
   FPSCounter,
@@ -78,7 +78,7 @@ const LeftNavWrapper = (props) => {
   let pageContainer;
 
   return (
-    <View
+    <view
       ref={window.APP as any}
       onAnnouncer={() => (announcer.enabled = !announcer.enabled)}
       onLast={() => history.back()}
@@ -94,7 +94,7 @@ const LeftNavWrapper = (props) => {
     >
       <Background />
       <FPSCounter mountX={1} x={1910} y={10} alpha={1} />
-      <View
+      <view
         mountX={1}
         display="flex"
         flexDirection="column"
@@ -105,23 +105,23 @@ const LeftNavWrapper = (props) => {
         color={0x000000ff}
         hidden={!showWidgets()}
       >
-        <Text x={8} fontSize={15}>
+        <text x={8} fontSize={15}>
           Window Size: {windowSize}
-        </Text>
-        <Text x={8} fontSize={15}>
+        </text>
+        <text x={8} fontSize={15}>
           {lastKey()}
-        </Text>
-      </View>
-      <Text x={270} y={20} fontSize={24} contain="width" width={800}>
+        </text>
+      </view>
+      <text x={270} y={20} fontSize={24} contain="width" width={800}>
         {lastError()}
-      </Text>
+      </text>
       <NavDrawer
         ref={navDrawer}
         focusPage={() => lastFocused.setFocus()}
         showWidgets={showWidgets()}
       />
-      <View id="pageContainer" ref={pageContainer} forwardFocus={0} children={props.children} />
-    </View>
+      <view id="pageContainer" ref={pageContainer} forwardFocus={0} children={props.children} />
+    </view>
   );
 };
 

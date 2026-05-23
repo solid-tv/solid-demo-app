@@ -1,10 +1,4 @@
-import {
-  IntrinsicNodeStyleProps,
-  IntrinsicTextNodeStyleProps,
-  Text,
-  View,
-  hexColor
-} from "@solidtv/solid";
+import { IntrinsicNodeStyleProps, IntrinsicTextNodeStyleProps, Text, hexColor } from "@solidtv/solid";
 import { onMount } from "solid-js";
 import { setGlobalBackground } from "../state";
 
@@ -112,29 +106,29 @@ const TextPage = () => {
 
   return (
     <>
-      <View autofocus style={OverviewContainer}>
-        <Text style={Title}>Title of the Page</Text>
-        <Text style={SubTitle}>Tag line for the page</Text>
-        <Text style={Overview}>
+      <view autofocus style={OverviewContainer}>
+        <text style={Title}>Title of the Page</text>
+        <text style={SubTitle}>Tag line for the page</text>
+        <text style={Overview}>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vel
           tempor tellus. Sed eu leo purus. Vestibulum sollicitudin eget tellus a
           varius. Phasellus est turpis, volutpat sed blandit sit amet, rutrum
           sit amet mauris. In dignissim elit orci, a sollicitudin ipsum faucibus
           et. Quisque vel quam rutrum, faucibus augue sed, scelerisque nunc.
-        </Text>
-        <View style={SublineContainer}>
-          <Text style={Subline}>Subline Text</Text>
-          <View width={28} height={28} src={"./assets/rt-popcorn.png"}></View>
-          <Text style={Subline}>More Text</Text>
-        </View>
-      </View>
+        </text>
+        <view style={SublineContainer}>
+          <text style={Subline}>Subline Text</text>
+          <view width={28} height={28} src={"./assets/rt-popcorn.png"}></view>
+          <text style={Subline}>More Text</text>
+        </view>
+      </view>
 
-      <View width={600} display="flex" gap={20} height={42} y={200} x={150}>
-        <Text style={Title}>Flex Grow</Text>
-        <View flexGrow={1} height={4} y={19} color={"#ff3000"} />
-        <View flexGrow={3} height={4} y={19} color={"#ff30ff"} />
-        <View flexGrow={1} height={4} y={19} color={"#eeba2c"} />
-      </View>
+      <view width={600} display="flex" gap={20} height={42} y={200} x={150}>
+        <text style={Title}>Flex Grow</text>
+        <view flexGrow={1} height={4} y={19} color={"#ff3000"} />
+        <view flexGrow={3} height={4} y={19} color={"#ff30ff"} />
+        <view flexGrow={1} height={4} y={19} color={"#eeba2c"} />
+      </view>
     </>
   );
 };

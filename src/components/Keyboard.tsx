@@ -1,5 +1,5 @@
 import { type Component, createMemo, createSignal, Index, Show, Signal, Switch, Match, Setter } from 'solid-js';
-import { View, Text, type NodeProps, type TextStyles, type NodeStyles } from '@solidtv/solid';
+import { type NodeProps, type TextStyles, type NodeStyles } from '@solidtv/solid';
 import { Row, Column, chainFunctions } from '@solidtv/solid/primitives';
 import Input from './Input';
 
@@ -60,39 +60,39 @@ export function onKeyPressWhenKeyboardOpen(setKeyEvent: Setter<string>, event: K
 
 
 export const Key: Component<NodeProps & { key: string; title?: string; textColor?: string }> = props => (
-  <View width={48} {...props} style={keyContainerStyle}>
-    <Text style={KeyText}>{props.key || props.title}</Text>
-  </View>
+  <view width={48} {...props} style={keyContainerStyle}>
+    <text style={KeyText}>{props.key || props.title}</text>
+  </view>
 );
 
 export const ActionKey: Component<NodeProps & { key: any }> = props => (
   <Switch>
     <Match when={typeof props.key === 'string'}>
-      <View
+      <view
         {...props}
         key={props.key}
         display='flex'
         padding={20}
         style={keyContainerStyle}
       >
-        <Text style={BaseKeyTextStyle}>{props.key}</Text>
-      </View>
+        <text style={BaseKeyTextStyle}>{props.key}</text>
+      </view>
     </Match>
     <Match when={props.key.icon}>
-      <View {...props} key={props.key.key} style={actionKeyContainerStyle}>
-        <View src={`${props.key.icon}`} style={ActionKeyIconStyle} />
-      </View>
+      <view {...props} key={props.key.key} style={actionKeyContainerStyle}>
+        <view src={`${props.key.icon}`} style={ActionKeyIconStyle} />
+      </view>
     </Match>
     <Match when={true}>
-      <View
+      <view
         {...props}
         key={props.key.key}
         display='flex'
         padding={20}
         style={/* @once */ props.key?.size ? actionKeyContainerStyle : keyContainerStyle}
       >
-        <Text style={BaseKeyTextStyle}>{props.key.title}</Text>
-      </View>
+        <text style={BaseKeyTextStyle}>{props.key.title}</text>
+      </view>
     </Match>
   </Switch>
 );
@@ -154,7 +154,7 @@ export const FullScreenKeyboard: Component<NodeProps & { type: any, valueSignal:
   };
 
   return (
-    <View
+    <view
       {...props}
       width={1920}
       height={1080}
@@ -177,6 +177,6 @@ export const FullScreenKeyboard: Component<NodeProps & { type: any, valueSignal:
         <Keyboard onEnter={onEnter} />
       </Column>
 
-    </View>
+    </view>
   );
 };

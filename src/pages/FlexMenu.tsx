@@ -1,19 +1,19 @@
 import { Column } from "@solidtv/solid/primitives";
-import { Text, View } from "@solidtv/solid";
+import { Text } from "@solidtv/solid";
 import { setGlobalBackground } from "../state";
 
 const Box = (props) => {
   return (
-    <View {...props} height={100} color="#FF00FF">
-      <Text>Text element</Text>
-    </View>
+    <view {...props} height={100} color="#FF00FF">
+      <text>Text element</text>
+    </view>
   );
 };
 
 export const FlexMenu = () => {
   setGlobalBackground("#000");
   return (
-      <View
+      <view
         right={0}
         display="flex" 
         width={400}
@@ -28,7 +28,7 @@ export const FlexMenu = () => {
             <Box flexOrder={2} marginBottom={50} />
           </Column>
         </Column>
-      </View>
+      </view>
   );
 };
 

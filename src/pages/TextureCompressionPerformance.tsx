@@ -1,4 +1,4 @@
-import { View, Text, type NodeStyles, TextStyles } from "@solidtv/solid";
+import { type NodeStyles, TextStyles } from "@solidtv/solid";
 import { createSignal, onMount, For } from "solid-js";
 
 const TextureCompressionPerformance = () => {
@@ -93,8 +93,8 @@ const TextureCompressionPerformance = () => {
   };
 
   return (
-    <View>
-      <View style={styles.container} autofocus={true}>
+    <view>
+      <view style={styles.container} autofocus={true}>
         <For each={images()}>
           {(item, index) => {
             const col = index() % 5;
@@ -119,7 +119,7 @@ const TextureCompressionPerformance = () => {
             const y = 50 + (row * 175.5);
 
             return (
-              <View
+              <view
                 style={styles.poster}
                 src={item.src}
                 x={x}
@@ -131,10 +131,10 @@ const TextureCompressionPerformance = () => {
             );
           }}
         </For>
-      </View>
+      </view>
 
-      <View style={styles.statusContainer}>
-        <View
+      <view style={styles.statusContainer}>
+        <view
           display="flex"
           justifyContent="center"
           alignItems="center"
@@ -143,10 +143,10 @@ const TextureCompressionPerformance = () => {
           height={200}
           padding={20}
         >
-          <Text style={styles.statusText}>{status()}</Text>
-        </View>
-      </View>
-    </View>
+          <text style={styles.statusText}>{status()}</text>
+        </view>
+      </view>
+    </view>
   );
 };
 

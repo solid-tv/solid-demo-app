@@ -1,10 +1,4 @@
-import {
-  ElementNode,
-  IntrinsicNodeStyleProps,
-  Text,
-  View,
-  hexColor
-} from "@solidtv/solid";
+import { ElementNode, IntrinsicNodeStyleProps, hexColor } from "@solidtv/solid";
 import { Column, Row } from "@solidtv/solid/primitives";
 import { createSignal, onMount } from "solid-js";
 import styles from "../styles";
@@ -34,7 +28,7 @@ const FlexSizePage = () => {
       color: 0x1769aaff
     };
 
-    return <View {...props} style={styles} />;
+    return <view {...props} style={styles} />;
   }
 
   function randSize() {
@@ -64,7 +58,7 @@ const FlexSizePage = () => {
         width={RowStyles.width}
         style={styles.Column}
       >
-        <Text style={rowTitle}>Flex Start - AlignItems: center</Text>
+        <text style={rowTitle}>Flex Start - AlignItems: center</text>
         <Row alignItems="center" gap={gap} style={RowStyles} onFocus={onFocus}>
           <Block autofocus height={randSize()} />
           <Block height={randSize()} />
@@ -72,9 +66,9 @@ const FlexSizePage = () => {
           <Block height={randSize()} />
           <Block height={randSize()} />
         </Row>
-        <Text style={rowTitle}>
+        <text style={rowTitle}>
           Flex Start - Margin Left - AlignItems: flexStart
-        </Text>
+        </text>
         <Row
           gap={gap}
           alignItems="flexStart"
@@ -87,7 +81,7 @@ const FlexSizePage = () => {
           <Block height={randSize()} />
           <Block height={randSize()} />
         </Row>
-        <Text style={rowTitle}>Flex End - AlignItems: flexEnd</Text>
+        <text style={rowTitle}>Flex End - AlignItems: flexEnd</text>
         <Row
           gap={gap}
           justifyContent="flexEnd"
@@ -102,7 +96,7 @@ const FlexSizePage = () => {
           <Block height={randSize()} />
         </Row>
 
-        <Text style={rowTitle}>Flex End - Margin Right</Text>
+        <text style={rowTitle}>Flex End - Margin Right</text>
         <Row
           gap={gap}
           justifyContent={"flexEnd"}
@@ -116,7 +110,7 @@ const FlexSizePage = () => {
           <Block marginRight={100} height={randSize()} />
         </Row>
 
-        <Text style={rowTitle}>Center - No Margin Support</Text>
+        <text style={rowTitle}>Center - No Margin Support</text>
         <Row
           gap={gap}
           justifyContent={"center"}
@@ -130,7 +124,7 @@ const FlexSizePage = () => {
           <Block height={randSize()} />
         </Row>
 
-        <Text style={rowTitle}>Space Between - No Margin Support</Text>
+        <text style={rowTitle}>Space Between - No Margin Support</text>
         <Row
           gap={gap}
           justifyContent={"spaceBetween"}
@@ -144,7 +138,7 @@ const FlexSizePage = () => {
           <Block height={randSize()} />
         </Row>
 
-        <Text style={rowTitle}>Space Evenly - No Margin Support</Text>
+        <text style={rowTitle}>Space Evenly - No Margin Support</text>
         <Row
           gap={gap}
           justifyContent={"spaceEvenly"}
@@ -158,7 +152,7 @@ const FlexSizePage = () => {
           <Block height={randSize()} />
         </Row>
 
-        <Text style={rowTitle}>Space Around - No Margin Support</Text>
+        <text style={rowTitle}>Space Around - No Margin Support</text>
         <Row
           gap={gap}
           justifyContent={"spaceAround"}

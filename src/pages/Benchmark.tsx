@@ -1,5 +1,5 @@
 import { createEffect, on, createSignal, batch, Show, onCleanup } from "solid-js";
-import { ElementNode, activeElement, View, Text, renderer } from "@solidtv/solid";
+import { ElementNode, activeElement, renderer } from "@solidtv/solid";
 import { LazyRow, LazyColumn, useFocusStack, VirtualRow, resetCounter } from "@solidtv/solid/primitives";
 import { Hero, TitleRow, AssetPanel } from "../components";
 import styles from "../styles";
@@ -217,19 +217,19 @@ const Benchmark = (props) => {
   };
 
   return (
-    <Show when={dataLoaded()} fallback={<Text x={960} y={540} fontSize={40} color={0xffffffff} mount={0.5}>Loading Data...</Text>}>
-      <View forwardFocus={2}>
-        <View ref={solidLogo} width={300} height={150} x={162} y={80} zIndex={105}>
-          <Text x={80} fontSize={28} color={0xf6f6f699}>
+    <Show when={dataLoaded()} fallback={<text x={960} y={540} fontSize={40} color={0xffffffff} mount={0.5}>Loading Data...</text>}>
+      <view forwardFocus={2}>
+        <view ref={solidLogo} width={300} height={150} x={162} y={80} zIndex={105}>
+          <text x={80} fontSize={28} color={0xf6f6f699}>
             Built With:
-          </Text>
-          <View y={32} src="./assets/solidWord.png" width={280} height={52} />
+          </text>
+          <view y={32} src="./assets/solidWord.png" width={280} height={52} />
 
-          <View x={0} y={110} src="./assets/tmdb.png" width={80} height={41} />
-          <Text x={90} y={110} contain="width" width={160} fontSize={12} color={0xf6f6f699}>
+          <view x={0} y={110} src="./assets/tmdb.png" width={80} height={41} />
+          <text x={90} y={110} contain="width" width={160} fontSize={12} color={0xf6f6f699}>
             This product uses the TMDB API but is not endorsed or certified by TMDB.
-          </Text>
-        </View>
+          </text>
+        </view>
 
         <ContentBlock ref={contentBlock} y={300} x={162} content={heroContent()} />
         <LazyColumn
@@ -266,11 +266,11 @@ const Benchmark = (props) => {
         </LazyColumn>
 
         {/* ── Benchmark Overlay ── */}
-        <View x={610} y={20} zIndex={200} style={overlayBgStyle}>
-          <Text x={20} y={16} style={overlayTitleStyle}>
+        <view x={610} y={20} zIndex={200} style={overlayBgStyle}>
+          <text x={20} y={16} style={overlayTitleStyle}>
             Benchmark (version: ###)
-          </Text>
-          <Text
+          </text>
+          <text
             x={20}
             y={54}
             contain="width"
@@ -279,16 +279,16 @@ const Benchmark = (props) => {
             color={benchmarkDone() ? 0x00ff88ff : benchmarkRunning() ? 0xffcc00ff : 0xaaaaaaff}
           >
             {benchmarkStatus()}
-          </Text>
-          <Text
+          </text>
+          <text
             x={20}
             y={92}
             style={overlayStatusStyle}
             color={0x00ff88ff}
           >
             {renderTime() !== null ? `Initial Render: ${renderTime()?.toFixed(2)}ms` : "Rendering..."}
-          </Text>
-        </View>
+          </text>
+        </view>
 
         <AssetPanel
           onFocus={storeFocus}
@@ -300,7 +300,7 @@ const Benchmark = (props) => {
           open={openPanel()}
           item={heroContent()}
         />
-      </View>
+      </view>
     </Show>
   );
 };

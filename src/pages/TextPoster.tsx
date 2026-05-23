@@ -1,4 +1,4 @@
-import { Text, View, type NodeStyles } from "@solidtv/solid";
+import { type NodeStyles } from "@solidtv/solid";
 import { Row } from "@solidtv/solid/primitives";
 import { onMount } from "solid-js";
 import { setGlobalBackground } from "../state";
@@ -33,37 +33,37 @@ const CircleContainer: NodeStyles = {
 };
 const ButtonIcon = (props) => {
   return (
-    <View style={ButtonContainer}>
-      <View src={props.icon} width={26} height={26}></View>
-      <Text fontSize={28} lineHeight={50} color={"#000000"}>
+    <view style={ButtonContainer}>
+      <view src={props.icon} width={26} height={26}></view>
+      <text fontSize={28} lineHeight={50} color={"#000000"}>
         {props.children}
-      </Text>
-    </View>
+      </text>
+    </view>
   );
 };
 
 const Button = (props) => {
   return (
-    <View style={ButtonContainer}>
-      <Text fontSize={28} lineHeight={50} color={"#000000"}>
+    <view style={ButtonContainer}>
+      <text fontSize={28} lineHeight={50} color={"#000000"}>
         {props.children}
-      </Text>
-    </View>
+      </text>
+    </view>
   );
 };
 
 const CircleIcon = (props) => {
   return (
-    <View style={CircleContainer}>
-      <View
+    <view style={CircleContainer}>
+      <view
         x={25}
         y={25}
         mount={0.5}
         src={props.icon}
         width={30}
         height={30}
-      ></View>
-    </View>
+      ></view>
+    </view>
   );
 };
 
@@ -118,22 +118,22 @@ const TextPosterPage = () => {
   });
 
   return (
-    <View id="TextPosterPage" style={styles.detailPane}>
-      <Text style={styles.detailTitle}>Movie Name</Text>
-      <View style={styles.detailImage} src="https://placehold.co/400x600.png" />
-      <View style={styles.detailDescriptionPane}>
-        <View style={styles.detailDescription}>
-          <Text style={styles.detailDescriptionTitle}>Release Date :</Text>
-          <Text style={styles.detailDescriptionText}>10/10/2022</Text>
-        </View>
+    <view id="TextPosterPage" style={styles.detailPane}>
+      <text style={styles.detailTitle}>Movie Name</text>
+      <view style={styles.detailImage} src="https://placehold.co/400x600.png" />
+      <view style={styles.detailDescriptionPane}>
+        <view style={styles.detailDescription}>
+          <text style={styles.detailDescriptionTitle}>Release Date :</text>
+          <text style={styles.detailDescriptionText}>10/10/2022</text>
+        </view>
 
-        <View style={styles.detailDescription}>
-          <Text style={styles.detailDescriptionTitle}>Genre :</Text>
-          <Text style={styles.detailDescriptionText}> Action</Text>
-        </View>
+        <view style={styles.detailDescription}>
+          <text style={styles.detailDescriptionTitle}>Genre :</text>
+          <text style={styles.detailDescriptionText}> Action</text>
+        </view>
 
-        <Text style={styles.detailDescriptionTitle}>Plot :</Text>
-        <Text
+        <text style={styles.detailDescriptionTitle}>Plot :</text>
+        <text
           style={styles.detailDescriptionText}
           contain="both"
           maxLines={10}
@@ -150,15 +150,15 @@ const TextPosterPage = () => {
           At vero eos et accusam et justo duo dolores et ea rebum. Stet clita
           kasd gubergren, no sea takimata Cast : Tom cruise, ma3ti
           benabdelkader, oussama ramzi
-        </Text>
+        </text>
         <Row gap={20} autofocus>
           <ButtonIcon icon="./assets/playIcon.png">Play</ButtonIcon>
           <Button>More Info</Button>
           <CircleIcon icon="./assets/thumbsUp.png"></CircleIcon>
           <CircleIcon icon="./assets/thumbsDown.png"></CircleIcon>
         </Row>
-      </View>
-    </View>
+      </view>
+    </view>
   );
 };
 

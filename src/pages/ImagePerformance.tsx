@@ -1,4 +1,4 @@
-import { View, Text, type NodeStyles, TextStyles } from "@solidtv/solid";
+import { type NodeStyles, TextStyles } from "@solidtv/solid";
 import { createSignal, onMount, For, Show } from "solid-js";
 import api, { getImageUrl } from "../api";
 
@@ -94,8 +94,8 @@ const ImagePerformance = () => {
   };
 
   return (
-    <View>
-      <View style={styles.container} autofocus={true}>
+    <view>
+      <view style={styles.container} autofocus={true}>
         <For each={images()}>
           {(item, index) => {
             const col = index() % 8;
@@ -118,7 +118,7 @@ const ImagePerformance = () => {
             const y = 50 + (row * 188.75);
 
             return (
-              <View
+              <view
                 style={styles.poster}
                 src={item.src}
                 x={x}
@@ -130,10 +130,10 @@ const ImagePerformance = () => {
             );
           }}
         </For>
-      </View>
+      </view>
 
-      <View style={styles.statusContainer}>
-        <View
+      <view style={styles.statusContainer}>
+        <view
           display="flex"
           justifyContent="center"
           alignItems="center"
@@ -142,10 +142,10 @@ const ImagePerformance = () => {
           height={200}
           padding={20}
         >
-          <Text style={styles.statusText}>{status()}</Text>
-        </View>
-      </View>
-    </View>
+          <text style={styles.statusText}>{status()}</text>
+        </view>
+      </view>
+    </view>
   );
 };
 

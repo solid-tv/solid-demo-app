@@ -1,4 +1,4 @@
-import { Text, View, IntrinsicNodeStyleProps, IntrinsicTextNodeStyleProps } from "@solidtv/solid";
+import { IntrinsicNodeStyleProps, IntrinsicTextNodeStyleProps } from "@solidtv/solid";
 import { createSignal, onMount } from "solid-js";
 import { setGlobalBackground } from "../state";
 
@@ -80,13 +80,13 @@ const RendererVersionsPage = () => {
   } satisfies IntrinsicTextNodeStyleProps;
 
   return (
-    <View style={Container} autofocus onRight={onRight} onLeft={onLeft} onUp={onUp} onDown={onDown} onEnter={onEnter}>
-      <Text style={Title}>Benchmark - Select Renderer Version To Run</Text>
-      <Text style={VersionText}>{version().toString()}</Text>
-      <Text style={Instructions}>Use LEFT / RIGHT arrows to select a known version</Text>
-      <Text style={Instructions}>Use UP / DOWN arrows to select a custom number</Text>
-      <Text style={Instructions}>Press ENTER to launch benchmark for this version</Text>
-    </View>
+    <view style={Container} autofocus onRight={onRight} onLeft={onLeft} onUp={onUp} onDown={onDown} onEnter={onEnter}>
+      <text style={Title}>Benchmark - Select Renderer Version To Run</text>
+      <text style={VersionText}>{version().toString()}</text>
+      <text style={Instructions}>Use LEFT / RIGHT arrows to select a known version</text>
+      <text style={Instructions}>Use UP / DOWN arrows to select a custom number</text>
+      <text style={Instructions}>Press ENTER to launch benchmark for this version</text>
+    </view>
   );
 };
 

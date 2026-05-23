@@ -1,4 +1,4 @@
-import { ElementNode, Text, View, Show, assertTruthy, setActiveElement } from "@solidtv/solid";
+import { ElementNode, Show, assertTruthy, setActiveElement } from "@solidtv/solid";
 import { Column, Row } from "@solidtv/solid/primitives";
 
 import { createEffect, on, createSignal } from "solid-js";
@@ -79,7 +79,7 @@ const Entity = (props) => {
    */
   return (
     <Show when={props.data.entity()}>
-      <View
+      <view
         x={170}
         onUp={() => entityActions.setFocus()}
         onEscape={onEscape}
@@ -105,9 +105,9 @@ const Entity = (props) => {
 
         <Column ref={columnRef} x={0} y={columnY} style={styles.Column} gap={80} height={880} scroll="none" zIndex={5}>
           <Show when={props.data.recommendations() && props.data.credits()}>
-            <Text skipFocus style={styles.RowTitle}>
+            <text skipFocus style={styles.RowTitle}>
               Recommendations
-            </Text>
+            </text>
             <TileRow
               onFocus={onRowFocus}
               onEnter={onEnter}
@@ -116,9 +116,9 @@ const Entity = (props) => {
               items={props.data.recommendations()}
               width={1620}
             />
-            <Text skipFocus style={styles.RowTitle}>
+            <text skipFocus style={styles.RowTitle}>
               Cast and Crew
-            </Text>
+            </text>
             <TileRow
               announce={"Cast and Crew"}
               onFocus={onRowFocusAnimate}
@@ -128,9 +128,9 @@ const Entity = (props) => {
             />
           </Show>
         </Column>
-        <View ref={backdropRef} style={Backdrop} transition={{ alpha: true, y: true }} />
-      </View>
-      <View
+        <view ref={backdropRef} style={Backdrop} transition={{ alpha: true, y: true }} />
+      </view>
+      <view
         alpha={backdropAlpha()}
         colorTop={"#0E1218"}
         colorBottom={"#1A1F27"}

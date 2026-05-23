@@ -1,5 +1,5 @@
 import { createSignal, type Component, createEffect, on, createMemo, type Signal } from 'solid-js';
-import { View, Text, type NodeProps, NodeStyles, TextStyles } from '@solidtv/solid';
+import { type NodeProps, NodeStyles, TextStyles } from '@solidtv/solid';
 
 export interface InputProps extends NodeProps {
   /**
@@ -118,11 +118,11 @@ const Input: Component<InputProps> = props => {
   }
 
   return (
-    <View {...props} position={position()} onLeft={onLeft} onRight={onRight} style={ContainerStyle}>
-      <Text style={TextStyle}>
+    <view {...props} position={position()} onLeft={onLeft} onRight={onRight} style={ContainerStyle}>
+      <text style={TextStyle}>
         {formatValueText() || props.placeholder || ''}
-      </Text>
-    </View>
+      </text>
+    </view>
   );
 };
 

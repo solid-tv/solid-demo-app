@@ -1,10 +1,4 @@
-import {
-  ElementNode,
-  IntrinsicNodeStyleProps,
-  Text,
-  View,
-  hexColor
-} from "@solidtv/solid";
+import { ElementNode, IntrinsicNodeStyleProps, hexColor } from "@solidtv/solid";
 import { Row } from "@solidtv/solid/primitives";
 
 import { MaterialButtonText } from "../styles";
@@ -39,14 +33,14 @@ const MaterialButtonsPage = () => {
   const RoundedRectangle = ["RoundedRectangle", { radius: 65 }];
   function Button(props) {
     return (
-      <View
+      <view
         {...props}
         forwardStates
         style={MaterialButton}
         shader={RoundedRectangle}
       >
-        <Text style={MaterialButtonText}>{props.children}</Text>
-      </View>
+        <text style={MaterialButtonText}>{props.children}</text>
+      </view>
     );
   }
 

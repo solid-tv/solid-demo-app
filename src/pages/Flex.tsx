@@ -1,9 +1,4 @@
-import {
-  ElementNode,
-  IntrinsicNodeStyleProps,
-  Text,
-  View
-} from "@solidtv/solid";
+import { ElementNode, IntrinsicNodeStyleProps } from "@solidtv/solid";
 import { Column, Row } from "@solidtv/solid/primitives";
 import { createSignal, onMount } from "solid-js";
 import styles from "../styles";
@@ -33,7 +28,7 @@ const FlexPage = () => {
       color: 0x1769aaff
     };
 
-    return <View {...props} style={styles} />;
+    return <view {...props} style={styles} />;
   }
 
   const [columnY, setColumnY] = createSignal(50);
@@ -58,7 +53,7 @@ const FlexPage = () => {
         width={RowStyles.width}
         style={styles.Column}
       >
-        <Text style={rowTitle}>Flex Start</Text>
+        <text style={rowTitle}>Flex Start</text>
         <Row gap={gap} style={RowStyles} onFocus={onFocus}>
           <Block autofocus />
           <Block />
@@ -66,7 +61,7 @@ const FlexPage = () => {
           <Block />
           <Block />
         </Row>
-        <Text style={rowTitle}>Flex Start - Margin Left</Text>
+        <text style={rowTitle}>Flex Start - Margin Left</text>
         <Row gap={gap} style={RowStyles} onFocus={onFocus}>
           <Block marginLeft={100} />
           <Block />
@@ -74,7 +69,7 @@ const FlexPage = () => {
           <Block />
           <Block />
         </Row>
-        <Text style={rowTitle}>Flex End</Text>
+        <text style={rowTitle}>Flex End</text>
         <Row
           gap={gap}
           justifyContent={"flexEnd"}
@@ -88,7 +83,7 @@ const FlexPage = () => {
           <Block />
         </Row>
 
-        <Text style={rowTitle}>Flex End - Margin Right</Text>
+        <text style={rowTitle}>Flex End - Margin Right</text>
         <Row
           gap={gap}
           justifyContent={"flexEnd"}
@@ -102,7 +97,7 @@ const FlexPage = () => {
           <Block marginRight={100} />
         </Row>
 
-        <Text style={rowTitle}>Center</Text>
+        <text style={rowTitle}>Center</text>
         <Row
           gap={gap}
           justifyContent={"center"}
@@ -116,7 +111,7 @@ const FlexPage = () => {
           <Block />
         </Row>
 
-        <Text style={rowTitle}>Space Between</Text>
+        <text style={rowTitle}>Space Between</text>
         <Row
           gap={gap}
           justifyContent={"spaceBetween"}
@@ -130,7 +125,7 @@ const FlexPage = () => {
           <Block marginRight={40} />
         </Row>
 
-        <Text style={rowTitle}>Space Evenly</Text>
+        <text style={rowTitle}>Space Evenly</text>
         <Row
           gap={gap}
           justifyContent={"spaceEvenly"}
@@ -144,7 +139,7 @@ const FlexPage = () => {
           <Block />
         </Row>
 
-        <Text style={rowTitle}>Flex Wrap</Text>
+        <text style={rowTitle}>Flex Wrap</text>
         <Row
           gap={gap}
           justifyContent={"flexStart"}

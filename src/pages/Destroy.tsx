@@ -1,5 +1,5 @@
 import { createEffect, on, createSignal, Show, onMount } from "solid-js";
-import { View } from "@solidtv/solid";
+
 import { Hero } from "../components";
 import { setGlobalBackground } from "../state";
 
@@ -56,9 +56,9 @@ const Destroy = (props) => {
   }
 
   return (
-    <View x={300} y={200} onDown={onDown} onUp={onUp}>
+    <view x={300} y={200} onDown={onDown} onUp={onUp}>
       {/* The keyed attribue makes Solid destroy the old content and create a new copy allowing for the animation */}
-      <View
+      <view
         src={"assets/up.svg"}
         width={350}
         height={200}
@@ -76,7 +76,7 @@ const Destroy = (props) => {
           title={heroContent()!.title}
         />
       </Show>
-    </View>
+    </view>
   );
 };
 

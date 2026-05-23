@@ -1,4 +1,4 @@
-import { View, Text } from "@solidtv/solid";
+
 import { Marquee } from "@solidtv/solid/primitives";
 import { For, Show } from "solid-js";
 import theme from "theme";
@@ -39,15 +39,15 @@ const BadgeStyle = {
 };
 
 const Description = (props) => (
-  <Text {...props} style={DescriptionStyles}>
+  <text {...props} style={DescriptionStyles}>
     {props.children}
-  </Text>
+  </text>
 );
 
 export const Badge = (props) => {
   console.log(props.children);
   return (
-    <View
+    <view
       {...props}
       style={{
         color: 0x00000099,
@@ -59,8 +59,8 @@ export const Badge = (props) => {
         width: 45
       }}
     >
-      <Text style={BadgeStyle}>{props.children}</Text>
-    </View>
+      <text style={BadgeStyle}>{props.children}</text>
+    </view>
   );
 };
 
@@ -71,7 +71,7 @@ const MetaTextStyle = {
 };
 
 const Metadata = (props) => (
-  <View
+  <view
     style={{
       display: "flex",
       flexDirection: "row",
@@ -80,18 +80,18 @@ const Metadata = (props) => (
       height: 48
     }}
   >
-    <View y={-4} src="./assets/stars.png" width={188} height={31}></View>
-    <View y={-4} flexItem={false} clipping width={(188 * props.voteAverage) / 10} height={31}>
-      <View src="./assets/stars-full.png" width={188} height={31}></View>
-    </View>
-    <Text style={MetaTextStyle}>{props.voteCount} reviews</Text>
-    <Text style={MetaTextStyle}>{props.metaText}</Text>
+    <view y={-4} src="./assets/stars.png" width={188} height={31}></view>
+    <view y={-4} flexItem={false} clipping width={(188 * props.voteAverage) / 10} height={31}>
+      <view src="./assets/stars-full.png" width={188} height={31}></view>
+    </view>
+    <text style={MetaTextStyle}>{props.voteCount} reviews</text>
+    <text style={MetaTextStyle}>{props.metaText}</text>
     <For each={props.badges}>{(item) => <Badge y={-5}>{item}</Badge>}</For>
-  </View>
+  </view>
 );
 
 const ContentBlock = (props) => (
-  <View id="contentBlock" style={ContentBlockStyle} {...props}>
+  <view id="contentBlock" style={ContentBlockStyle} {...props}>
     <Headline marquee={props.marquee}>{props.content.title}</Headline>
     <Description>{props.content.description}</Description>
     <Show when={props.content.voteCount}>
@@ -102,7 +102,7 @@ const ContentBlock = (props) => (
         voteAverage={props.content.voteAverage}
       />
     </Show>
-  </View>
+  </view>
 );
 
 export default ContentBlock;

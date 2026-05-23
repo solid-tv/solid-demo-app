@@ -1,4 +1,4 @@
-import { View, Text, type NodeStyles } from "@solidtv/solid";
+import { type NodeStyles } from "@solidtv/solid";
 import { createSignal, onMount, For, Show } from "solid-js";
 import api, { getImageUrl } from "../api";
 
@@ -106,8 +106,8 @@ const MixedImagePerformance = () => {
   };
 
   return (
-    <View>
-      <View style={styles.container} autofocus={true}>
+    <view>
+      <view style={styles.container} autofocus={true}>
         <For each={images()}>
           {(item, index) => {
             const i = index();
@@ -118,7 +118,7 @@ const MixedImagePerformance = () => {
 
             if (item.isMain) {
                 return (
-                    <View
+                    <view
                         style={styles.mainImage}
                         src={item.src}
                         onEvent={{
@@ -153,7 +153,7 @@ const MixedImagePerformance = () => {
             const y = startY;
 
             return (
-              <View
+              <view
                 style={styles.poster}
                 src={item.src}
                 x={x}
@@ -165,10 +165,10 @@ const MixedImagePerformance = () => {
             );
           }}
         </For>
-      </View>
+      </view>
 
-      <View style={styles.statusContainer} pointerEvents="none">
-         <View
+      <view style={styles.statusContainer} pointerEvents="none">
+         <view
           display="flex"
           justifyContent="center"
           alignItems="center"
@@ -177,10 +177,10 @@ const MixedImagePerformance = () => {
           height={200}
           padding={20}
         >
-          <Text style={styles.statusText}>{status()}</Text>
-        </View>
-      </View>
-    </View>
+          <text style={styles.statusText}>{status()}</text>
+        </view>
+      </view>
+    </view>
   );
 };
 

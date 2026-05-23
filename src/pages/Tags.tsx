@@ -1,4 +1,4 @@
-import { View, Text } from "@solidtv/solid";
+
 import { createTag } from "@solidtv/solid/primitives";
 import { setGlobalBackground } from "../state";
 import { onCleanup } from "solid-js";
@@ -13,35 +13,35 @@ const TagsPage = () => {
   };
 
   const ActionTag = createTag(
-    <View color={'#118322ff'} borderRadius={8} display="flex" padding={8}>
-      <Text style={watchIconTextStyle}>
+    <view color={'#118322ff'} borderRadius={8} display="flex" padding={8}>
+      <text style={watchIconTextStyle}>
         Action
-      </Text>
-    </View>
+      </text>
+    </view>
   );
 
   const ComedyTag = createTag(
-    <View color={'#250fceff'} borderRadius={8} display="flex" padding={8}>
-      <Text style={watchIconTextStyle}>
+    <view color={'#250fceff'} borderRadius={8} display="flex" padding={8}>
+      <text style={watchIconTextStyle}>
         Comedy
-      </Text>
-    </View>
+      </text>
+    </view>
   );
 
   const DramaTag = createTag(
-    <View color={'#ff0000ff'} borderRadius={8} display="flex" padding={8}>
-      <Text style={watchIconTextStyle}>
+    <view color={'#ff0000ff'} borderRadius={8} display="flex" padding={8}>
+      <text style={watchIconTextStyle}>
         Drama
-      </Text>
-    </View>
+      </text>
+    </view>
   );
 
   const NewEpisodeTag = createTag(
-    <View color={'#fff'} borderRadius={8} display="flex" padding={8} effects={{ rounded: { radius: [ 10, 0, 10, 0 ]} }}>
-      <Text style={watchIconTextStyle} color={'#000'} fontWeight={400}>
+    <view color={'#fff'} borderRadius={8} display="flex" padding={8} effects={{ rounded: { radius: [ 10, 0, 10, 0 ]} }}>
+      <text style={watchIconTextStyle} color={'#000'} fontWeight={400}>
         New Episode
-      </Text>
-    </View>
+      </text>
+    </view>
   );
 
 
@@ -54,9 +54,9 @@ const TagsPage = () => {
 
   return (
     <>
-      <Text x={100} y={100} fontSize={50} color="#ffffff">Tags Page</Text>
+      <text x={100} y={100} fontSize={50} color="#ffffff">Tags Page</text>
 
-      <View x={150} y={200} display="flex" flexDirection="row" gap={16} flexWrap="wrap" autofocus>
+      <view x={150} y={200} display="flex" flexDirection="row" gap={16} flexWrap="wrap" autofocus>
         <ComedyTag />
         <DramaTag />
         <ActionTag />
@@ -92,7 +92,7 @@ const TagsPage = () => {
         <ComedyTag />
         <DramaTag />
         <ActionTag />
-      </View>
+      </view>
     </>
   );
 };

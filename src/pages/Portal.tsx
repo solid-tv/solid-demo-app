@@ -1,5 +1,5 @@
 import { createSignal, createSelector, For, children, createEffect } from "solid-js";
-import { ElementNode, View, Text, assertTruthy } from "@solidtv/solid";
+import { ElementNode, Text, assertTruthy } from "@solidtv/solid";
 import { Column, Row, useFocusStack } from "@solidtv/solid/primitives";
 import { useNavigate } from "@solidjs/router";
 import { Announcer } from "@solidtv/solid/primitives";
@@ -204,12 +204,12 @@ const Portal = (props) => {
     const [hasFocus, setHasFocus] = createSignal(false);
 
     return (
-      <View {...props} onFocusChanged={setHasFocus} style={Container}>
-        <View x={30}>
-          <Text y={30} fontSize={84} color={hasFocus() ? 0x000000ff : 0xffffffff}>
+      <view {...props} onFocusChanged={setHasFocus} style={Container}>
+        <view x={30}>
+          <text y={30} fontSize={84} color={hasFocus() ? 0x000000ff : 0xffffffff}>
             {props.index}
-          </Text>
-          <Text
+          </text>
+          <text
             y={140}
             fontSize={42}
             width={340}
@@ -218,12 +218,12 @@ const Portal = (props) => {
             color={hasFocus() ? 0x000000ff : 0xffffffff}
           >
             {props.title}
-          </Text>
-          <Text y={200} fontSize={28} width={330} contain="width" color={hasFocus() ? 0x000000ff : 0xffffffff}>
+          </text>
+          <text y={200} fontSize={28} width={330} contain="width" color={hasFocus() ? 0x000000ff : 0xffffffff}>
             {props.description}
-          </Text>
-        </View>
-      </View>
+          </text>
+        </view>
+      </view>
     );
   }
 
@@ -239,57 +239,57 @@ const Portal = (props) => {
 
   return (
     <>
-      <View
+      <view
         ref={portalRef}
         colorTop={0x446b9eff}
         colorBottom={0x2c4f7cff}
         onBlur={storeFocus}
         hidden={Boolean(resolvedChildren())}
       >
-        <View x={120}>
-          <View src="./assets/solidjs.png" width={101} height={90} y={40} />
-          <Text fontSize={90} x={110} y={40}>
+        <view x={120}>
+          <view src="./assets/solidjs.png" width={101} height={90} y={40} />
+          <text fontSize={90} x={110} y={40}>
             Examples
-          </Text>
-          <View y={140} height={1} width={1800} color={0xe8d7f9ff} />
-        </View>
-        <View clipping y={146} x={150}>
+          </text>
+          <view y={140} height={1} width={1800} color={0xe8d7f9ff} />
+        </view>
+        <view clipping y={146} x={150}>
           <Column scroll="auto" y={20} x={20} gap={20} autofocus={!resolvedChildren()}>
-            <View forwardFocus={1} height={400}>
-              <Text style={styles.RowTitle} fontSize={42}>
+            <view forwardFocus={1} height={400}>
+              <text style={styles.RowTitle} fontSize={42}>
                 Core Concepts
-              </Text>
+              </text>
               <Row y={48} onEnter={onEnter} gap={40} height={320} flexBoundary="contain" scroll="always">
                 <For each={basicDemos}>{(demo, i) => <DemoTile index={i()} {...demo} />}</For>
               </Row>
-            </View>
-            <View forwardFocus={1} height={400}>
-              <Text style={styles.RowTitle} fontSize={42}>
+            </view>
+            <view forwardFocus={1} height={400}>
+              <text style={styles.RowTitle} fontSize={42}>
                 Text
-              </Text>
+              </text>
               <Row y={48} onEnter={onEnter} gap={40} height={320} flexBoundary="contain" scroll="always">
                 <For each={textDemos}>{(demo, i) => <DemoTile index={i()} {...demo} />}</For>
               </Row>
-            </View>
-            <View forwardFocus={1} height={400}>
-              <Text style={styles.RowTitle} fontSize={42}>
+            </view>
+            <view forwardFocus={1} height={400}>
+              <text style={styles.RowTitle} fontSize={42}>
                 Flexbox & Styling
-              </Text>
+              </text>
               <Row y={48} onEnter={onEnter} gap={40} height={320} flexBoundary="contain" scroll="always">
                 <For each={flexDemos}>{(demo, i) => <DemoTile index={i()} {...demo} />}</For>
               </Row>
-            </View>
-            <View forwardFocus={1} height={400}>
-              <Text style={styles.RowTitle} fontSize={42}>
+            </view>
+            <view forwardFocus={1} height={400}>
+              <text style={styles.RowTitle} fontSize={42}>
                 Patterns & Examples
-              </Text>
+              </text>
               <Row y={48} onEnter={onEnter} gap={40} height={320} flexBoundary="contain" scroll="always">
                 <For each={advancedDemos}>{(demo, i) => <DemoTile index={i()} {...demo} />}</For>
               </Row>
-            </View>
+            </view>
           </Column>
-        </View>
-      </View>
+        </view>
+      </view>
       {resolvedChildren()}
     </>
   );

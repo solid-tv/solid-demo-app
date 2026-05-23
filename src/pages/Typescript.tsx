@@ -1,6 +1,6 @@
-import { View, Text } from "@solidtv/solid";
 
-<View
+
+<view
   x={4}
   y={12}
   width={100}
@@ -42,4 +42,4 @@ import { View, Text } from "@solidtv/solid";
   }}
 />;
 
-<Text>Hello World</Text>;
+<text>Hello World</text>;

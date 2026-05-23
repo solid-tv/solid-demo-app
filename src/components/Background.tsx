@@ -1,10 +1,6 @@
 import { globalBackground } from "../state.js";
 import {
-  type IntrinsicNodeStyleProps,
-  type AnimationSettings,
-  View,
-  hexColor
-} from "@solidtv/solid";
+  type IntrinsicNodeStyleProps, type AnimationSettings, hexColor } from "@solidtv/solid";
 import { createEffect, on, onMount } from "solid-js";
 import theme from "theme";
 
@@ -82,17 +78,17 @@ export default function Background() {
 
   return (
     <>
-      <View width={1920} height={1080} zIndex={-5}>
-        <View ref={bg1} style={bgStyles} />
-        <View ref={bg2} style={bgStyles} alpha={0} />
-        <View
+      <view width={1920} height={1080} zIndex={-5}>
+        <view ref={bg1} style={bgStyles} />
+        <view ref={bg2} style={bgStyles} alpha={0} />
+        <view
           ref={heroMask}
           src="./assets/hero-mask-inverted.png"
           color={0x000000ff}
           width={1920}
           height={1080}
         />
-        {/* <View
+        {/* <view
           ref={heroMask}
           effects={{
             radialGradient: {
@@ -104,7 +100,7 @@ export default function Background() {
             },
           }}
         /> */}
-      </View>
+      </view>
     </>
   );
 }

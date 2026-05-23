@@ -1,5 +1,5 @@
 import { createSignal, For, Index } from "solid-js";
-import { View, Text } from "@solidtv/solid";
+
 import { LazyRow, Column, Row } from "@solidtv/solid/primitives";
 import { List } from "@solid-primitives/list";
 import { Poster } from "../components";
@@ -41,7 +41,7 @@ const Loops = (props) => {
 
   return (
     <>
-      <View
+      <view
         ref={solidLogo}
         width={300}
         height={150}
@@ -49,13 +49,13 @@ const Loops = (props) => {
         y={80}
         zIndex={105}
       >
-        <Text x={80} fontSize={28} color={0xf6f6f699}>
+        <text x={80} fontSize={28} color={0xf6f6f699}>
           Built With:
-        </Text>
-        <View y={32} src="./assets/solidWord.png" width={280} height={52} />
+        </text>
+        <view y={32} src="./assets/solidWord.png" width={280} height={52} />
 
-        <View x={0} y={110} src="./assets/tmdb.png" width={80} height={41} />
-        <Text
+        <view x={0} y={110} src="./assets/tmdb.png" width={80} height={41} />
+        <text
           x={90}
           y={110}
           contain="width"
@@ -65,46 +65,46 @@ const Loops = (props) => {
         >
           This product uses the TMDB API but is not endorsed or certified by
           TMDB.
-        </Text>
-      </View>
+        </text>
+      </view>
       <Column autofocus={activeRow()?.items()} y={240} onKeyPress={switchRow}>
-        <View x={160} height={300} forwardFocus={1} marginTop={30}>
-          <Text skipFocus style={titleRowStyles}>
+        <view x={160} height={300} forwardFocus={1} marginTop={30}>
+          <text skipFocus style={titleRowStyles}>
             For Loop
-          </Text>
+          </text>
           <Row gap={20} y={40} display="block">
             <For each={activeRow()?.items()}>
               {(item, index) => <Poster x={index() * 210} {...item} />}
             </For>
           </Row>
-        </View>
+        </view>
 
-        <View x={160} height={300} forwardFocus={1} marginTop={30}>
-          <Text skipFocus style={titleRowStyles}>
+        <view x={160} height={300} forwardFocus={1} marginTop={30}>
+          <text skipFocus style={titleRowStyles}>
             Map Loop
-          </Text>
+          </text>
           <Row gap={20} y={40} display="block">
             {activeRow()
               ?.items()
               ?.map((item, index) => <Poster x={index * 210} {...item} />)}
           </Row>
-        </View>
+        </view>
 
-        <View x={160} height={300} forwardFocus={1} marginTop={30}>
-          <Text skipFocus style={titleRowStyles}>
+        <view x={160} height={300} forwardFocus={1} marginTop={30}>
+          <text skipFocus style={titleRowStyles}>
             Index Loop
-          </Text>
+          </text>
           <Row gap={20} y={40} display="block">
             <Index each={activeRow()?.items()}>
               {(item, index) => <Poster x={index * 210} {...item()} />}
             </Index>
           </Row>
-        </View>
+        </view>
 
-        <View x={160} height={300} forwardFocus={1} marginTop={30}>
-          <Text skipFocus style={titleRowStyles}>
+        <view x={160} height={300} forwardFocus={1} marginTop={30}>
+          <text skipFocus style={titleRowStyles}>
             Lazy Row Loop
-          </Text>
+          </text>
           <LazyRow
             display="block"
             gap={20}
@@ -114,12 +114,12 @@ const Loops = (props) => {
           >
             {(item, index) => <Poster x={index * 210} {...item()} />}
           </LazyRow>
-        </View>
+        </view>
 
-        <View x={160} height={300} forwardFocus={1} marginTop={30}>
-          <Text skipFocus style={titleRowStyles}>
+        <view x={160} height={300} forwardFocus={1} marginTop={30}>
+          <text skipFocus style={titleRowStyles}>
             List Loop
-          </Text>
+          </text>
           <Row gap={20} y={40} display="block">
             <List each={activeRow()?.items()}>
               {(item, index) => (
@@ -131,7 +131,7 @@ const Loops = (props) => {
               )}
             </List>
           </Row>
-        </View>
+        </view>
       </Column>
     </>
   );

@@ -1,10 +1,4 @@
-import {
-  IntrinsicNodeStyleProps,
-  IntrinsicTextNodeStyleProps,
-  Text,
-  View,
-  hexColor
-} from "@solidtv/solid";
+import { IntrinsicNodeStyleProps, IntrinsicTextNodeStyleProps, hexColor } from "@solidtv/solid";
 import { onMount } from "solid-js";
 import { setGlobalBackground } from "../state";
 import { init, load, play } from "../video";
@@ -124,9 +118,9 @@ const Player = () => {
     play();
   });
 
-  return <View autofocus onBack={() => navigate(-1)}>
+  return <view autofocus onBack={() => navigate(-1)}>
 
-  </View>;
+  </view>;
 };
 
 export default Player;

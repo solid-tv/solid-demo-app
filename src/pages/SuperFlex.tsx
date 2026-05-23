@@ -1,4 +1,4 @@
-import { View, Text, For } from "@solidtv/solid";
+import { Text, For } from "@solidtv/solid";
 import { Column, Row } from "@solidtv/solid/primitives";
 import { Show, createSignal } from "solid-js";
 
@@ -43,11 +43,11 @@ export default () => {
 
   return (
     <Column display="block">
-      <View ref={PageLoader} style={styles.PageContainer}>
-        <Text>Center - gif doesnt animate</Text>
-        <View autosize src="./assets/spinner.gif" />
-        <Text>Spinner</Text>
-      </View>
+      <view ref={PageLoader} style={styles.PageContainer}>
+        <text>Center - gif doesnt animate</text>
+        <view autosize src="./assets/spinner.gif" />
+        <text>Spinner</text>
+      </view>
 
       <Row
         scroll="always"
@@ -60,7 +60,7 @@ export default () => {
       >
         <For each={Items}>
           {(item, index) => (
-            <View
+            <view
               width={100}
               height={200}
               style={{ color: 0xff0000ff, $focus: { color: 0xffffffff } }}
@@ -81,7 +81,7 @@ export default () => {
         >
           <For each={Items}>
             {(item, index) => (
-              <View
+              <view
                 width={100}
                 height={200}
                 style={{ color: 0xff0000ff, $focus: { color: 0xffffffff } }}
@@ -102,9 +102,9 @@ export default () => {
         >
           <For each={Items}>
             {(item, index) => (
-              <Text style={SpecialFont} fontSize={24}>
+              <text style={SpecialFont} fontSize={24}>
                 {item} {lazyShow() ? "Add Text" : ""}
-              </Text>
+              </text>
             )}
           </For>
         </Row>
@@ -114,9 +114,9 @@ export default () => {
         <Column scroll="none" gap={20} selected={2} x={350} y={450}>
           <For each={Items}>
             {(item, index) => (
-              <Text style={SpecialFont} fontSize={24}>
+              <text style={SpecialFont} fontSize={24}>
                 {item}
-              </Text>
+              </text>
             )}
           </For>
         </Column>

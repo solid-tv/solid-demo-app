@@ -1,4 +1,4 @@
-import { Text, View } from "@solidtv/solid";
+
 import { createSignal, onMount } from "solid-js";
 import { Column } from "@solidtv/solid/primitives";
 import { setGlobalBackground } from "../state";
@@ -227,15 +227,15 @@ const LoginPage = () => {
   });
 
   return (
-    <View width={1080} x={350} y={100}>
+    <view width={1080} x={350} y={100}>
       <Column autofocus selected={1} scroll={"none"}>
-        <Text skipFocus style={Title}>
+        <text skipFocus style={Title}>
           Username
-        </Text>
+        </text>
         <Input valueSignal={valueSignal} keyEvents={keyEvent} />
         <Keyboard width={550} formats={formats} onEnter={onEnter} />
       </Column>
-    </View>
+    </view>
   );
 };
 

@@ -1,4 +1,4 @@
-import { View } from "@solidtv/solid";
+
 import { Row, Column } from "@solidtv/solid/primitives";
 import { setGlobalBackground } from "../state";
 
@@ -12,7 +12,7 @@ const styles = {
 };
 function Button(props) {
   return (
-    <View
+    <view
       {...props}
       width={200}
       height={60}
@@ -35,11 +35,11 @@ const PositioningPage = () => {
   };
 
   return (
-    <View x={450} y={200}>
+    <view x={450} y={200}>
       {/* Disable flex layout on this Row */}
       <Row display="block">
         {/* Send focus to the first child (the column) */}
-        <View
+        <view
           forwardFocus={0}
           style={leftMenuStyle}
           colorLeft={"#475569aa"}
@@ -51,7 +51,7 @@ const PositioningPage = () => {
             <Button color="#e4e4e7" />
             <Button color="#e4e4e7" />
           </Column>
-        </View>
+        </view>
         {/* Row and Column take care of focus with built in on{Direction} handlers */}
         <Column x={250} gap={20} plinko autofocus>
           <Row gap={20} height={60}>
@@ -71,7 +71,7 @@ const PositioningPage = () => {
           </Row>
         </Column>
       </Row>
-    </View>
+    </view>
   );
 };
 
