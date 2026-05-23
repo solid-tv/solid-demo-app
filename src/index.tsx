@@ -67,6 +67,8 @@ const BenchmarkPage = lazy(() => import("./pages/Benchmark"));
 const RendererVersionsPage = lazy(() => import("./pages/RendererVersions"));
 const TextCenteringPage = lazy(() => import("./pages/TextCentering"));
 const CountdownTimerPage = lazy(() => import("./pages/CountdownTimer"));
+const CustomButtonsPage = lazy(() => import("./pages/CustomButtons"));
+
 
 let numImageWorkers = 4;
 const urlParams = new URLSearchParams(window.location.search);
@@ -182,6 +184,7 @@ render(() => (
         <Route path="textposter" component={TextPosterPage} />
         <Route path="textcentering" component={TextCenteringPage} />
         <Route path="countdown" component={CountdownTimerPage} />
+        <Route path="custombuttons" component={CustomButtonsPage} />
         <Route path="positioning" component={PositioningPage} />
         <Route path="layout" component={LayoutPage} />
         <Route path="focusbasics" component={FocusBasicsPage} />

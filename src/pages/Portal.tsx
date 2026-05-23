@@ -79,6 +79,11 @@ const Portal = (props) => {
       title: "Text Centering",
       id: "textcentering",
       description: "verticalAlign, textBaselineMode, and flex alignment"
+    },
+    {
+      title: "Custom Buttons",
+      id: "custombuttons",
+      description: "6 custom buttons with text and icons"
     }
   ];
 
