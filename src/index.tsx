@@ -62,9 +62,11 @@ const LargeImagePerformance = lazy(() => import("./pages/LargeImagePerformance")
 const MixedImagePerformance = lazy(() => import("./pages/MixedImagePerformance"));
 const TextureCompressionPerformance = lazy(() => import("./pages/TextureCompressionPerformance"));
 const ComplexFlexPage = lazy(() => import("./pages/ComplexFlex"));
+const ComplexFlexCapsPage = lazy(() => import("./pages/ComplexFlexCaps"));
 const BenchmarkPage = lazy(() => import("./pages/Benchmark"));
 const RendererVersionsPage = lazy(() => import("./pages/RendererVersions"));
 const TextCenteringPage = lazy(() => import("./pages/TextCentering"));
+const CountdownTimerPage = lazy(() => import("./pages/CountdownTimer"));
 
 let numImageWorkers = 4;
 const urlParams = new URLSearchParams(window.location.search);
@@ -143,7 +145,8 @@ import {
   RoundedWithBorderAndShadow,
   RadialGradient,
   LinearGradient,
-  HolePunch
+  HolePunch,
+  RadialProgress
 } from "@solidtv/renderer/webgl/shaders";
 const shManager = renderer.stage.shManager;
 shManager.registerShaderType("rounded", Rounded);
@@ -153,6 +156,7 @@ shManager.registerShaderType("roundedWithBorderWithShadow", RoundedWithBorderAnd
 shManager.registerShaderType("radialGradient", RadialGradient);
 shManager.registerShaderType("linearGradient", LinearGradient);
 shManager.registerShaderType("holePunch", HolePunch);
+shManager.registerShaderType("radialProgress", RadialProgress);
 render(() => (
   <FocusStackProvider>
     <HashRouter root={(props) => <App {...props} />}>
@@ -177,6 +181,7 @@ render(() => (
         <Route path="nested" component={lazy(() => import("./pages/Nested"))} />
         <Route path="textposter" component={TextPosterPage} />
         <Route path="textcentering" component={TextCenteringPage} />
+        <Route path="countdown" component={CountdownTimerPage} />
         <Route path="positioning" component={PositioningPage} />
         <Route path="layout" component={LayoutPage} />
         <Route path="focusbasics" component={FocusBasicsPage} />
@@ -205,6 +210,7 @@ render(() => (
         <Route path="mixed-image-performance" component={MixedImagePerformance} />
         <Route path="texture-compression-performance" component={TextureCompressionPerformance} />
         <Route path="complexflex" component={ComplexFlexPage} />
+        <Route path="complexflexcaps" component={ComplexFlexCapsPage} />
         <Route path="benchmark" component={BenchmarkPage} preload={tmdbData} />
         <Route path="versions" component={RendererVersionsPage} />
 

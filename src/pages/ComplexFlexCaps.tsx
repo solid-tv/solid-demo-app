@@ -1,4 +1,4 @@
-
+import { View, Text } from "@solidtv/solid";
 import { Column, Row } from "@solidtv/solid/primitives";
 import { createSignal, For, onMount } from "solid-js";
 
@@ -6,7 +6,7 @@ const Card = (props: { index: number }) => {
   const [focused, setFocused] = createSignal(false);
 
   return (
-    <view
+    <View
       width={180}
       height={100}
       color={focused() ? "#33333399" : "#333333ff"}
@@ -17,26 +17,26 @@ const Card = (props: { index: number }) => {
       padding={10}
       onFocusChanged={setFocused}
     >
-      <text fontSize={20} color="#ffffffff">
+      <Text fontSize={20} color="#ffffffff">
         Item {String(props.index)}
-      </text>
-      <view color="#0000ffff" padding={8} borderRadius={4} height={40} display="flex" alignItems="center">
-        <text fontSize={16} color="#ffffffff">
+      </Text>
+      <View color="#0000ffff" padding={8} borderRadius={4} height={40} display="flex" alignItems="center">
+        <Text fontSize={16} color="#ffffffff">
           Button
-        </text>
-      </view>
-    </view>
+        </Text>
+      </View>
+    </View>
   );
 };
 
-export default function ComplexFlex() {
-  performance.mark("complexflex-start");
+export default function ComplexFlexCaps() {
+  performance.mark("complexflexcaps-start");
 
   onMount(() => {
-    performance.mark("complexflex-end");
-    performance.measure("ComplexFlex Render", "complexflex-start", "complexflex-end");
-    const measure = performance.getEntriesByName("ComplexFlex Render").slice(-1)[0];
-    console.log(`ComplexFlex Render duration: ${measure?.duration}ms`);
+    performance.mark("complexflexcaps-end");
+    performance.measure("ComplexFlexCaps Render", "complexflexcaps-start", "complexflexcaps-end");
+    const measure = performance.getEntriesByName("ComplexFlexCaps Render").slice(-1)[0];
+    console.log(`ComplexFlexCaps Render duration: ${measure?.duration}ms`);
   });
 
   const items = Array.from({ length: 8 }).map((_, i) => i);
@@ -55,9 +55,9 @@ export default function ComplexFlex() {
       scroll="none"
       selected={1}
     >
-      <text skipFocus fontSize={40} color="#ffffffff" marginBottom={20}>
-        Complex Flex Layout
-      </text>
+      <Text skipFocus fontSize={40} color="#ffffffff" marginBottom={20}>
+        Complex Flex Layout Capped View
+      </Text>
       <Row width={1400} gap={20} scroll="none">
         <For each={items}>{(item) => <Card index={item} />}</For>
       </Row>

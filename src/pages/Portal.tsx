@@ -120,6 +120,11 @@ const Portal = (props) => {
       title: "Complex Flex",
       id: "complexflex",
       description: "Complex Flex Layout with ~400 Nodes"
+    },
+    {
+      title: "ComplexFlexCaps",
+      id: "complexflexcaps",
+      description: "Complex Flex Layout using View and Text"
     }
   ];
 
@@ -187,7 +192,12 @@ const Portal = (props) => {
       id: "suspense",
       description: "Using Suspense to load data"
     },
-    { title: "Tags", id: "tags", description: "Tags Page" }
+    { title: "Tags", id: "tags", description: "Tags Page" },
+    {
+      title: "Countdown Timer",
+      id: "countdown",
+      description: "Radial progress shader countdown"
+    }
   ];
 
   function DemoTile(props) {
