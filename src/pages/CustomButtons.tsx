@@ -66,7 +66,7 @@ function CustomIconButton(props: {
       display="flex"
       flexDirection="row"
       alignItems="center"
-      padding={20}
+      padding={[0, 20]}
       gap={16}
       transition={{
         color: { duration: 200, easing: "ease-out" },

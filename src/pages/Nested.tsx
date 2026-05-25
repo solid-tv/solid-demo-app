@@ -1,4 +1,5 @@
 
+import { type NodeStyles } from "@solidtv/solid";
 import { Column } from "@solidtv/solid/primitives";
 import { setGlobalBackground } from "../state";
 import { Button } from "../components/";
@@ -8,7 +9,7 @@ import { createSignal } from "solid-js";
 const NestedButtonColumns = () => {
   setGlobalBackground("#333");
 
-  const styles = {
+  const styles: Record<string, NodeStyles> = {
     container: {
       x: 400,
       width: 400,
@@ -17,14 +18,14 @@ const NestedButtonColumns = () => {
       display: 'flex',
       flexDirection: 'column', // Arranges columns horizontally
       justifyContent: 'spaceBetween', // Distributes columns evenly
-      padding: 10,
+      padding: [0, 10],
     },
     column: {
       display: 'flex',
       flexDirection: 'column', // Stacks buttons vertically within each column
-      padding: 5, // Add some spacing between columns
+      padding: [0, 5], // Add some spacing between columns
     },
-  } as const;
+  };
 
   const [currentIndex, setCurrentIndex] = createSignal(0);
 

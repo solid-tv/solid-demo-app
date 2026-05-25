@@ -14,13 +14,13 @@ const Card = (props: { index: number }) => {
       flexDirection="column"
       alignItems="center"
       gap={10}
-      padding={10}
+      padding={[0, 10]}
       onFocusChanged={setFocused}
     >
       <text fontSize={20} color="#ffffffff">
         Item {String(props.index)}
       </text>
-      <view color="#0000ffff" padding={8} borderRadius={4} height={40} display="flex" alignItems="center">
+      <view color="#0000ffff" padding={[0, 8]} borderRadius={4} height={40} display="flex" alignItems="center">
         <text fontSize={16} color="#ffffffff">
           Button
         </text>
@@ -32,14 +32,34 @@ const Card = (props: { index: number }) => {
 export default function ComplexFlex() {
   performance.mark("complexflex-start");
 
+  const items = Array.from({ length: 8 }).map((_, i) => i);
+  const X = 8;
+  const initialRows = Array.from({ length: X }).map((_, i) => i);
+  const [rows, setRows] = createSignal<number[]>(initialRows);
+
   onMount(() => {
     performance.mark("complexflex-end");
     performance.measure("ComplexFlex Render", "complexflex-start", "complexflex-end");
     const measure = performance.getEntriesByName("ComplexFlex Render").slice(-1)[0];
     console.log(`ComplexFlex Render duration: ${measure?.duration}ms`);
-  });
 
-  const items = Array.from({ length: 8 }).map((_, i) => i);
+    const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+    const runRecreations = async () => {
+      await sleep(100);
+      for (let i = 0; i < 3; i++) {
+        console.log(`Resetting rows to [] (Recreation step ${i + 1})`);
+        setRows([]);
+        await sleep(100);
+
+        console.log(`Recreating rows to full (Recreation step ${i + 1})`);
+        setRows(initialRows);
+        await sleep(100);
+      }
+    };
+
+    runRecreations();
+  });
 
   return (
     <Column
@@ -58,27 +78,13 @@ export default function ComplexFlex() {
       <text skipFocus fontSize={40} color="#ffffffff" marginBottom={20}>
         Complex Flex Layout
       </text>
-      <Row width={1400} gap={20} scroll="none">
-        <For each={items}>{(item) => <Card index={item} />}</For>
-      </Row>
-      <Row width={1400} gap={20} scroll="none">
-        <For each={items}>{(item) => <Card index={item} />}</For>
-      </Row>
-      <Row width={1400} gap={20} scroll="none">
-        <For each={items}>{(item) => <Card index={item} />}</For>
-      </Row>
-      <Row width={1400} gap={20} scroll="none">
-        <For each={items}>{(item) => <Card index={item} />}</For>
-      </Row>
-      <Row width={1400} gap={20} scroll="none">
-        <For each={items}>{(item) => <Card index={item} />}</For>
-      </Row>
-      <Row width={1400} gap={20} scroll="none">
-        <For each={items}>{(item) => <Card index={item} />}</For>
-      </Row>
-      <Row width={1400} gap={20} scroll="none">
-        <For each={items}>{(item) => <Card index={item} />}</For>
-      </Row>
+      <For each={rows()}>
+        {() => (
+          <Row width={1400} gap={20} scroll="none">
+            <For each={items}>{(item) => <Card index={item} />}</For>
+          </Row>
+        )}
+      </For>
     </Column>
   );
 }

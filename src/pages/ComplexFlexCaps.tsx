@@ -14,13 +14,13 @@ const Card = (props: { index: number }) => {
       flexDirection="column"
       alignItems="center"
       gap={10}
-      padding={10}
+      padding={[0, 10]}
       onFocusChanged={setFocused}
     >
       <Text fontSize={20} color="#ffffffff">
         Item {String(props.index)}
       </Text>
-      <View color="#0000ffff" padding={8} borderRadius={4} height={40} display="flex" alignItems="center">
+      <View color="#0000ffff" padding={[0, 8]} borderRadius={4} height={40} display="flex" alignItems="center">
         <Text fontSize={16} color="#ffffffff">
           Button
         </Text>

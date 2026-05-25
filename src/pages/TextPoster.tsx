@@ -7,7 +7,7 @@ const ButtonContainer: NodeStyles = {
   display: "flex",
   color: "#ffffff",
   alignItems: "center",
-  padding: 32,
+  padding: [0, 32],
   gap: 8,
   height: 50,
   effects: {

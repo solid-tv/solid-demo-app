@@ -39,7 +39,7 @@ const LayoutPage = () => {
         x={500}
         y={100}
         width={200}
-        padding={20}
+        padding={[0, 20]}
         height={36}
         border={{ color: "#ffffff", width: 5 }}
       >

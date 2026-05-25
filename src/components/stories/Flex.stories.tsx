@@ -44,7 +44,7 @@ const Container = (props: any) => (
       display: "flex",
       flexDirection: "column",
       marginBottom: 24,
-      padding: 16,
+      padding: [0, 16],
       borderRadius: 4,
       color: 0x2a2a2aff,
       ...props.style

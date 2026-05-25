@@ -72,7 +72,7 @@ export const ActionKey: Component<NodeProps & { key: any }> = props => (
         {...props}
         key={props.key}
         display='flex'
-        padding={20}
+        padding={[0, 20]}
         style={keyContainerStyle}
       >
         <text style={BaseKeyTextStyle}>{props.key}</text>
@@ -88,7 +88,7 @@ export const ActionKey: Component<NodeProps & { key: any }> = props => (
         {...props}
         key={props.key.key}
         display='flex'
-        padding={20}
+        padding={[0, 20]}
         style={/* @once */ props.key?.size ? actionKeyContainerStyle : keyContainerStyle}
       >
         <text style={BaseKeyTextStyle}>{props.key.title}</text>

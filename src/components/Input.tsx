@@ -31,7 +31,7 @@ export interface InputProps extends NodeProps {
 const ContainerStyle: NodeStyles = {
   display: 'flex',
   flexBoundary: 'fixed',
-  padding: 20,
+  padding: [0, 20],
   width: 450,
   height: 70,
   borderRadius: 8,

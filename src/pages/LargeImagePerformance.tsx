@@ -141,7 +141,7 @@ const LargeImagePerformance = () => {
           color="#000000cc"
           width={900}
           height={200}
-          padding={20}
+          padding={[0, 20]}
         >
           <text style={styles.statusText}>{status()}</text>
         </view>

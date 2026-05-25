@@ -13,7 +13,7 @@ const TagsPage = () => {
   };
 
   const ActionTag = createTag(
-    <view color={'#118322ff'} borderRadius={8} display="flex" padding={8}>
+    <view color={'#118322ff'} borderRadius={8} display="flex" padding={[0, 8]}>
       <text style={watchIconTextStyle}>
         Action
       </text>
@@ -21,7 +21,7 @@ const TagsPage = () => {
   );
 
   const ComedyTag = createTag(
-    <view color={'#250fceff'} borderRadius={8} display="flex" padding={8}>
+    <view color={'#250fceff'} borderRadius={8} display="flex" padding={[0, 8]}>
       <text style={watchIconTextStyle}>
         Comedy
       </text>
@@ -29,7 +29,7 @@ const TagsPage = () => {
   );
 
   const DramaTag = createTag(
-    <view color={'#ff0000ff'} borderRadius={8} display="flex" padding={8}>
+    <view color={'#ff0000ff'} borderRadius={8} display="flex" padding={[0, 8]}>
       <text style={watchIconTextStyle}>
         Drama
       </text>
@@ -37,7 +37,7 @@ const TagsPage = () => {
   );
 
   const NewEpisodeTag = createTag(
-    <view color={'#fff'} borderRadius={8} display="flex" padding={8} effects={{ rounded: { radius: [ 10, 0, 10, 0 ]} }}>
+    <view color={'#fff'} borderRadius={8} display="flex" padding={[0, 8]} effects={{ rounded: { radius: [ 10, 0, 10, 0 ]} }}>
       <text style={watchIconTextStyle} color={'#000'} fontWeight={400}>
         New Episode
       </text>

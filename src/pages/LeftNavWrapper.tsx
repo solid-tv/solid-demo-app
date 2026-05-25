@@ -101,7 +101,7 @@ const LeftNavWrapper = (props) => {
         width={330}
         height={50}
         x={1910}
-        y={202}
+        y={212}
         color={0x000000ff}
         hidden={!showWidgets()}
       >
