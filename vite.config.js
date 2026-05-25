@@ -9,7 +9,7 @@ import path from "path";
 export default defineConfig(({ mode }) => ({
   define: {
     __DEV__: mode !== "production",
-    __RTT__: false,
+    __RTT__: true,
     __renderTextBatching__: true,
     __enableCompressedTextures__: true,
     __calculateFps__: true,
