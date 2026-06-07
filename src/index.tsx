@@ -138,6 +138,19 @@ if (rendererMode === "canvas") {
 }
 
 const { renderer, render } = createRenderer();
+let idleFired = false;
+renderer.on('idle', () => {
+  if (!idleFired) {
+    idleFired = true;
+    const splash = document.getElementById('splash');
+    if (splash) {
+      splash.classList.add('fade-out');
+      setTimeout(() => {
+        splash.remove();
+      }, 500);
+    }
+  }
+});
 loadFonts(fonts);
 // Prepare for RC3 of Renderer
 import {
