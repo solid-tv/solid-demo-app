@@ -33,7 +33,7 @@ video {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: #0b1a30;
+  background-color: #335d92;
   z-index: 9999;
   transition: opacity 0.5s ease;
   opacity: 1;

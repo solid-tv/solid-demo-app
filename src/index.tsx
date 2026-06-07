@@ -23,6 +23,17 @@ import { browsePreload } from "./api/browsePreload";
 import { entityPreload } from "./api/entityPreload";
 import LeftNavWrapper from "./pages/LeftNavWrapper";
 import theme from "theme";
+import {
+  Rounded,
+  RoundedWithShadow,
+  RoundedWithBorder,
+  RoundedWithBorderAndShadow,
+  RadialGradient,
+  LinearGradient,
+  HolePunch,
+  RadialProgress
+} from "@solidtv/renderer/webgl/shaders";
+
 
 const Player = lazy(() => import("./pages/Player"));
 const Grid = lazy(() => import("./pages/Grid"));
@@ -137,104 +148,98 @@ if (rendererMode === "canvas") {
   Config.rendererOptions.renderEngine = WebGlCoreRenderer;
 }
 
-const { renderer, render } = createRenderer();
-let idleFired = false;
-renderer.on('idle', () => {
-  if (!idleFired) {
-    idleFired = true;
-    const splash = document.getElementById('splash');
-    if (splash) {
-      splash.classList.add('fade-out');
-      setTimeout(() => {
-        splash.remove();
-      }, 500);
-    }
-  }
-});
-loadFonts(fonts);
-// Prepare for RC3 of Renderer
-import {
-  Rounded,
-  RoundedWithShadow,
-  RoundedWithBorder,
-  RoundedWithBorderAndShadow,
-  RadialGradient,
-  LinearGradient,
-  HolePunch,
-  RadialProgress
-} from "@solidtv/renderer/webgl/shaders";
-const shManager = renderer.stage.shManager;
-shManager.registerShaderType("rounded", Rounded);
-shManager.registerShaderType("roundedWithBorder", RoundedWithBorder);
-shManager.registerShaderType("roundedWithShadow", RoundedWithShadow);
-shManager.registerShaderType("roundedWithBorderWithShadow", RoundedWithBorderAndShadow);
-shManager.registerShaderType("radialGradient", RadialGradient);
-shManager.registerShaderType("linearGradient", LinearGradient);
-shManager.registerShaderType("holePunch", HolePunch);
-shManager.registerShaderType("radialProgress", RadialProgress);
-render(() => (
-  <FocusStackProvider>
-    <HashRouter root={(props) => <App {...props} />}>
-      <Route path="" component={LeftNavWrapper}>
-        <Route path="" component={() => <Navigate href="/browse/all" />} />
-        <Route path="examples" component={Portal}>
-          <Route path="/" />
-          <Route path="tmdb" component={TMDB} preload={tmdbData} />
-        </Route>
-        {/* <Route path="browse/:filter" component={KeepAliveWrapper(Browse)} preload={browsePreload} /> */}
-        <KeepAliveRoute id="browse" path="browse/:filter" component={Browse} preload={browsePreload} />
-        <Route path="loops" component={Loops} preload={tmdbData} />
-        <Route path="infinite" component={Infinite} preload={tmdbData} />
-        <Route path="tmdbgrid" component={TMDBGrid} preload={tmdbData} />
-        <Route path="virtual" component={VirtualPage} preload={tmdbData} />
-        <Route path="destroy" component={DestroyPage} preload={destroyData} />
-        <Route path="grid" component={Grid} />
-        <Route path="matrix" component={MatrixPage} />
-        <Route path="text" component={TextPage} />
-        <Route path="firebolt" component={FireboltPage} />
-        <Route path="login" component={LoginPage} />
-        <Route path="nested" component={lazy(() => import("./pages/Nested"))} />
-        <Route path="textposter" component={TextPosterPage} />
-        <Route path="textcentering" component={TextCenteringPage} />
-        <Route path="countdown" component={CountdownTimerPage} />
-        <Route path="custombuttons" component={CustomButtonsPage} />
-        <Route path="positioning" component={PositioningPage} />
-        <Route path="layout" component={LayoutPage} />
-        <Route path="focusbasics" component={FocusBasicsPage} />
-        <Route path="transitions" component={TransitionsPage} />
-        <Route path="components" component={ComponentsPage} />
-        <Route path="focushandling" component={FocusHandlingPage} />
-        <Route path="keyhandling" component={KeyHandlingPage} />
-        <Route path="gradients" component={GradientsPage} />
-        <Route path="flex" component={FlexPage} />
-        <Route path="create" component={CreatePage} />
-        <Route path="viewport" component={ViewportPage} />
-        <Route path="flexsize" component={FlexSizePage} />
-        <Route path="flexmenu" component={FlexMenuPage} />
-        <Route path="flexcolumnsize" component={FlexColumnSizePage} />
-        <Route path="flexcolumn" component={FlexColumnPage} />
-        <Route path="flexgrow" component={FlexGrowPage} />
-        <Route path="keepalive" component={lazy(() => import("./pages/KeepAlive.jsx"))} />
-        <Route path="suspense" component={lazy(() => import("./pages/suspense.jsx"))} />
-        <Route path="superflex" component={SuperFlexPage} />
-        <Route path="tags" component={TagsPage} />
-        <Route path="buttonsmaterial" component={ButtonsMaterialPage} />
-        <Route path="entity/people/:id" component={People} />
-        <Route path="entity/:type/:id" component={Entity} preload={entityPreload} />
-        <Route path="image-performance" component={ImagePerformance} />
-        <Route path="large-image-performance" component={LargeImagePerformance} />
-        <Route path="mixed-image-performance" component={MixedImagePerformance} />
-        <Route path="texture-compression-performance" component={TextureCompressionPerformance} />
-        <Route path="complexflex" component={ComplexFlexPage} />
-        <Route path="complexflexcaps" component={ComplexFlexCapsPage} />
-        <Route path="benchmark" component={BenchmarkPage} preload={tmdbData} />
-        <Route path="versions" component={RendererVersionsPage} />
+// Delay initialization to allow the browser to perform a first paint of the splash screen
+requestAnimationFrame(() => {
+  setTimeout(() => {
+    const { renderer, render } = createRenderer();
+    let idleFired = false;
+    renderer.on('idle', () => {
+      if (!idleFired) {
+        idleFired = true;
+        const splash = document.getElementById('splash');
+        if (splash) {
+          splash.classList.add('fade-out');
+          setTimeout(() => {
+            splash.remove();
+          }, 100);
+        }
+      }
+    });
+    loadFonts(fonts);
+    const shManager = renderer.stage.shManager;
+    shManager.registerShaderType("rounded", Rounded);
+    shManager.registerShaderType("roundedWithBorder", RoundedWithBorder);
+    shManager.registerShaderType("roundedWithShadow", RoundedWithShadow);
+    shManager.registerShaderType("roundedWithBorderWithShadow", RoundedWithBorderAndShadow);
+    shManager.registerShaderType("radialGradient", RadialGradient);
+    shManager.registerShaderType("linearGradient", LinearGradient);
+    shManager.registerShaderType("holePunch", HolePunch);
+    shManager.registerShaderType("radialProgress", RadialProgress);
+    render(() => (
+      <FocusStackProvider>
+        <HashRouter root={(props) => <App {...props} />}>
+          <Route path="" component={LeftNavWrapper}>
+            <Route path="" component={() => <Navigate href="/browse/all" />} />
+            <Route path="examples" component={Portal}>
+              <Route path="/" />
+              <Route path="tmdb" component={TMDB} preload={tmdbData} />
+            </Route>
+            {/* <Route path="browse/:filter" component={KeepAliveWrapper(Browse)} preload={browsePreload} /> */}
+            <KeepAliveRoute id="browse" path="browse/:filter" component={Browse} preload={browsePreload} />
+            <Route path="loops" component={Loops} preload={tmdbData} />
+            <Route path="infinite" component={Infinite} preload={tmdbData} />
+            <Route path="tmdbgrid" component={TMDBGrid} preload={tmdbData} />
+            <Route path="virtual" component={VirtualPage} preload={tmdbData} />
+            <Route path="destroy" component={DestroyPage} preload={destroyData} />
+            <Route path="grid" component={Grid} />
+            <Route path="matrix" component={MatrixPage} />
+            <Route path="text" component={TextPage} />
+            <Route path="firebolt" component={FireboltPage} />
+            <Route path="login" component={LoginPage} />
+            <Route path="nested" component={lazy(() => import("./pages/Nested"))} />
+            <Route path="textposter" component={TextPosterPage} />
+            <Route path="textcentering" component={TextCenteringPage} />
+            <Route path="countdown" component={CountdownTimerPage} />
+            <Route path="custombuttons" component={CustomButtonsPage} />
+            <Route path="positioning" component={PositioningPage} />
+            <Route path="layout" component={LayoutPage} />
+            <Route path="focusbasics" component={FocusBasicsPage} />
+            <Route path="transitions" component={TransitionsPage} />
+            <Route path="components" component={ComponentsPage} />
+            <Route path="focushandling" component={FocusHandlingPage} />
+            <Route path="keyhandling" component={KeyHandlingPage} />
+            <Route path="gradients" component={GradientsPage} />
+            <Route path="flex" component={FlexPage} />
+            <Route path="create" component={CreatePage} />
+            <Route path="viewport" component={ViewportPage} />
+            <Route path="flexsize" component={FlexSizePage} />
+            <Route path="flexmenu" component={FlexMenuPage} />
+            <Route path="flexcolumnsize" component={FlexColumnSizePage} />
+            <Route path="flexcolumn" component={FlexColumnPage} />
+            <Route path="flexgrow" component={FlexGrowPage} />
+            <Route path="keepalive" component={lazy(() => import("./pages/KeepAlive.jsx"))} />
+            <Route path="suspense" component={lazy(() => import("./pages/suspense.jsx"))} />
+            <Route path="superflex" component={SuperFlexPage} />
+            <Route path="tags" component={TagsPage} />
+            <Route path="buttonsmaterial" component={ButtonsMaterialPage} />
+            <Route path="entity/people/:id" component={People} />
+            <Route path="entity/:type/:id" component={Entity} preload={entityPreload} />
+            <Route path="image-performance" component={ImagePerformance} />
+            <Route path="large-image-performance" component={LargeImagePerformance} />
+            <Route path="mixed-image-performance" component={MixedImagePerformance} />
+            <Route path="texture-compression-performance" component={TextureCompressionPerformance} />
+            <Route path="complexflex" component={ComplexFlexPage} />
+            <Route path="complexflexcaps" component={ComplexFlexCapsPage} />
+            <Route path="benchmark" component={BenchmarkPage} preload={tmdbData} />
+            <Route path="versions" component={RendererVersionsPage} />
 
-        <Route path="*all" component={NotFound} />
-      </Route>
-      <Route path="player">
-        <Route path=":id" component={Player} />
-      </Route>
-    </HashRouter>
-  </FocusStackProvider>
-));
+            <Route path="*all" component={NotFound} />
+          </Route>
+          <Route path="player">
+            <Route path=":id" component={Player} />
+          </Route>
+        </HashRouter>
+      </FocusStackProvider>
+    ));
+  }, 0);
+});
