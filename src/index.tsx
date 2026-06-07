@@ -159,9 +159,7 @@ requestAnimationFrame(() => {
         const splash = document.getElementById('splash');
         if (splash) {
           splash.classList.add('fade-out');
-          setTimeout(() => {
-            splash.remove();
-          }, 100);
+          splash.remove();
         }
       }
     });
