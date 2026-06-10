@@ -29,7 +29,7 @@
   "dependencies": {
     "@capacitor/core": "^8.2.0",
     "@firebolt-js/sdk": "^1.7.0",
-    "@solidtv/renderer": "1.4.0",
+    "@solidtv/renderer": "1.5.0",
     "@solidtv/solid": "1.2.2",
     "@solid-primitives/list": "^0.1.2",
     "@solid-primitives/scheduled": "^1.5.2",

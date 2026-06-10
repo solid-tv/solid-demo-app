@@ -1,4 +1,4 @@
-import { createEffect, on, createSignal, batch, Show, onCleanup } from "solid-js";
+import { createEffect, on, createSignal, batch, Show, For, onCleanup } from "solid-js";
 import { ElementNode, activeElement, renderer } from "@solidtv/solid";
 import { LazyRow, LazyColumn, useFocusStack, VirtualRow, resetCounter } from "@solidtv/solid/primitives";
 import { Hero, TitleRow, AssetPanel } from "../components";
@@ -31,8 +31,26 @@ const Benchmark = (props) => {
   const [dataLoaded, setDataLoaded] = createSignal(false);
   const [renderTime, setRenderTime] = createSignal<number | null>(null);
 
+  // ── Renderer telemetry from the fpsUpdate payload ──
+  type RendererCapabilities = {
+    renderMode: "webgl" | "canvas";
+    webGlVersion: 1 | 2 | null;
+    vertexArrayObject: boolean;
+    maxTextureSize: number;
+    maxTextureUnits: number;
+  };
+  const [capabilities, setCapabilities] = createSignal<RendererCapabilities | null>(null);
+  const [drawStats, setDrawStats] = createSignal<{ renderOps: number; quads: number } | null>(null);
+  // Per-frame WebGL call counts from the last sampled frame of the run
+  const [contextSpy, setContextSpy] = createSignal<Record<string, number> | null>(null);
+
   // FPS tracking
   let fpsValues: number[] = [];
+  // Peak draw counts seen during the run (renderOps = draw calls, quads = quads rendered)
+  let maxRenderOps = 0;
+  let maxQuads = 0;
+  // Most recent contextSpyData seen while running (the GL call breakdown)
+  let lastContextSpy: Record<string, number> | null = null;
   let fpsListenerAttached = false;
 
   function attachFpsListener() {
@@ -46,6 +64,26 @@ const Benchmark = (props) => {
       // ignore really low fps which occur during page load or transitions
       if (fps > 5 && benchmarkRunning()) {
         fpsValues.push(fps);
+
+        // The newer fpsUpdate payload is an object carrying draw counts and the
+        // (constant) renderer capabilities alongside the fps number.
+        if (typeof fpsData === 'object' && fpsData) {
+          if (typeof fpsData.renderOps === 'number') {
+            maxRenderOps = Math.max(maxRenderOps, fpsData.renderOps);
+          }
+          if (typeof fpsData.quads === 'number') {
+            maxQuads = Math.max(maxQuads, fpsData.quads);
+          }
+          // GL call breakdown for the frame (null on the Canvas backend)
+          if (fpsData.contextSpyData) {
+            lastContextSpy = fpsData.contextSpyData;
+            console.log(lastContextSpy);
+          }
+          // capabilities are fixed for the lifetime of the renderer — capture once
+          if (fpsData.capabilities && !capabilities()) {
+            setCapabilities(fpsData.capabilities);
+          }
+        }
       }
     });
   }
@@ -77,6 +115,11 @@ const Benchmark = (props) => {
 
     // Reset state
     fpsValues = [];
+    maxRenderOps = 0;
+    maxQuads = 0;
+    lastContextSpy = null;
+    setDrawStats(null);
+    setContextSpy(null);
     setBenchmarkRunning(true);
     setBenchmarkDone(false);
 
@@ -118,6 +161,10 @@ const Benchmark = (props) => {
       setBenchmarkDone(true);
       setBenchmarkRunning(false);
     });
+
+    // Publish the peak draw counts and the GL call breakdown collected during the run
+    setDrawStats({ renderOps: maxRenderOps, quads: maxQuads });
+    setContextSpy(lastContextSpy);
 
     if (fpsValues.length > 0) {
       const sum = fpsValues.reduce((a, b) => a + b, 0);
@@ -216,6 +263,60 @@ const Benchmark = (props) => {
     lineHeight: 28,
   };
 
+  // ── Top-left results overlay (shown at the end of the test) ──
+  const resultsBgStyle = {
+    color: 0x000000ff,
+    borderRadius: 12,
+  };
+
+  const OVERLAY_WIDTH = 560;
+  const ROW_H = 28;
+
+  const resultsLabelStyle = {
+    fontFamily: "Roboto",
+    fontSize: 20,
+    lineHeight: 28,
+    color: 0xaaaaaaff,
+  };
+
+  const resultsValueStyle = {
+    fontFamily: "Roboto",
+    fontSize: 20,
+    lineHeight: 28,
+    color: 0xffffffff,
+  };
+
+  // One label/value row in the results overlay
+  const ResultRow = (rowProps: { y: number; label: string; value: string }) => (
+    <view y={rowProps.y}>
+      <text x={20} style={resultsLabelStyle}>
+        {rowProps.label}
+      </text>
+      <text x={340} style={resultsValueStyle}>
+        {rowProps.value}
+      </text>
+    </view>
+  );
+
+  const webGlLabel = (caps: RendererCapabilities) =>
+    caps.renderMode === "webgl" ? `WebGL ${caps.webGlVersion ?? "?"}` : "Canvas2D";
+
+  // contextSpyData entries (GL call → count for the sampled frame), busiest first.
+  // Empty when context spy is disabled (enable with ?contextSpy=true) or on Canvas.
+  const glEntries = (): [string, number][] => {
+    const spy = contextSpy();
+    if (!spy) return [];
+    return Object.entries(spy).sort((a, b) => b[1] - a[1]);
+  };
+
+  // ── Reactive vertical layout for the results overlay ──
+  const GL_HEADER_Y = 116;
+  const glStartY = GL_HEADER_Y + 28; // first GL row sits below its header
+  const glRowsHeight = () => Math.max(glEntries().length, 1) * ROW_H;
+  const dividerY = () => glStartY + glRowsHeight() + 8;
+  const capsStartY = () => dividerY() + 16;
+  const overlayHeight = () => capsStartY() + 5 * ROW_H + 16;
+
   return (
     <Show when={dataLoaded()} fallback={<text x={960} y={540} fontSize={40} color={0xffffffff} mount={0.5}>Loading Data...</text>}>
       <view forwardFocus={2}>
@@ -289,6 +390,74 @@ const Benchmark = (props) => {
             {renderTime() !== null ? `Initial Render: ${renderTime()?.toFixed(2)}ms` : "Rendering..."}
           </text>
         </view>
+
+        {/* ── Results Overlay (top-left, appears when the test finishes) ── */}
+        <Show when={benchmarkDone()}>
+          <view x={40} y={20} zIndex={8000} width={OVERLAY_WIDTH} height={overlayHeight()} style={resultsBgStyle}>
+            <text x={20} y={16} style={overlayTitleStyle}>
+              Test Results
+            </text>
+
+            <ResultRow
+              y={60}
+              label="Draw Calls"
+              value={drawStats() ? `${drawStats()!.renderOps}` : "—"}
+            />
+            <ResultRow
+              y={88}
+              label="Quads"
+              value={drawStats() ? `${drawStats()!.quads}` : "—"}
+            />
+
+            {/* WebGL call breakdown (per sampled frame, from contextSpyData) */}
+            <text x={20} y={GL_HEADER_Y} style={resultsLabelStyle}>
+              GL Calls / frame
+            </text>
+            <Show
+              when={glEntries().length > 0}
+              fallback={
+                <text x={200} y={GL_HEADER_Y} style={resultsValueStyle}>
+                  off (?contextSpy=true)
+                </text>
+              }
+            >
+              <For each={glEntries()}>
+                {([name, count], i) => (
+                  <ResultRow y={glStartY + i() * ROW_H} label={name} value={`${count}`} />
+                )}
+              </For>
+            </Show>
+
+            <view y={dividerY()} width={OVERLAY_WIDTH - 40} height={1} x={20} color={0xffffff33} />
+
+            <Show
+              when={capabilities()}
+              fallback={
+                <text x={20} y={capsStartY()} style={resultsLabelStyle}>
+                  Capabilities unavailable
+                </text>
+              }
+            >
+              <ResultRow y={capsStartY()} label="Render Mode" value={capabilities()!.renderMode} />
+              <ResultRow y={capsStartY() + ROW_H} label="WebGL Version" value={webGlLabel(capabilities()!)} />
+              <ResultRow
+                y={capsStartY() + 2 * ROW_H}
+                label="Vertex Array Obj"
+                value={capabilities()!.vertexArrayObject ? "Yes" : "No"}
+              />
+              <ResultRow
+                y={capsStartY() + 3 * ROW_H}
+                label="Max Texture Size"
+                value={`${capabilities()!.maxTextureSize}`}
+              />
+              <ResultRow
+                y={capsStartY() + 4 * ROW_H}
+                label="Max Texture Units"
+                value={`${capabilities()!.maxTextureUnits}`}
+              />
+            </Show>
+          </view>
+        </Show>
 
         <AssetPanel
           onFocus={storeFocus}

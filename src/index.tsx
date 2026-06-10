@@ -87,6 +87,10 @@ const numWorkers = urlParams.get("numImageWorkers");
 const screenSize = urlParams.get("size") || "default";
 const rendererMode = urlParams.get("mode") || "webgl";
 const animationsEnabled = urlParams.get("animate") || "true";
+// Off by default — enable with ?contextSpy=true to capture per-frame WebGL call counts
+const enableContextSpy = urlParams.get("contextSpy") === "true";
+// Off by default (renderer requests a WebGL1 context) — force WebGL2 with ?webgl2=true
+const forceWebGL2 = urlParams.get("webgl2") === "true";
 const textBaseline = urlParams.get("textBaseline") as
   | "optical"
   | "cap"
@@ -98,12 +102,13 @@ if (numWorkers) {
   numImageWorkers = parseInt(numWorkers);
 }
 
-const deviceLogicalPixelRatio = {
-  "720": 0.666667,
+const devicePhysicalPixelRatio = {
+  low: 0.666667,
   medium: 0.8,
-  "1080": 1,
-  "4k": 2,
-  default: window.innerHeight / 1080
+  high: 1,
+  xhigh: 1.5,
+  ultra: 2,
+  default: window.devicePixelRatio || 1
 }[screenSize];
 
 const logFps = true;
@@ -127,12 +132,14 @@ Config.rendererOptions = {
   numImageWorkers, // temp fix for renderer bug
   // Set the resolution based on window height
   // 720p = 0.666667, 1080p = 1, 1440p = 1.5, 2160p = 2
-  deviceLogicalPixelRatio,
-  devicePhysicalPixelRatio: window.devicePixelRatio || 1,
+  deviceLogicalPixelRatio: window.innerHeight / 1080,
+  devicePhysicalPixelRatio: devicePhysicalPixelRatio ?? 1,
   createImageBitmapSupport: "auto",
   boundsMargin: 100,
   targetFPS: 0,
-  enableClear: false
+  enableClear: false,
+  enableContextSpy,
+  forceWebGL2
 };
 
 if (textBaseline) {
