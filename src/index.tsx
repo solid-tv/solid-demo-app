@@ -104,7 +104,7 @@ Config.fontSettings.color = theme.textPrimary;
 Config.fontSettings.fontSize = 32;
 Config.domRendererEnabled = false;
 Config.focusHistoryDebug = 5;
-// Config.focusDebug = true;
+Config.focusDebug = true;
 
 Config.rendererOptions = {
   fpsUpdateInterval: logFps ? 300 : 0,

@@ -207,8 +207,9 @@ const Portal = (props) => {
 
   function DemoTile(props) {
     const Container = {
-      width: 370,
-      height: 320,
+      display: "flex",
+      flexDirection: "row",
+      height: 200,
       borderRadius: 6,
       color: "#182b44",
       transition: { color: true },
@@ -220,24 +221,21 @@ const Portal = (props) => {
 
     return (
       <view {...props} onFocusChanged={setHasFocus} style={Container}>
-        <view x={30}>
-          <text y={30} fontSize={84} color={hasFocus() ? 0x000000ff : 0xffffffff}>
-            {props.index}
-          </text>
-          <text
-            y={140}
-            fontSize={42}
-            width={340}
-            maxHeight={42}
-            contain="both"
-            color={hasFocus() ? 0x000000ff : 0xffffffff}
-          >
-            {props.title}
-          </text>
-          <text y={200} fontSize={28} width={330} contain="width" color={hasFocus() ? 0x000000ff : 0xffffffff}>
-            {props.description}
-          </text>
-        </view>
+        <text fontSize={84} color={hasFocus() ? 0x000000ff : 0xffffffff}>
+          {props.index}
+        </text>
+        <text
+          fontSize={42}
+          width={340}
+          maxHeight={42}
+          contain="both"
+          color={hasFocus() ? 0x000000ff : 0xffffffff}
+        >
+          {props.title}
+        </text>
+        <text fontSize={28} width={330} contain="width" color={hasFocus() ? 0x000000ff : 0xffffffff}>
+          {props.description}
+        </text>
       </view>
     );
   }
