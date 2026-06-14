@@ -46,11 +46,22 @@ export default defineConfig(({ mode }) => ({
       modernPolyfills: [
         // Safari 11 has modules, but throws > ReferenceError: Can't find variable: globalThis
         "es.global-this"
-      ]
+      ],
+      // The renderer is class-field heavy (ElementNode alone has ~70 fields, one
+      // node per on-screen element). Forwarded to @babel/preset-env, these make
+      // public/private fields compile to plain assignment instead of
+      // Object.defineProperty / WeakMap, cutting per-node construction cost.
+      assumptions: {
+        setPublicClassFields: true, // public fields -> assignment, no Object.defineProperty
+        privateFieldsAsProperties: true, // #private -> plain prop, no WeakMap
+        constantSuper: true, // drop _get/_superPropGet helpers on super calls
+        noClassCalls: true, // drop _classCallCheck
+        noDocumentAll: true // ?. / ?? compile to != null, not the document.all helper
+      }
     })
   ],
   build: {
-    targets: ["chrome>=69"],
+    target: "chrome>=69",
     minify: "terser",
     terserOptions: {
       compress: false,

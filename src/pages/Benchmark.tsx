@@ -24,6 +24,9 @@ const Benchmark = (props) => {
     firstRun = true;
   let columnRef: ElementNode | undefined;
 
+  // Which Vite bundle this device loaded — set as a global at startup in src/index.tsx.
+  const bundleType = window.bundleType ?? "unknown";
+
   // ── Benchmark state ──
   const [benchmarkStatus, setBenchmarkStatus] = createSignal("Waiting for data...");
   const [benchmarkRunning, setBenchmarkRunning] = createSignal(false);
@@ -370,6 +373,17 @@ const Benchmark = (props) => {
         <view x={610} y={20} zIndex={200} style={overlayBgStyle}>
           <text x={20} y={16} style={overlayTitleStyle}>
             Benchmark (version: ###)
+          </text>
+          <text
+            x={360}
+            y={20}
+            width={320}
+            contain="width"
+            textAlign="right"
+            fontSize={24}
+            color={bundleType.includes("LEGACY") ? 0xffcc00ff : 0x00ff88ff}
+          >
+            {bundleType}
           </text>
           <text
             x={20}

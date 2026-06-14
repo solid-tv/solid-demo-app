@@ -34,6 +34,12 @@ import {
   RadialProgress
 } from "@solidtv/renderer/webgl/shaders";
 
+// Which Vite bundle is this device actually running? import.meta.env.LEGACY is
+// rewritten to `true` only in the legacy (nomodule) chunk and `false` in the
+// modern (module) chunk — so this reports the bundle the TV loaded. Stored as a
+// global so any page (e.g. Benchmark) can display it.
+window.bundleType = import.meta.env.LEGACY ? "LEGACY (nomodule)" : "MODERN (module)";
+console.log(`[bundle] Loaded ${window.bundleType} build`);
 
 const Player = lazy(() => import("./pages/Player"));
 const Grid = lazy(() => import("./pages/Grid"));

@@ -2,10 +2,10 @@ import { IntrinsicNodeStyleProps, IntrinsicTextNodeStyleProps } from "@solidtv/s
 import { createSignal, onMount } from "solid-js";
 import { setGlobalBackground } from "../state";
 
-const knownVersions = [300, 316, 320, 321, 322, 323, 324, 325, 326, 330, 331, 340];
+const knownVersions: (number | "Current")[] = ["Current", 300, 316, 320, 321, 322, 323, 324, 325, 326, 330, 331, 340];
 
 const RendererVersionsPage = () => {
-  const [version, setVersion] = createSignal(340);
+  const [version, setVersion] = createSignal<number | "Current">("Current");
 
   onMount(() => {
     setGlobalBackground("#000000");
@@ -34,17 +34,21 @@ const RendererVersionsPage = () => {
   };
 
   const onUp = () => {
-    setVersion((v) => v + 1);
+    setVersion((v) => (v === "Current" ? 341 : v + 1));
     return true;
   };
 
   const onDown = () => {
-    setVersion((v) => Math.max(0, v - 1));
+    setVersion((v) => (v === "Current" ? 339 : Math.max(0, v - 1)));
     return true;
   };
 
   const onEnter = () => {
-    window.location.href = `https://solid-tv.github.io/solid-demo-app/${version()}/#/benchmark`;
+    if (version() === "Current") {
+      window.location.hash = "#/benchmark";
+    } else {
+      window.location.href = `https://solid-tv.github.io/solid-demo-app/${version()}/#/benchmark`;
+    }
     return true;
   };
 
