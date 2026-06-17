@@ -30,7 +30,7 @@
     "@capacitor/core": "^8.2.0",
     "@firebolt-js/sdk": "^1.7.0",
     "@solidtv/renderer": "1.5.2",
-    "@solidtv/solid": "link:@solidtv/solid",
+    "@solidtv/solid": "1.3.0-0",
     "@solid-primitives/list": "^0.1.2",
     "@solid-primitives/scheduled": "^1.5.2",
     "@solidjs/router": "^0.16.1",
