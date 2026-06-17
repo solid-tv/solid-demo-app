@@ -60,6 +60,7 @@ export default {
     height: 278,
     scale: 1,
     zIndex: 2,
+    placeholderColor: '#FF0000',
     transition: {
       scale: { duration: 250, easing: "linear" },
       // border: { duration: 250, easing: "linear" },

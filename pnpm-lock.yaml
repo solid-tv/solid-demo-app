@@ -27,8 +27,8 @@ importers:
         specifier: 1.5.4
         version: 1.5.4
       '@solidtv/solid':
-        specifier: 1.2.2
-        version: 1.2.2(@solidjs/router@0.16.1(solid-js@1.9.9))(@solidtv/renderer@1.5.4)(solid-js@1.9.9)
+        specifier: 1.3.2
+        version: 1.3.2(@solidjs/router@0.16.1(solid-js@1.9.9))(@solidtv/renderer@1.5.4)(solid-js@1.9.9)
       browserlist:
         specifier: ^1.0.1
         version: 1.0.1
@@ -1279,11 +1279,11 @@ packages:
     resolution: {integrity: sha512-a3sUHHLQGAZErRr6A6CIxx1YClvtebGidjT52JIVKHKpLLNLCfhtNi/UwnMJAf1pZmZ0WL5tMB43l4xQMn5T4w==}
     engines: {node: '>= 18.0.0', npm: '>= 10.0.0', pnpm: '>= 10.17.0'}
 
-  '@solidtv/solid@1.2.2':
-    resolution: {integrity: sha512-S1ENx0BcLCXQlYx32eCA1C/VUmA8+X/WuIEDpWvxibgIFalsZjlLB/onRTS0XBFVP10VCsx1V7i9QOsc4FiwCQ==}
+  '@solidtv/solid@1.3.2':
+    resolution: {integrity: sha512-MUONGFCuaQLql9977ye79nYVwj5zjps1rJM/30S7ggRMGRyryiB+Hc88zrFpcDm+6IXYkFfgBPjkpeX8ptn31w==}
     peerDependencies:
       '@solidjs/router': ^0.16.1
-      '@solidtv/renderer': ^1.3.0
+      '@solidtv/renderer': ^1.5.4
       solid-js: '*'
 
   '@storybook/builder-vite@10.3.5':
@@ -4105,7 +4105,7 @@ snapshots:
 
   '@solidtv/renderer@1.5.4': {}
 
-  '@solidtv/solid@1.2.2(@solidjs/router@0.16.1(solid-js@1.9.9))(@solidtv/renderer@1.5.4)(solid-js@1.9.9)':
+  '@solidtv/solid@1.3.2(@solidjs/router@0.16.1(solid-js@1.9.9))(@solidtv/renderer@1.5.4)(solid-js@1.9.9)':
     dependencies:
       '@solid-primitives/event-listener': 2.4.5(solid-js@1.9.9)
       '@solid-primitives/list': 0.1.2(solid-js@1.9.9)
