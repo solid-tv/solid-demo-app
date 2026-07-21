@@ -29,11 +29,11 @@
   "dependencies": {
     "@capacitor/core": "^8.2.0",
     "@firebolt-js/sdk": "^1.7.0",
-    "@solidtv/renderer": "1.5.4",
-    "@solidtv/solid": "1.3.2",
     "@solid-primitives/list": "^0.1.2",
     "@solid-primitives/scheduled": "^1.5.2",
     "@solidjs/router": "^0.16.1",
+    "@solidtv/renderer": "1.6.1",
+    "@solidtv/solid": "1.3.9",
     "browserlist": "^1.0.1",
     "proxy-polyfill": "^0.3.2",
     "shaka-player": "^4.16.5",
@@ -42,13 +42,15 @@
     "whatwg-fetch": "^3.6.20"
   },
   "devDependencies": {
+    "@babel/core": "^8.0.1",
+    "@babel/preset-env": "^8.0.2",
     "@capacitor/android": "^8.2.0",
     "@capacitor/cli": "^8.2.0",
     "@lightningtv/vite-hex-transform": "^1.1.0",
     "@solidjs/testing-library": "^0.8.10",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/user-event": "^14.6.1",
-    "@vitejs/plugin-legacy": "^7.2.1",
+    "@vitejs/plugin-legacy": "^8.2.1",
     "baseline-browser-mapping": "^2.10.0",
     "dayjs": "^1.11.20",
     "gh-pages": "^6.3.0",
@@ -57,14 +59,14 @@
     "lint-staged": "^16.2.4",
     "prettier": "^3.6.2",
     "solid-devtools": "^0.34.5",
-    "storybook": "10.3.1",
-    "storybook-solidjs-vite": "10.0.9",
+    "storybook": "^10.5.2",
+    "storybook-solidjs-vite": "^10.6.0",
     "terser": "^5.44.0",
     "typescript": "^5.9.3",
-    "vite": "^7.1.10",
+    "vite": "^8.1.5",
     "vite-bundle-visualizer": "^1.2.1",
-    "vite-plugin-solid": "^2.11.9",
-    "vitest": "^3.2.4"
+    "vite-plugin-solid": "^2.11.13",
+    "vitest": "^4.1.10"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
