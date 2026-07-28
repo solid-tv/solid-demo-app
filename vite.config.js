@@ -91,7 +91,7 @@ export default defineConfig(({ mode }) => ({
       assumptions: {
         setPublicClassFields: true, // public fields -> assignment, no Object.defineProperty
         privateFieldsAsProperties: true, // #private -> plain prop, no WeakMap
-        constantSuper: true, // drop _get/_superPropGet helpers on super calls
+        constantSuper: false, // drop _get/_superPropGet helpers on super calls
         noClassCalls: true, // drop _classCallCheck
         noDocumentAll: true // ?. / ?? compile to != null, not the document.all helper
       }

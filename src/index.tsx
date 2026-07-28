@@ -4,6 +4,44 @@
 
 //setElementInterface(elementInterface);
 
+// Patch Object.getOwnPropertyNames to prevent strict mode errors in solid-js mergeProps
+(function() {
+  const originalGetOwnPropertyNames = Object.getOwnPropertyNames;
+  Object.getOwnPropertyNames = function(obj) {
+    const names = originalGetOwnPropertyNames(obj);
+    if (obj && (typeof obj === 'function' || Object.prototype.toString.call(obj) === '[object Arguments]')) {
+      return names.filter(function(name) {
+        return name !== 'caller' && name !== 'callee' && name !== 'arguments';
+      });
+    }
+    return names;
+  };
+})();
+
+// Normalize legacy arrow keys to standardized values for third-party navigation libraries
+(function() {
+  const keyMap = {
+    'Left': 'ArrowLeft',
+    'Right': 'ArrowRight',
+    'Up': 'ArrowUp',
+    'Down': 'ArrowDown'
+  };
+  function normalizeKey(e) {
+    if (e && keyMap[e.key]) {
+      try {
+        Object.defineProperty(e, 'key', {
+          value: keyMap[e.key],
+          configurable: true,
+          writable: true,
+          enumerable: true
+        });
+      } catch (err) {}
+    }
+  }
+  window.addEventListener('keydown', normalizeKey, true);
+  window.addEventListener('keyup', normalizeKey, true);
+})();
+
 import { createRenderer, Config, loadFonts } from "@solidtv/solid";
 import { WebGlCoreRenderer, SdfTextRenderer } from "@solidtv/renderer/webgl";
 import { CanvasCoreRenderer, CanvasTextRenderer } from "@solidtv/renderer/canvas";
@@ -87,7 +125,7 @@ const CountdownTimerPage = lazy(() => import("./pages/CountdownTimer"));
 const CustomButtonsPage = lazy(() => import("./pages/CustomButtons"));
 
 
-let numImageWorkers = 4;
+let numImageWorkers = (typeof window !== "undefined" && window.createImageBitmap) ? 4 : 0;
 const urlParams = new URLSearchParams(window.location.search);
 const numWorkers = urlParams.get("numImageWorkers");
 const screenSize = urlParams.get("size") || "default";
@@ -119,6 +157,17 @@ const devicePhysicalPixelRatio = {
 
 const logFps = true;
 Config.debug = false;
+Config.keyMap = {
+  Left: ["ArrowLeft", "Left", 37],
+  Right: ["ArrowRight", "Right", 39],
+  Up: ["ArrowUp", "Up", 38],
+  Down: ["ArrowDown", "Down", 40],
+  Enter: ["Enter", 13],
+  Back: ["Back", 461, 10009, "Escape", 27],
+  Backspace: ["Backspace", 8],
+  Menu: ["m", "Menu", 224],
+  Announcer: ["a"]
+};
 // Config.keyDebug = true;
 Config.animationsEnabled = animationsEnabled === "true";
 Config.fontSettings.fontFamily = "Roboto";
@@ -136,6 +185,7 @@ Config.rendererOptions = {
     targetThresholdLevel: 0.8
   },
   numImageWorkers, // temp fix for renderer bug
+  imageDecodeConcurrency: (typeof window !== "undefined" && window.createImageBitmap) ? 4 : 2, // limit concurrent main-thread fetches/decodes on low-end TVs
   // Set the resolution based on window height
   // 720p = 0.666667, 1080p = 1, 1440p = 1.5, 2160p = 2
   deviceLogicalPixelRatio: window.innerHeight / 1080,

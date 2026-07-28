@@ -1,10 +1,14 @@
 import { getImageUrl } from "../index";
 
-function truncateString(str: string, maxLength: number): string {
-  if (str.length > maxLength) {
-    return str.substring(0, maxLength - 3) + "...";
+function truncateString(str: string | null | undefined, maxLength: number): string {
+  if (!str) {
+    return "";
   }
-  return str;
+  const s = String(str);
+  if (s.length > maxLength) {
+    return s.substring(0, maxLength - 3) + "...";
+  }
+  return s;
 }
 
 export function chunkArray(array: string[], size = 7) {

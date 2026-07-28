@@ -4,6 +4,17 @@
 <head>
   <title>Solid Demo</title>
   <meta charset="UTF-8" />
+  <script>
+    window.addEventListener('unhandledrejection', function(event) {
+      var reason = event.reason;
+      var message = reason ? (reason.message || reason) : 'No reason';
+      var stack = reason ? (reason.stack || '') : '';
+      console.error('[GLOBAL_REJECTION]', message, '\nStack:', stack);
+    });
+    window.addEventListener('error', function(event) {
+      console.error('[GLOBAL_ERROR]', event.message, '\nFile:', event.filename, '\nLine:', event.lineno, '\nStack:', event.error ? event.error.stack : '');
+    });
+  </script>
   <!-- Don't inline styles for Tizen CSP rules -->
   <link rel="stylesheet" href="./styles.css" />
   <link rel="icon" type="image/png" href="/assets/favicon-32x32.png" />

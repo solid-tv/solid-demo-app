@@ -93,13 +93,15 @@ const Benchmark = (props) => {
 
   // ── Simulated navigation helpers ──
   function simulateKeyDown(key: string) {
-    const event = new KeyboardEvent("keydown", {
-      key,
-      code: key === "ArrowDown" ? "ArrowDown" : "ArrowUp",
-      bubbles: true,
-      cancelable: true,
-    });
-    document.dispatchEvent(event);
+    try {
+      const event = document.createEvent("Event");
+      event.initEvent("keydown", true, true);
+      Object.defineProperty(event, "key", { value: key, enumerable: true, configurable: true });
+      Object.defineProperty(event, "code", { value: key === "ArrowDown" ? "ArrowDown" : "ArrowUp", enumerable: true, configurable: true });
+      document.dispatchEvent(event);
+    } catch (e) {
+      console.error("Failed to simulate key down:", e);
+    }
   }
 
   function sleep(ms: number): Promise<void> {

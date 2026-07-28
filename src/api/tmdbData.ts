@@ -3,10 +3,15 @@ import { convertItemsToTiles } from "./formatters/ItemFormatter";
 import { createResource, createSignal } from "solid-js";
 
 const handleResults = (response) => {
-  return response.then(({ results }) => {
-    let filteredItems = results.filter((r) => !r.adult);
-    return convertItemsToTiles(filteredItems);
-  });
+  return response
+    .then(({ results }) => {
+      let filteredItems = results.filter((r) => !r.adult);
+      return convertItemsToTiles(filteredItems);
+    })
+    .catch((err) => {
+      console.error("[HANDLE_RESULTS_ERROR] error:", err.message, err.stack);
+      throw err;
+    });
 };
 
 const fetchPopular = (type) => {
@@ -26,6 +31,9 @@ const fetchGenreMovies = (genres) => {
     return handleResults(
       api.get(`/discover/movie?with_genres=${targetGenreIds.join()}`)
     );
+  }).catch((err) => {
+    console.error("[FETCH_GENRE_MOVIES_ERROR] genres:", genres, "error:", err.message, err.stack);
+    throw err;
   });
 };
 
