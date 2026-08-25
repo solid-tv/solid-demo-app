@@ -15,7 +15,6 @@ declare module "@solidtv/solid" {
     Announcer: (string | number)[];
     Menu: (string | number)[];
     Escape: (string | number)[];
-    Backspace: (string | number)[];
   }
   interface ElementNode {
     heroContent?: boolean;
@@ -80,17 +79,27 @@ const LeftNavWrapper = (props) => {
   return (
     <view
       ref={window.APP as any}
-      onAnnouncer={() => (announcer.enabled = !announcer.enabled)}
-      onLast={() => history.back()}
-      onMenu={() => navigate("/")}
-      onBack={() => navigate(-1)}
+      onAnnouncer={() => { announcer.enabled = !announcer.enabled; return true; }}
+      onLast={() => { history.back(); return true; }}
+      onMenu={() => { navigate("/"); return true; }}
+      onBack={() => {
+        // TVs only have one back key, so it does double duty: from page content
+        // it opens the nav drawer, and from the drawer it walks history back.
+        if (navDrawer.states.has("focus")) {
+          navigate(-1);
+        } else {
+          focusNavDrawer();
+        }
+        return true;
+      }}
       style={{ width: 1920, height: 1080 }}
-      onBackspace={focusNavDrawer}
-      onLeft={focusNavDrawer}
-      onRight={() =>
-        navDrawer.states.has("focus") &&
-        (lastFocused || pageContainer).setFocus()
-      }
+      onLeft={() => { focusNavDrawer(); return true; }}
+      onRight={() => {
+        if (navDrawer.states.has("focus")) {
+          (lastFocused || pageContainer).setFocus();
+          return true;
+        }
+      }}
     >
       <Background />
       <FPSCounter mountX={1} x={1910} y={10} alpha={1} />

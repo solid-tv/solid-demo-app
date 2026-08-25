@@ -18,30 +18,6 @@
   };
 })();
 
-// Normalize legacy arrow keys to standardized values for third-party navigation libraries
-(function() {
-  const keyMap = {
-    'Left': 'ArrowLeft',
-    'Right': 'ArrowRight',
-    'Up': 'ArrowUp',
-    'Down': 'ArrowDown'
-  };
-  function normalizeKey(e) {
-    if (e && keyMap[e.key]) {
-      try {
-        Object.defineProperty(e, 'key', {
-          value: keyMap[e.key],
-          configurable: true,
-          writable: true,
-          enumerable: true
-        });
-      } catch (err) {}
-    }
-  }
-  window.addEventListener('keydown', normalizeKey, true);
-  window.addEventListener('keyup', normalizeKey, true);
-})();
-
 import { createRenderer, Config, loadFonts } from "@solidtv/solid";
 import { WebGlCoreRenderer, SdfTextRenderer } from "@solidtv/renderer/webgl";
 import { CanvasCoreRenderer, CanvasTextRenderer } from "@solidtv/renderer/canvas";
@@ -157,17 +133,6 @@ const devicePhysicalPixelRatio = {
 
 const logFps = true;
 Config.debug = false;
-Config.keyMap = {
-  Left: ["ArrowLeft", "Left", 37],
-  Right: ["ArrowRight", "Right", 39],
-  Up: ["ArrowUp", "Up", 38],
-  Down: ["ArrowDown", "Down", 40],
-  Enter: ["Enter", 13],
-  Back: ["Back", 461, 10009, "Escape", 27],
-  Backspace: ["Backspace", 8],
-  Menu: ["m", "Menu", 224],
-  Announcer: ["a"]
-};
 // Config.keyDebug = true;
 Config.animationsEnabled = animationsEnabled === "true";
 Config.fontSettings.fontFamily = "Roboto";

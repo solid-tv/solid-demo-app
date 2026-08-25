@@ -10,12 +10,15 @@ const App = (props) => {
         Announcer: ["a"],
         Menu: ["m"],
         Escape: ["Escape", 27],
-        Backspace: ["Backspace", 8, 10009],
-        Back: ["b"],
-        Left: ["ArrowLeft", 37],
-        Right: ["ArrowRight", 39],
-        Up: ["ArrowUp", 38],
-        Down: ["ArrowDown", 40],
+        // Every back-ish key maps to Back. Note the framework resolves
+        // keyMapEntries[e.key] BEFORE keyMapEntries[e.keyCode], so the key
+        // strings TVs report ("Back"/"GoBack"/"Backspace") must be listed here
+        // or a correct keyCode will never be consulted.
+        Back: ["Back", "GoBack", "Backspace", "b", 8, 461, 10009, "Escape", 27],
+        Left: ["ArrowLeft", "Left", 37],
+        Right: ["ArrowRight", "Right", 39],
+        Up: ["ArrowUp", "Up", 38],
+        Down: ["ArrowDown", "Down", 40],
         Enter: ["Enter", 13],
         Play: ['Play', 415],
         Pause: ['Pause', 19],
