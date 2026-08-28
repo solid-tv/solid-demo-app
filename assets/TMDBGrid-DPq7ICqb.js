@@ -235,4 +235,3 @@ var TMDB = props => {
 };
 
 export { TMDB as default };
-//# sourceMappingURL=TMDBGrid-DPq7ICqb.js.map

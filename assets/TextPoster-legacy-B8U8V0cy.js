@@ -226,4 +226,3 @@
         };
     });
 })();
-//# sourceMappingURL=TextPoster-legacy-B8U8V0cy.js.map

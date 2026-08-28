@@ -46,4 +46,3 @@ var Column = props => (() => {
 })();
 
 export { Column as t };
-//# sourceMappingURL=Column-WNuUSRCy.js.map

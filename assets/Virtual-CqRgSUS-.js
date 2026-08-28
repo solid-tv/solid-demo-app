@@ -63,4 +63,3 @@ var VirtualPage = props => {
 };
 
 export { VirtualPage as default };
-//# sourceMappingURL=Virtual-CqRgSUS-.js.map

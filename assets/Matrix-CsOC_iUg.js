@@ -65,4 +65,3 @@ var Matrix = () => {
 };
 
 export { Matrix as default };
-//# sourceMappingURL=Matrix-CsOC_iUg.js.map

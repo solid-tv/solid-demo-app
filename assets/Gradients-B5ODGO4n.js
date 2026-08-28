@@ -35,4 +35,3 @@ var Default = () => {
 };
 
 export { Default as default };
-//# sourceMappingURL=Gradients-B5ODGO4n.js.map

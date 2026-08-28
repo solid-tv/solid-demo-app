@@ -86,4 +86,3 @@ function SuspensePage() {
 }
 
 export { SuspensePage as default };
-//# sourceMappingURL=suspense-DcWkvOg0.js.map

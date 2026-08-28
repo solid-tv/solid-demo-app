@@ -314,4 +314,3 @@
         };
     });
 })();
-//# sourceMappingURL=FPSCounter-legacy-BhUGeBEH.js.map

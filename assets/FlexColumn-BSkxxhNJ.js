@@ -152,4 +152,3 @@ var FlexColumnPage = () => {
 };
 
 export { FlexColumnPage as default };
-//# sourceMappingURL=FlexColumn-BSkxxhNJ.js.map

@@ -168,4 +168,3 @@ var Loops = props => {
 };
 
 export { Loops as default };
-//# sourceMappingURL=Infinite-CSIMgE-G.js.map

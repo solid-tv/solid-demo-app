@@ -542,4 +542,3 @@ function createRouteContext(router, parent, outlet, match) {
 }
 
 export { saveCurrentDepth as _, createRouterContext as a, setInPreloadFn as c, useNavigate as d, useParams as f, notifyIfNotBlocked as g, keepDepth as h, createRouteContext as i, useLocation as l, createBeforeLeave as m, RouterContextObj as n, getIntent as o, usePreloadRoute as p, createBranches as r, getRouteMatches as s, RouteContextObj as t, useMatch as u };
-//# sourceMappingURL=routing-C0_eGPl5.js.map

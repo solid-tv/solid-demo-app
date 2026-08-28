@@ -53,4 +53,3 @@ var FlexMenu = () => {
 };
 
 export { FlexMenu, FlexMenu as default };
-//# sourceMappingURL=FlexMenu-BhdMB9dQ.js.map

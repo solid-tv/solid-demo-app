@@ -141,4 +141,3 @@ var People = () => {
 };
 
 export { People as default };
-//# sourceMappingURL=People-Cdg_T-2v.js.map

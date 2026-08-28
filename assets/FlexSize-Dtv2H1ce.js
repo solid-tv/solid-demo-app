@@ -341,4 +341,3 @@ var FlexSizePage = () => {
 };
 
 export { FlexSizePage as default };
-//# sourceMappingURL=FlexSize-Dtv2H1ce.js.map

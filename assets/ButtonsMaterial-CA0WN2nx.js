@@ -72,4 +72,3 @@ var MaterialButtonsPage = () => {
 };
 
 export { MaterialButtonsPage as default };
-//# sourceMappingURL=ButtonsMaterial-CA0WN2nx.js.map

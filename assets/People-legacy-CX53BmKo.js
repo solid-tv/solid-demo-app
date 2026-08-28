@@ -267,4 +267,3 @@
         };
     });
 })();
-//# sourceMappingURL=People-legacy-CX53BmKo.js.map

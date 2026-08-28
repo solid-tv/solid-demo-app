@@ -353,4 +353,3 @@ var Announcer = {
 };
 
 export { createScheduled as n, throttle as r, Announcer as t };
-//# sourceMappingURL=announcer-D0DQuHu4.js.map

@@ -188,4 +188,3 @@ var Entity = props => {
 };
 
 export { Entity as default };
-//# sourceMappingURL=Entity-COZsPDVV.js.map

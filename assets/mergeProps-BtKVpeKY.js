@@ -13,4 +13,3 @@ var mergeProps = (...sources) => {
 };
 
 export { mergeProps as t };
-//# sourceMappingURL=mergeProps-BtKVpeKY.js.map

@@ -230,4 +230,3 @@ var CreatePage = () => {
 };
 
 export { CreatePage as default };
-//# sourceMappingURL=Create-OX_9N_7i.js.map

@@ -17,4 +17,3 @@ var debounce = (callback, wait) => {
 };
 
 export { debounce as t };
-//# sourceMappingURL=dist-BUHcVfc2.js.map

@@ -245,4 +245,3 @@ var FPSCounter = props => (() => {
 })();
 
 export { resetCounter as n, setupFPS as r, FPSCounter as t };
-//# sourceMappingURL=FPSCounter-B6MjPBIM.js.map

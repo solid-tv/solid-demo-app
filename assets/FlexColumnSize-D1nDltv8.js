@@ -141,4 +141,3 @@ var FlexColumnPage = () => {
 };
 
 export { FlexColumnPage as default };
-//# sourceMappingURL=FlexColumnSize-D1nDltv8.js.map

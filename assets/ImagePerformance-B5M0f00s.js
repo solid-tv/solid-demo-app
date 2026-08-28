@@ -131,4 +131,3 @@ var ImagePerformance = () => {
 };
 
 export { ImagePerformance as default };
-//# sourceMappingURL=ImagePerformance-B5M0f00s.js.map

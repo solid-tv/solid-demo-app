@@ -1883,4 +1883,3 @@ function Firebolt() {
 }
 
 export { Firebolt as default };
-//# sourceMappingURL=Firebolt-B2TfCgrL.js.map
