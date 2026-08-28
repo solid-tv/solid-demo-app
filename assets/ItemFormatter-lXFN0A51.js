@@ -30,3 +30,4 @@ function convertItemsToTiles(items = []) {
 }
 
 export { convertItemsToTiles as t };
+//# sourceMappingURL=ItemFormatter-lXFN0A51.js.map
