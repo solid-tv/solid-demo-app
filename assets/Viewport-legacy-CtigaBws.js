@@ -1,0 +1,160 @@
+(function() {
+    function _toConsumableArray(r) {
+        return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread();
+    }
+    function _nonIterableSpread() {
+        throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+    }
+    function _iterableToArray(r) {
+        if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r);
+    }
+    function _arrayWithoutHoles(r) {
+        if (Array.isArray(r)) return _arrayLikeToArray(r);
+    }
+    function _slicedToArray(r, e) {
+        return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest();
+    }
+    function _nonIterableRest() {
+        throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+    }
+    function _unsupportedIterableToArray(r, a) {
+        if (r) {
+            if ("string" == typeof r) return _arrayLikeToArray(r, a);
+            var t = {}.toString.call(r).slice(8, -1);
+            return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0;
+        }
+    }
+    function _arrayLikeToArray(r, a) {
+        (null == a || a > r.length) && (a = r.length);
+        for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];
+        return n;
+    }
+    function _iterableToArrayLimit(r, l) {
+        var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];
+        if (null != t) {
+            var e, n, i, u, a = [], f = !0, o = !1;
+            try {
+                if (i = (t = t.call(r)).next, 0 === l) {
+                    if (Object(t) !== t) return;
+                    f = !1;
+                } else for (;!(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0) ;
+            } catch (r) {
+                o = !0, n = r;
+            } finally {
+                try {
+                    if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return;
+                } finally {
+                    if (o) throw n;
+                }
+            }
+            return a;
+        }
+    }
+    function _arrayWithHoles(r) {
+        if (Array.isArray(r)) return r;
+    }
+    System.register([ "./render-legacy-DtakB29i.js", "./state-legacy-C_-XYt6A.js" ], function(_export, _context) {
+        "use strict";
+        var onMount, onCleanup, createElement, use, insert, setProp, createSignal, insertNode, setGlobalBackground, Viewport_default;
+        return {
+            setters: [ function(_renderLegacy001Js) {
+                onMount = _renderLegacy001Js.$;
+                onCleanup = _renderLegacy001Js.Q;
+                createElement = _renderLegacy001Js.a;
+                use = _renderLegacy001Js.g;
+                insert = _renderLegacy001Js.l;
+                setProp = _renderLegacy001Js.m;
+                createSignal = _renderLegacy001Js.q;
+                insertNode = _renderLegacy001Js.u;
+            }, function(_stateLegacy00iJs) {
+                setGlobalBackground = _stateLegacy00iJs.n;
+            } ],
+            execute: function execute() {
+                _export("default", Viewport_default = function Viewport_default() {
+                    var ball, invervalTimer;
+                    var _createSignal = createSignal([]), _createSignal2 = _slicedToArray(_createSignal, 2), ballStatus = _createSignal2[0], setBallStatus = _createSignal2[1];
+                    var styleBall = {
+                        width: 100,
+                        height: 100,
+                        x: -400,
+                        y: -400,
+                        rotation: 0,
+                        borderRadius: 50,
+                        color: 1116206591,
+                        transition: {
+                            x: {
+                                duration: 1250,
+                                easing: "linear"
+                            },
+                            y: {
+                                duration: 1250,
+                                easing: "linear"
+                            },
+                            rotation: {
+                                duration: 1400,
+                                easing: "ease-in-out"
+                            }
+                        }
+                    };
+                    var Title = {
+                        fontSize: 32,
+                        x: 960,
+                        y: 540,
+                        mount: .5,
+                        lineheight: 52
+                    };
+                    var randomIntBetween = function randomIntBetween(from, to) {
+                        return Math.floor(Math.random() * (to - from + 1) + from);
+                    };
+                    onMount(function() {
+                        setGlobalBackground(255);
+                        ball.x = 1820 / 2;
+                        ball.y = 980 / 2;
+                        invervalTimer = setInterval(function() {
+                            ball.rotation = randomIntBetween(-90, 90);
+                            ball.x = randomIntBetween(-300, 2220);
+                            ball.y = randomIntBetween(-300, 1380);
+                        }, 2500);
+                    });
+                    function logEvent(name, elm) {
+                        setBallStatus(function(prev) {
+                            return [].concat(_toConsumableArray(prev), [ name ]).slice(-4);
+                        });
+                        console.log(name);
+                    }
+                    onCleanup(function() {
+                        clearInterval(invervalTimer);
+                    });
+                    return function() {
+                        var _el$ = createElement("view"), _el$2 = createElement("text"), _el$3 = createElement("view");
+                        insertNode(_el$, _el$2);
+                        insertNode(_el$, _el$3);
+                        setProp(_el$2, "style", Title);
+                        insert(_el$2, function() {
+                            return ballStatus().join("\n");
+                        });
+                        var _ref$ = ball;
+                        typeof _ref$ === "function" ? use(_ref$, _el$3) : ball = _el$3;
+                        setProp(_el$3, "autofocus", true);
+                        setProp(_el$3, "style", styleBall);
+                        setProp(_el$3, "onEvent", {
+                            inBounds: function inBounds(elm) {
+                                return logEvent("inBounds", elm);
+                            },
+                            outOfBounds: function outOfBounds(elm) {
+                                return logEvent("outOfBounds", elm);
+                            },
+                            inViewport: function inViewport(elm) {
+                                return logEvent("inViewport", elm);
+                            },
+                            outOfViewport: function outOfViewport(elm) {
+                                return logEvent("outOfViewport", elm);
+                            }
+                        });
+                        return _el$;
+                    }();
+                });
+            }
+        };
+    });
+})();
