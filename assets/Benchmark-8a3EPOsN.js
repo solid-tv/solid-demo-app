@@ -1,0 +1,861 @@
+import { A as For, I as batch, N as Show, O as activeElement, Q as onCleanup, V as createEffect, Z as on, a as createElement, c as effect, d as memo, g as use, i as createComponent, l as insert, m as setProp, q as createSignal, s as createTextNode, u as insertNode, x as renderer } from "./render-Dr57z7L3.js";
+
+import { n as LazyRow, t as LazyColumn } from "./Lazy-BCzNX9f2.js";
+
+import { n as resetCounter } from "./FPSCounter-B6MjPBIM.js";
+
+import { t as ContentBlock } from "./ContentBlock-DFgzYZTy.js";
+
+import { n as useFocusStack } from "./createFocusStack-CzTAImXq.js";
+
+import { c as TitleRow, i as Hero, t as AssetPanel } from "./components-Bhg6v2sg.js";
+
+import { r as styles_default } from "./styles-BcDKugwt.js";
+
+import { n as setGlobalBackground } from "./state-guayLGTd.js";
+
+import { t as debounce } from "./dist-BUHcVfc2.js";
+
+var TOTAL_CYCLES = 2;
+
+var NAV_DELAY_MS = 300;
+
+var FRAME_TIME_SPLIT_MS = 32;
+
+var FRAME_TIME_FINE_MS = 1;
+
+var FRAME_TIME_COARSE_MS = 8;
+
+var FRAME_TIME_BUCKET_COUNT = 45;
+
+function frameTimeBucketLowerBound(index) {
+    return index < FRAME_TIME_SPLIT_MS ? index * FRAME_TIME_FINE_MS : FRAME_TIME_SPLIT_MS + (index - FRAME_TIME_SPLIT_MS) * FRAME_TIME_COARSE_MS;
+}
+
+function percentileMs(buckets, fraction) {
+    let total = 0;
+    for (let i = 0; i < buckets.length; i++) {
+        var _buckets$i;
+        total += (_buckets$i = buckets[i]) !== null && _buckets$i !== void 0 ? _buckets$i : 0;
+    }
+    if (total === 0) return 0;
+    const target = total * fraction;
+    let seen = 0;
+    for (let i = 0; i < buckets.length; i++) {
+        var _buckets$i2;
+        seen += (_buckets$i2 = buckets[i]) !== null && _buckets$i2 !== void 0 ? _buckets$i2 : 0;
+        if (seen >= target) return frameTimeBucketLowerBound(i);
+    }
+    return frameTimeBucketLowerBound(buckets.length - 1);
+}
+
+var Benchmark = props => {
+    var _window$bundleType;
+    let cancelled = false;
+    onCleanup(() => {
+        cancelled = true;
+    });
+    const [heroContent, setHeroContent] = createSignal({});
+    const [openPanel, setOpenPanel] = createSignal(false);
+    const {storeFocus: storeFocus, restoreFocus: restoreFocus} = useFocusStack();
+    let contentBlock, solidLogo, firstRun = true;
+    let columnRef;
+    const bundleType = (_window$bundleType = window.bundleType) !== null && _window$bundleType !== void 0 ? _window$bundleType : "unknown";
+    const [benchmarkStatus, setBenchmarkStatus] = createSignal("Waiting for data...");
+    const [benchmarkRunning, setBenchmarkRunning] = createSignal(false);
+    const [benchmarkDone, setBenchmarkDone] = createSignal(false);
+    const [dataLoaded, setDataLoaded] = createSignal(false);
+    const [renderTime, setRenderTime] = createSignal(null);
+    const [capabilities, setCapabilities] = createSignal(null);
+    const [perfStats, setPerfStats] = createSignal(null);
+    const [drawStats, setDrawStats] = createSignal(null);
+    const [contextSpy, setContextSpy] = createSignal(null);
+    let fpsValues = [];
+    let animatedFpsValues = [];
+    let cumulativeAllBuckets = new Array(FRAME_TIME_BUCKET_COUNT).fill(0);
+    let cumulativeAnimBuckets = new Array(FRAME_TIME_BUCKET_COUNT).fill(0);
+    let totalRenderedFrames = 0;
+    let totalRenderedMs = 0;
+    let totalIdleTicks = 0;
+    let totalAnimatedFrames = 0;
+    let totalAnimatedMs = 0;
+    let worstMaxFrameTime = 0;
+    let worstAnimatedMaxFrameTime = 0;
+    let totalUpdateMs = 0;
+    let totalRenderMs = 0;
+    let totalUploadMs = 0;
+    let worstMaxUpdateMs = 0;
+    let worstMaxRenderMs = 0;
+    let worstMaxUploadMs = 0;
+    let totalUploadedTextures = 0;
+    let totalUploadFrames = 0;
+    let worstMaxUploadQueueSize = 0;
+    let activeAnimationsSamples = [];
+    let worstMaxActiveAnimations = 0;
+    let maxRenderOps = 0;
+    let maxQuads = 0;
+    let lastContextSpy = null;
+    let fpsListenerAttached = false;
+    function attachFpsListener() {
+        if (fpsListenerAttached) return;
+        const root = renderer;
+        if (!root) return;
+        fpsListenerAttached = true;
+        if (typeof root.getCapabilities === "function" && !capabilities()) setCapabilities(root.getCapabilities());
+        root.on("fpsUpdate", (_target, fpsData) => {
+            const fps = typeof fpsData === "number" ? fpsData : fpsData == null ? void 0 : fpsData.fps;
+            if ((fpsData == null ? void 0 : fpsData.capabilities) && !capabilities()) setCapabilities(fpsData.capabilities);
+            if (fps > 5 && benchmarkRunning()) {
+                fpsValues.push(fps);
+                if (typeof fpsData === "object" && fpsData !== null) {
+                    const payload = fpsData;
+                    if (typeof payload.animatedFps === "number" && payload.animatedFrames > 0) animatedFpsValues.push(payload.animatedFps);
+                    if (Array.isArray(payload.frameTimeBuckets)) for (let i = 0; i < Math.min(payload.frameTimeBuckets.length, cumulativeAllBuckets.length); i++) cumulativeAllBuckets[i] += payload.frameTimeBuckets[i] || 0;
+                    if (Array.isArray(payload.animatedFrameTimeBuckets)) for (let i = 0; i < Math.min(payload.animatedFrameTimeBuckets.length, cumulativeAnimBuckets.length); i++) cumulativeAnimBuckets[i] += payload.animatedFrameTimeBuckets[i] || 0;
+                    totalRenderedFrames += payload.renderedFrames || 0;
+                    totalRenderedMs += payload.renderedMs || 0;
+                    totalIdleTicks += payload.idleTicks || 0;
+                    totalAnimatedFrames += payload.animatedFrames || 0;
+                    totalAnimatedMs += payload.animatedMs || 0;
+                    if (typeof payload.maxFrameTime === "number") worstMaxFrameTime = Math.max(worstMaxFrameTime, payload.maxFrameTime);
+                    if (typeof payload.animatedMaxFrameTime === "number") worstAnimatedMaxFrameTime = Math.max(worstAnimatedMaxFrameTime, payload.animatedMaxFrameTime);
+                    totalUpdateMs += payload.updateMs || 0;
+                    totalRenderMs += payload.renderMs || 0;
+                    totalUploadMs += payload.uploadMs || 0;
+                    if (typeof payload.maxUpdateMs === "number") worstMaxUpdateMs = Math.max(worstMaxUpdateMs, payload.maxUpdateMs);
+                    if (typeof payload.maxRenderMs === "number") worstMaxRenderMs = Math.max(worstMaxRenderMs, payload.maxRenderMs);
+                    if (typeof payload.maxUploadMs === "number") worstMaxUploadMs = Math.max(worstMaxUploadMs, payload.maxUploadMs);
+                    totalUploadedTextures += payload.uploadedTextures || 0;
+                    totalUploadFrames += payload.uploadFrames || 0;
+                    if (typeof payload.maxUploadQueueSize === "number") worstMaxUploadQueueSize = Math.max(worstMaxUploadQueueSize, payload.maxUploadQueueSize);
+                    if (typeof payload.meanActiveAnimations === "number") activeAnimationsSamples.push(payload.meanActiveAnimations);
+                    if (typeof payload.maxActiveAnimations === "number") worstMaxActiveAnimations = Math.max(worstMaxActiveAnimations, payload.maxActiveAnimations);
+                    if (typeof payload.renderOps === "number") maxRenderOps = Math.max(maxRenderOps, payload.renderOps);
+                    if (typeof payload.quads === "number") maxQuads = Math.max(maxQuads, payload.quads);
+                    if (payload.contextSpyData) lastContextSpy = payload.contextSpyData;
+                }
+            }
+        });
+    }
+    function simulateKeyDown(key) {
+        try {
+            const event = document.createEvent("Event");
+            event.initEvent("keydown", true, true);
+            Object.defineProperty(event, "key", {
+                value: key,
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(event, "code", {
+                value: key === "ArrowDown" ? "ArrowDown" : "ArrowUp",
+                enumerable: true,
+                configurable: true
+            });
+            document.dispatchEvent(event);
+        } catch (e) {
+            console.error("Failed to simulate key down:", e);
+        }
+    }
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+    async function runBenchmark() {
+        resetCounter();
+        const totalRows = props.data.rows.length;
+        if (totalRows === 0) {
+            setBenchmarkStatus("No rows to benchmark");
+            return;
+        }
+        fpsValues = [];
+        animatedFpsValues = [];
+        cumulativeAllBuckets = new Array(FRAME_TIME_BUCKET_COUNT).fill(0);
+        cumulativeAnimBuckets = new Array(FRAME_TIME_BUCKET_COUNT).fill(0);
+        totalRenderedFrames = 0;
+        totalRenderedMs = 0;
+        totalIdleTicks = 0;
+        totalAnimatedFrames = 0;
+        totalAnimatedMs = 0;
+        worstMaxFrameTime = 0;
+        worstAnimatedMaxFrameTime = 0;
+        totalUpdateMs = 0;
+        totalRenderMs = 0;
+        totalUploadMs = 0;
+        worstMaxUpdateMs = 0;
+        worstMaxRenderMs = 0;
+        worstMaxUploadMs = 0;
+        totalUploadedTextures = 0;
+        totalUploadFrames = 0;
+        worstMaxUploadQueueSize = 0;
+        activeAnimationsSamples = [];
+        worstMaxActiveAnimations = 0;
+        maxRenderOps = 0;
+        maxQuads = 0;
+        lastContextSpy = null;
+        setPerfStats(null);
+        setDrawStats(null);
+        setContextSpy(null);
+        setBenchmarkRunning(true);
+        setBenchmarkDone(false);
+        attachFpsListener();
+        setBenchmarkStatus("Starting benchmark...");
+        await sleep(1500);
+        for (let cycle = 0; cycle < TOTAL_CYCLES; cycle++) {
+            if (cancelled) return;
+            for (let i = 0; i < totalRows - 1; i++) {
+                if (cancelled) return;
+                setBenchmarkStatus(`Cycle ${cycle + 1}/${TOTAL_CYCLES} - Down ${i + 1}/${totalRows - 1}`);
+                simulateKeyDown("ArrowDown");
+                await sleep(NAV_DELAY_MS);
+            }
+            if (cancelled) return;
+            for (let i = 0; i < totalRows - 1; i++) {
+                if (cancelled) return;
+                setBenchmarkStatus(`Cycle ${cycle + 1}/${TOTAL_CYCLES} - Up ${i + 1}/${totalRows - 1}`);
+                simulateKeyDown("ArrowUp");
+                await sleep(NAV_DELAY_MS);
+            }
+        }
+        if (cancelled) return;
+        const avgAnimatedFps = totalAnimatedMs > 0 && totalAnimatedFrames > 0 ? totalAnimatedFrames / (totalAnimatedMs / 1e3) : animatedFpsValues.length > 0 ? animatedFpsValues.reduce((a, b) => a + b, 0) / animatedFpsValues.length : 0;
+        const avgFps = totalRenderedMs > 0 && totalRenderedFrames > 0 ? totalRenderedFrames / (totalRenderedMs / 1e3) : fpsValues.length > 0 ? fpsValues.reduce((a, b) => a + b, 0) / fpsValues.length : 0;
+        const minFps = fpsValues.length > 0 ? Math.min(...fpsValues) : 0;
+        const maxFps = fpsValues.length > 0 ? Math.max(...fpsValues) : 0;
+        const animP95 = percentileMs(cumulativeAnimBuckets, .95);
+        const animP99 = percentileMs(cumulativeAnimBuckets, .99);
+        const allP95 = percentileMs(cumulativeAllBuckets, .95);
+        const allP99 = percentileMs(cumulativeAllBuckets, .99);
+        const avgActiveAnims = activeAnimationsSamples.length > 0 ? activeAnimationsSamples.reduce((a, b) => a + b, 0) / activeAnimationsSamples.length : 0;
+        const meanUploadCost = totalUploadedTextures > 0 ? totalUploadMs / totalUploadedTextures : 0;
+        const calculatedStats = {
+            avgFps: avgFps,
+            minFps: minFps,
+            maxFps: maxFps,
+            totalRenderedFrames: totalRenderedFrames,
+            totalRenderedMs: totalRenderedMs,
+            totalIdleTicks: totalIdleTicks,
+            avgAnimatedFps: avgAnimatedFps,
+            totalAnimatedFrames: totalAnimatedFrames,
+            totalAnimatedMs: totalAnimatedMs,
+            animP95: animP95,
+            animP99: animP99,
+            animMaxFrameTime: worstAnimatedMaxFrameTime,
+            p95: allP95,
+            p99: allP99,
+            maxFrameTime: worstMaxFrameTime,
+            totalUpdateMs: totalUpdateMs,
+            totalRenderMs: totalRenderMs,
+            totalUploadMs: totalUploadMs,
+            maxUpdateMs: worstMaxUpdateMs,
+            maxRenderMs: worstMaxRenderMs,
+            maxUploadMs: worstMaxUploadMs,
+            uploadedTextures: totalUploadedTextures,
+            uploadFrames: totalUploadFrames,
+            meanUploadCostMs: meanUploadCost,
+            maxUploadQueueSize: worstMaxUploadQueueSize,
+            avgActiveAnimations: avgActiveAnims,
+            maxActiveAnimations: worstMaxActiveAnimations,
+            renderOps: maxRenderOps,
+            quads: maxQuads
+        };
+        batch(() => {
+            setPerfStats(calculatedStats);
+            setDrawStats({
+                renderOps: maxRenderOps,
+                quads: maxQuads
+            });
+            setContextSpy(lastContextSpy);
+            if (typeof (renderer == null ? void 0 : renderer.getCapabilities) === "function" && !capabilities()) setCapabilities(renderer.getCapabilities());
+            setBenchmarkDone(true);
+            setBenchmarkRunning(false);
+        });
+        if (fpsValues.length > 0 || totalRenderedFrames > 0) {
+            const animRateStr = avgAnimatedFps > 0 ? `${avgAnimatedFps.toFixed(1)} FPS` : `${avgFps.toFixed(1)} FPS`;
+            setBenchmarkStatus(`Anim: ${animRateStr} (p95: ${animP95}ms, max: ${worstAnimatedMaxFrameTime.toFixed(0)}ms) | All: ${avgFps.toFixed(1)} FPS`);
+        } else setBenchmarkStatus("Done - No FPS samples collected");
+    }
+    createEffect(() => {
+        var _props$data;
+        const rows = (_props$data = props.data) == null ? void 0 : _props$data.rows;
+        if (!rows || rows.length === 0) return;
+        const firstItems = rows[0].items();
+        if (firstItems && firstItems.length > 0) {
+            if (!dataLoaded()) {
+                const startTime = performance.now();
+                setDataLoaded(true);
+                renderer.on("idle", () => {
+                    if (renderTime() === null) setRenderTime(performance.now() - startTime);
+                });
+            }
+            if (!benchmarkDone() && !benchmarkRunning()) {
+                attachFpsListener();
+                const timeoutId = setTimeout(() => {
+                    if (!cancelled) runBenchmark();
+                }, 2e3);
+                onCleanup(() => clearTimeout(timeoutId));
+            }
+        }
+    });
+    const delayedBackgrounds = debounce(setGlobalBackground, 800);
+    const delayedHero = debounce(content => setHeroContent(content || {}), 600);
+    createEffect(on(activeElement, elm => {
+        if (!elm) return;
+        const item = elm.item || {};
+        if (firstRun) {
+            item.backdrop && setGlobalBackground(item.backdrop);
+            item.heroContent && setHeroContent(item.heroContent);
+            firstRun = false;
+        } else {
+            item.backdrop && delayedBackgrounds(item.backdrop);
+            item.heroContent && delayedHero(item.heroContent);
+        }
+    }, {
+        defer: true
+    }));
+    function onRowChanged(selectedIndex, column, row, lastIndex) {
+        if (selectedIndex === lastIndex) return;
+        const values = selectedIndex === 0 ? {
+            y: 300,
+            alpha: 1
+        } : {
+            y: 200,
+            alpha: 0
+        };
+        contentBlock.animate(values, {
+            duration: 300,
+            easing: "ease-in-out"
+        }).start();
+        const values2 = selectedIndex === 0 ? {
+            y: 80,
+            alpha: 1
+        } : {
+            y: 0,
+            alpha: 0
+        };
+        solidLogo.animate(values2, {
+            duration: 300,
+            easing: "ease-in-out"
+        }).start();
+    }
+    const overlayBgStyle = {
+        width: 700,
+        height: 140,
+        color: 204,
+        borderRadius: 12
+    };
+    const overlayTitleStyle = {
+        fontFamily: "Roboto",
+        fontSize: 28,
+        color: 4294967295,
+        lineHeight: 34
+    };
+    const overlayStatusStyle = {
+        fontFamily: "Roboto",
+        fontSize: 22,
+        lineHeight: 28
+    };
+    const resultsBgStyle = {
+        color: 245,
+        borderRadius: 12
+    };
+    const OVERLAY_WIDTH = 580;
+    const ROW_H = 26;
+    const resultsHeaderStyle = {
+        fontFamily: "Roboto",
+        fontSize: 16,
+        lineHeight: 22,
+        color: 14221311
+    };
+    const resultsLabelStyle = {
+        fontFamily: "Roboto",
+        fontSize: 17,
+        lineHeight: 24,
+        color: 2661195519
+    };
+    const resultsValueStyle = {
+        fontFamily: "Roboto",
+        fontSize: 17,
+        lineHeight: 24,
+        color: 4294967295
+    };
+    const ResultRow = rowProps => (() => {
+        var _el$ = createElement("view"), _el$2 = createElement("text"), _el$3 = createElement("text");
+        insertNode(_el$, _el$2);
+        insertNode(_el$, _el$3);
+        setProp(_el$2, "x", 24);
+        setProp(_el$2, "style", resultsLabelStyle);
+        insert(_el$2, () => rowProps.label);
+        setProp(_el$3, "x", 290);
+        setProp(_el$3, "style", resultsValueStyle);
+        insert(_el$3, () => rowProps.value);
+        effect(_p$ => {
+            var _rowProps$valueColor;
+            var _v$ = rowProps.y, _v$2 = (_rowProps$valueColor = rowProps.valueColor) !== null && _rowProps$valueColor !== void 0 ? _rowProps$valueColor : 4294967295;
+            _v$ !== _p$.e && (_p$.e = setProp(_el$, "y", _v$, _p$.e));
+            _v$2 !== _p$.t && (_p$.t = setProp(_el$3, "color", _v$2, _p$.t));
+            return _p$;
+        }, {
+            e: void 0,
+            t: void 0
+        });
+        return _el$;
+    })();
+    const SectionHeader = headerProps => (() => {
+        var _el$4 = createElement("view"), _el$5 = createElement("text");
+        insertNode(_el$4, _el$5);
+        setProp(_el$5, "x", 24);
+        setProp(_el$5, "style", resultsHeaderStyle);
+        insert(_el$5, () => headerProps.title);
+        effect(_$p => setProp(_el$4, "y", headerProps.y, _$p));
+        return _el$4;
+    })();
+    const SectionDivider = divProps => (() => {
+        var _el$6 = createElement("view");
+        setProp(_el$6, "width", OVERLAY_WIDTH - 48);
+        setProp(_el$6, "height", 1);
+        setProp(_el$6, "x", 24);
+        setProp(_el$6, "color", 4294967074);
+        effect(_$p => setProp(_el$6, "y", divProps.y, _$p));
+        return _el$6;
+    })();
+    const webGlLabel = caps => {
+        var _caps$webGlVersion;
+        return caps.renderMode === "webgl" ? `WebGL ${(_caps$webGlVersion = caps.webGlVersion) !== null && _caps$webGlVersion !== void 0 ? _caps$webGlVersion : "?"}` : "Canvas2D";
+    };
+    const glEntries = () => {
+        const spy = contextSpy();
+        if (!spy) return [];
+        return Object.entries(spy).sort((a, b) => b[1] - a[1]);
+    };
+    const SEC_GL_Y = 486;
+    const glStartY = 512;
+    const glRowsCount = () => glEntries().length;
+    const glRowsHeight = () => glRowsCount() > 0 ? glRowsCount() * ROW_H : ROW_H;
+    const dividerCapsY = () => glStartY + glRowsHeight() + 6;
+    const secCapsY = () => dividerCapsY() + 10;
+    const capsStartY = () => secCapsY() + 26;
+    const overlayHeight = () => capsStartY() + 5 * ROW_H + 18;
+    const fpsColor = fpsVal => fpsVal >= 55 ? 16746751 : fpsVal >= 30 ? 4291559679 : 4283782655;
+    return createComponent(Show, {
+        get when() {
+            return dataLoaded();
+        },
+        get fallback() {
+            return (() => {
+                var _el$22 = createElement("text");
+                insertNode(_el$22, createTextNode(`Loading Data...`));
+                setProp(_el$22, "x", 960);
+                setProp(_el$22, "y", 540);
+                setProp(_el$22, "fontSize", 40);
+                setProp(_el$22, "color", 4294967295);
+                setProp(_el$22, "mount", .5);
+                return _el$22;
+            })();
+        },
+        get children() {
+            var _el$7 = createElement("view"), _el$8 = createElement("view"), _el$9 = createElement("text"), _el$1 = createElement("view"), _el$10 = createElement("view"), _el$11 = createElement("text"), _el$13 = createElement("view"), _el$14 = createElement("text"), _el$16 = createElement("text"), _el$17 = createElement("text"), _el$18 = createElement("text");
+            insertNode(_el$7, _el$8);
+            insertNode(_el$7, _el$13);
+            setProp(_el$7, "forwardFocus", 2);
+            insertNode(_el$8, _el$9);
+            insertNode(_el$8, _el$1);
+            insertNode(_el$8, _el$10);
+            insertNode(_el$8, _el$11);
+            var _ref$ = solidLogo;
+            typeof _ref$ === "function" ? use(_ref$, _el$8) : solidLogo = _el$8;
+            setProp(_el$8, "width", 300);
+            setProp(_el$8, "height", 150);
+            setProp(_el$8, "x", 162);
+            setProp(_el$8, "y", 80);
+            setProp(_el$8, "zIndex", 105);
+            insertNode(_el$9, createTextNode(`Built With:`));
+            setProp(_el$9, "x", 80);
+            setProp(_el$9, "fontSize", 28);
+            setProp(_el$9, "color", 4143380121);
+            setProp(_el$1, "y", 32);
+            setProp(_el$1, "src", "./assets/solidWord.png");
+            setProp(_el$1, "width", 280);
+            setProp(_el$1, "height", 52);
+            setProp(_el$10, "x", 0);
+            setProp(_el$10, "y", 110);
+            setProp(_el$10, "src", "./assets/tmdb.png");
+            setProp(_el$10, "width", 80);
+            setProp(_el$10, "height", 41);
+            insertNode(_el$11, createTextNode(`This product uses the TMDB API but is not endorsed or certified by TMDB.`));
+            setProp(_el$11, "x", 90);
+            setProp(_el$11, "y", 110);
+            setProp(_el$11, "contain", "width");
+            setProp(_el$11, "width", 160);
+            setProp(_el$11, "fontSize", 12);
+            setProp(_el$11, "color", 4143380121);
+            insert(_el$7, createComponent(ContentBlock, {
+                ref(r$) {
+                    var _ref$2 = contentBlock;
+                    typeof _ref$2 === "function" ? _ref$2(r$) : contentBlock = r$;
+                },
+                y: 300,
+                x: 162,
+                get content() {
+                    return heroContent();
+                }
+            }), _el$13);
+            insert(_el$7, createComponent(LazyColumn, {
+                ref(r$) {
+                    var _ref$3 = columnRef;
+                    typeof _ref$3 === "function" ? _ref$3(r$) : columnRef = r$;
+                },
+                y: 500,
+                upCount: 3,
+                get each() {
+                    return props.data.rows;
+                },
+                id: "BenchmarkColumn",
+                onSelectedChanged: onRowChanged,
+                onEnter: () => setOpenPanel(true),
+                get autofocus() {
+                    return props.data.rows[0].items();
+                },
+                gap: 40,
+                throttleInput: 250,
+                get style() {
+                    return styles_default.Column;
+                },
+                children: row => row().type === "Hero" ? createComponent(LazyRow, {
+                    gap: 80,
+                    upCount: 2,
+                    bufferSize: 1,
+                    scroll: "center",
+                    centerScroll: true,
+                    get each() {
+                        return row().items();
+                    },
+                    y: 50,
+                    get height() {
+                        return row().height;
+                    },
+                    children: item => createComponent(Hero, {
+                        get item() {
+                            return item();
+                        }
+                    })
+                }) : createComponent(TitleRow, {
+                    get row() {
+                        return row();
+                    },
+                    get title() {
+                        return row().title;
+                    },
+                    get height() {
+                        return row().height;
+                    },
+                    get items() {
+                        return row().items();
+                    }
+                })
+            }), _el$13);
+            insertNode(_el$13, _el$14);
+            insertNode(_el$13, _el$16);
+            insertNode(_el$13, _el$17);
+            insertNode(_el$13, _el$18);
+            setProp(_el$13, "x", 610);
+            setProp(_el$13, "y", 20);
+            setProp(_el$13, "zIndex", 200);
+            setProp(_el$13, "style", overlayBgStyle);
+            insertNode(_el$14, createTextNode(`Benchmark (version: ###)`));
+            setProp(_el$14, "x", 20);
+            setProp(_el$14, "y", 16);
+            setProp(_el$14, "style", overlayTitleStyle);
+            setProp(_el$16, "x", 360);
+            setProp(_el$16, "y", 20);
+            setProp(_el$16, "width", 320);
+            setProp(_el$16, "contain", "width");
+            setProp(_el$16, "textAlign", "right");
+            setProp(_el$16, "fontSize", 24);
+            insert(_el$16, bundleType);
+            setProp(_el$17, "x", 20);
+            setProp(_el$17, "y", 54);
+            setProp(_el$17, "contain", "width");
+            setProp(_el$17, "width", 660);
+            setProp(_el$17, "style", overlayStatusStyle);
+            insert(_el$17, benchmarkStatus);
+            setProp(_el$18, "x", 20);
+            setProp(_el$18, "y", 92);
+            setProp(_el$18, "style", overlayStatusStyle);
+            setProp(_el$18, "color", 16746751);
+            insert(_el$18, (() => {
+                var _c$ = memo(() => renderTime() !== null);
+                return () => {
+                    var _renderTime;
+                    return _c$() ? `Initial Render: ${(_renderTime = renderTime()) == null ? void 0 : _renderTime.toFixed(2)}ms` : "Rendering...";
+                };
+            })());
+            insert(_el$7, createComponent(Show, {
+                get when() {
+                    return benchmarkDone();
+                },
+                get children() {
+                    var _el$19 = createElement("view"), _el$20 = createElement("text");
+                    insertNode(_el$19, _el$20);
+                    setProp(_el$19, "x", 40);
+                    setProp(_el$19, "y", 20);
+                    setProp(_el$19, "zIndex", 8e3);
+                    setProp(_el$19, "width", OVERLAY_WIDTH);
+                    setProp(_el$19, "style", resultsBgStyle);
+                    insertNode(_el$20, createTextNode(`Performance Breakdown`));
+                    setProp(_el$20, "x", 24);
+                    setProp(_el$20, "y", 14);
+                    setProp(_el$20, "style", overlayTitleStyle);
+                    insert(_el$19, createComponent(SectionHeader, {
+                        y: 50,
+                        title: "FRAME RATE & SMOOTHNESS"
+                    }), null);
+                    insert(_el$19, createComponent(ResultRow, {
+                        y: 74,
+                        label: "Animated FPS",
+                        get value() {
+                            return memo(() => !!perfStats())() ? `${perfStats().avgAnimatedFps.toFixed(1)} FPS` : "—";
+                        },
+                        get valueColor() {
+                            return memo(() => !!perfStats())() ? fpsColor(perfStats().avgAnimatedFps) : void 0;
+                        }
+                    }), null);
+                    insert(_el$19, createComponent(ResultRow, {
+                        y: 100,
+                        label: "Anim p95 / p99",
+                        get value() {
+                            return memo(() => !!perfStats())() ? `${perfStats().animP95}ms / ${perfStats().animP99}ms` : "—";
+                        }
+                    }), null);
+                    insert(_el$19, createComponent(ResultRow, {
+                        y: 126,
+                        label: "Worst Anim Frame",
+                        get value() {
+                            return memo(() => !!perfStats())() ? `${perfStats().animMaxFrameTime.toFixed(1)}ms` : "—";
+                        }
+                    }), null);
+                    insert(_el$19, createComponent(ResultRow, {
+                        y: 152,
+                        label: "Overall Rendered FPS",
+                        get value() {
+                            return memo(() => !!perfStats())() ? `${perfStats().avgFps.toFixed(1)} FPS (${perfStats().totalRenderedFrames}f)` : "—";
+                        }
+                    }), null);
+                    insert(_el$19, createComponent(ResultRow, {
+                        y: 178,
+                        label: "All p95 / p99 / Max",
+                        get value() {
+                            return memo(() => !!perfStats())() ? `${perfStats().p95}ms / ${perfStats().p99}ms / ${perfStats().maxFrameTime.toFixed(1)}ms` : "—";
+                        }
+                    }), null);
+                    insert(_el$19, createComponent(ResultRow, {
+                        y: 204,
+                        label: "Frames / Idle Polls",
+                        get value() {
+                            return memo(() => !!perfStats())() ? `${perfStats().totalRenderedFrames} drew / ${perfStats().totalIdleTicks} idle` : "—";
+                        }
+                    }), null);
+                    insert(_el$19, createComponent(SectionDivider, {
+                        y: 232
+                    }), null);
+                    insert(_el$19, createComponent(SectionHeader, {
+                        y: 242,
+                        title: "FRAME WORK SPLIT (INTERVAL / PEAK)"
+                    }), null);
+                    insert(_el$19, createComponent(ResultRow, {
+                        y: 266,
+                        label: "Scene Update (upd)",
+                        get value() {
+                            return memo(() => !!perfStats())() ? `${perfStats().totalUpdateMs.toFixed(1)}ms total | ${perfStats().maxUpdateMs.toFixed(1)}ms peak` : "—";
+                        }
+                    }), null);
+                    insert(_el$19, createComponent(ResultRow, {
+                        y: 292,
+                        label: "Render Pass (rnd)",
+                        get value() {
+                            return memo(() => !!perfStats())() ? `${perfStats().totalRenderMs.toFixed(1)}ms total | ${perfStats().maxRenderMs.toFixed(1)}ms peak` : "—";
+                        }
+                    }), null);
+                    insert(_el$19, createComponent(ResultRow, {
+                        y: 318,
+                        label: "Texture Upload (upl)",
+                        get value() {
+                            return memo(() => !!perfStats())() ? `${perfStats().totalUploadMs.toFixed(1)}ms total | ${perfStats().maxUploadMs.toFixed(1)}ms peak` : "—";
+                        }
+                    }), null);
+                    insert(_el$19, createComponent(SectionDivider, {
+                        y: 346
+                    }), null);
+                    insert(_el$19, createComponent(SectionHeader, {
+                        y: 356,
+                        title: "ASSETS, ANIMATIONS & GEOMETRY"
+                    }), null);
+                    insert(_el$19, createComponent(ResultRow, {
+                        y: 380,
+                        label: "Draw Calls / Quads",
+                        get value() {
+                            return memo(() => !!drawStats())() ? `${drawStats().renderOps} draws / ${drawStats().quads} quads` : "—";
+                        }
+                    }), null);
+                    insert(_el$19, createComponent(ResultRow, {
+                        y: 406,
+                        label: "Texture Uploads",
+                        get value() {
+                            return memo(() => !!perfStats())() ? `${perfStats().uploadedTextures} tex / ${perfStats().uploadFrames}f (${perfStats().meanUploadCostMs.toFixed(1)}ms avg)` : "—";
+                        }
+                    }), null);
+                    insert(_el$19, createComponent(ResultRow, {
+                        y: 432,
+                        label: "Upload Queue Peak",
+                        get value() {
+                            return memo(() => !!perfStats())() ? `q <= ${perfStats().maxUploadQueueSize}` : "—";
+                        }
+                    }), null);
+                    insert(_el$19, createComponent(ResultRow, {
+                        y: 458,
+                        label: "Active Animations",
+                        get value() {
+                            return memo(() => !!perfStats())() ? `${perfStats().avgActiveAnimations.toFixed(1)} avg | ${perfStats().maxActiveAnimations} peak` : "—";
+                        }
+                    }), null);
+                    insert(_el$19, createComponent(SectionDivider, {
+                        y: 486
+                    }), null);
+                    insert(_el$19, createComponent(SectionHeader, {
+                        y: SEC_GL_Y,
+                        title: "GL CALLS / INTERVAL"
+                    }), null);
+                    insert(_el$19, createComponent(Show, {
+                        get when() {
+                            return glEntries().length > 0;
+                        },
+                        get fallback() {
+                            return (() => {
+                                var _el$24 = createElement("text");
+                                insertNode(_el$24, createTextNode(`off (?contextSpy=true)`));
+                                setProp(_el$24, "x", 290);
+                                setProp(_el$24, "y", SEC_GL_Y);
+                                setProp(_el$24, "style", resultsValueStyle);
+                                setProp(_el$24, "color", 2290649343);
+                                return _el$24;
+                            })();
+                        },
+                        get children() {
+                            return createComponent(For, {
+                                get each() {
+                                    return glEntries();
+                                },
+                                children: ([name, count], i) => createComponent(ResultRow, {
+                                    get y() {
+                                        return glStartY + i() * ROW_H;
+                                    },
+                                    label: name,
+                                    value: `${count}`
+                                })
+                            });
+                        }
+                    }), null);
+                    insert(_el$19, createComponent(SectionDivider, {
+                        get y() {
+                            return dividerCapsY();
+                        }
+                    }), null);
+                    insert(_el$19, createComponent(SectionHeader, {
+                        get y() {
+                            return secCapsY();
+                        },
+                        title: "RENDERER CAPABILITIES"
+                    }), null);
+                    insert(_el$19, createComponent(Show, {
+                        get when() {
+                            return capabilities();
+                        },
+                        get fallback() {
+                            return (() => {
+                                var _el$26 = createElement("text");
+                                insertNode(_el$26, createTextNode(`Capabilities unavailable`));
+                                setProp(_el$26, "x", 24);
+                                setProp(_el$26, "style", resultsLabelStyle);
+                                effect(_$p => setProp(_el$26, "y", capsStartY(), _$p));
+                                return _el$26;
+                            })();
+                        },
+                        get children() {
+                            return [ createComponent(ResultRow, {
+                                get y() {
+                                    return capsStartY();
+                                },
+                                label: "Render Mode",
+                                get value() {
+                                    return capabilities().renderMode;
+                                }
+                            }), createComponent(ResultRow, {
+                                get y() {
+                                    return capsStartY() + ROW_H;
+                                },
+                                label: "WebGL Version",
+                                get value() {
+                                    return webGlLabel(capabilities());
+                                }
+                            }), createComponent(ResultRow, {
+                                get y() {
+                                    return capsStartY() + 2 * ROW_H;
+                                },
+                                label: "Vertex Array Obj (VAO)",
+                                get value() {
+                                    return capabilities().vertexArrayObject ? "Enabled (on)" : "Disabled (off)";
+                                },
+                                get valueColor() {
+                                    return capabilities().vertexArrayObject ? 16746751 : 2863311615;
+                                }
+                            }), createComponent(ResultRow, {
+                                get y() {
+                                    return capsStartY() + 3 * ROW_H;
+                                },
+                                label: "Max Texture Size",
+                                get value() {
+                                    return `${capabilities().maxTextureSize}px`;
+                                }
+                            }), createComponent(ResultRow, {
+                                get y() {
+                                    return capsStartY() + 4 * ROW_H;
+                                },
+                                label: "Max Texture Units",
+                                get value() {
+                                    return `${capabilities().maxTextureUnits} units`;
+                                }
+                            }) ];
+                        }
+                    }), null);
+                    effect(_$p => setProp(_el$19, "height", overlayHeight(), _$p));
+                    return _el$19;
+                }
+            }), null);
+            insert(_el$7, createComponent(AssetPanel, {
+                onFocus: storeFocus,
+                close: () => {
+                    setOpenPanel(false);
+                    restoreFocus();
+                    return true;
+                },
+                get open() {
+                    return openPanel();
+                },
+                get item() {
+                    return heroContent();
+                }
+            }), null);
+            effect(_p$ => {
+                var _v$3 = bundleType.includes("LEGACY") ? 4291559679 : 16746751, _v$4 = benchmarkDone() ? 16746751 : benchmarkRunning() ? 4291559679 : 2863311615;
+                _v$3 !== _p$.e && (_p$.e = setProp(_el$16, "color", _v$3, _p$.e));
+                _v$4 !== _p$.t && (_p$.t = setProp(_el$17, "color", _v$4, _p$.t));
+                return _p$;
+            }, {
+                e: void 0,
+                t: void 0
+            });
+            return _el$7;
+        }
+    });
+};
+
+export { Benchmark as default };
+//# sourceMappingURL=Benchmark-8a3EPOsN.js.map

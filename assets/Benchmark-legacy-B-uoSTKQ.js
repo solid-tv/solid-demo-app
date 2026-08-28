@@ -1,0 +1,1242 @@
+(function() {
+    function _regenerator() {
+        var e, t, r = "function" == typeof Symbol ? Symbol : {}, n = r.iterator || "@@iterator", o = r.toStringTag || "@@toStringTag";
+        function i(r, n, o, i) {
+            var c = n && n.prototype instanceof Generator ? n : Generator, u = Object.create(c.prototype);
+            return _regeneratorDefine2(u, "_invoke", function(r, n, o) {
+                var i, c, u, f = 0, p = o || [], y = !1, G = {
+                    p: 0,
+                    n: 0,
+                    v: e,
+                    a: d,
+                    f: d.bind(e, 4),
+                    d: function d(t, r) {
+                        return i = t, c = 0, u = e, G.n = r, a;
+                    }
+                };
+                function d(r, n) {
+                    for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) {
+                        var o, i = p[t], d = G.p, l = i[2];
+                        r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, 
+                        G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, 
+                        G.n = l, c = 0));
+                    }
+                    if (o || r > 1) return a;
+                    throw y = !0, n;
+                }
+                return function(o, p, l) {
+                    if (f > 1) throw TypeError("Generator is already running");
+                    for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y; ) {
+                        i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u);
+                        try {
+                            if (f = 2, i) {
+                                if (c || (o = "next"), t = i[o]) {
+                                    if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object");
+                                    if (!t.done) return t;
+                                    u = t.value, c < 2 && (c = 0);
+                                } else 1 === c && (t = i.return) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), 
+                                c = 1);
+                                i = e;
+                            } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break;
+                        } catch (t) {
+                            i = e, c = 1, u = t;
+                        } finally {
+                            f = 1;
+                        }
+                    }
+                    return {
+                        value: t,
+                        done: y
+                    };
+                };
+            }(r, o, i), !0), u;
+        }
+        var a = {};
+        function Generator() {}
+        function GeneratorFunction() {}
+        function GeneratorFunctionPrototype() {}
+        t = Object.getPrototypeOf;
+        var c = [][n] ? t(t([][n]())) : (_regeneratorDefine2(t = {}, n, function() {
+            return this;
+        }), t), u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c);
+        function f(e) {
+            return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, 
+            _regeneratorDefine2(e, o, "GeneratorFunction")), e.prototype = Object.create(u), 
+            e;
+        }
+        return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine2(u, "constructor", GeneratorFunctionPrototype), 
+        _regeneratorDefine2(GeneratorFunctionPrototype, "constructor", GeneratorFunction), 
+        GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine2(GeneratorFunctionPrototype, o, "GeneratorFunction"), 
+        _regeneratorDefine2(u), _regeneratorDefine2(u, o, "Generator"), _regeneratorDefine2(u, n, function() {
+            return this;
+        }), _regeneratorDefine2(u, "toString", function() {
+            return "[object Generator]";
+        }), (_regenerator = function _regenerator() {
+            return {
+                w: i,
+                m: f
+            };
+        })();
+    }
+    function _regeneratorDefine2(e, r, n, t) {
+        var i = Object.defineProperty;
+        try {
+            i({}, "", {});
+        } catch (e) {
+            i = 0;
+        }
+        _regeneratorDefine2 = function _regeneratorDefine(e, r, n, t) {
+            function o(r, n) {
+                _regeneratorDefine2(e, r, function(e) {
+                    return this._invoke(r, n, e);
+                });
+            }
+            r ? i ? i(e, r, {
+                value: n,
+                enumerable: !t,
+                configurable: !t,
+                writable: !t
+            }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2));
+        }, _regeneratorDefine2(e, r, n, t);
+    }
+    function _toConsumableArray(r) {
+        return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread();
+    }
+    function _nonIterableSpread() {
+        throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+    }
+    function _iterableToArray(r) {
+        if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r);
+    }
+    function _arrayWithoutHoles(r) {
+        if (Array.isArray(r)) return _arrayLikeToArray(r);
+    }
+    function asyncGeneratorStep(n, t, e, r, o, a, c) {
+        try {
+            var i = n[a](c), u = i.value;
+        } catch (n) {
+            return void e(n);
+        }
+        i.done ? t(u) : Promise.resolve(u).then(r, o);
+    }
+    function _asyncToGenerator(n) {
+        return function() {
+            var t = this, e = arguments;
+            return new Promise(function(r, o) {
+                var a = n.apply(t, e);
+                function _next(n) {
+                    asyncGeneratorStep(a, r, o, _next, _throw, "next", n);
+                }
+                function _throw(n) {
+                    asyncGeneratorStep(a, r, o, _next, _throw, "throw", n);
+                }
+                _next(void 0);
+            });
+        };
+    }
+    function _typeof(o) {
+        "@babel/helpers - typeof";
+        return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o) {
+            return typeof o;
+        } : function(o) {
+            return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
+        }, _typeof(o);
+    }
+    function _slicedToArray(r, e) {
+        return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest();
+    }
+    function _nonIterableRest() {
+        throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+    }
+    function _unsupportedIterableToArray(r, a) {
+        if (r) {
+            if ("string" == typeof r) return _arrayLikeToArray(r, a);
+            var t = {}.toString.call(r).slice(8, -1);
+            return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0;
+        }
+    }
+    function _arrayLikeToArray(r, a) {
+        (null == a || a > r.length) && (a = r.length);
+        for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];
+        return n;
+    }
+    function _iterableToArrayLimit(r, l) {
+        var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];
+        if (null != t) {
+            var e, n, i, u, a = [], f = !0, o = !1;
+            try {
+                if (i = (t = t.call(r)).next, 0 === l) {
+                    if (Object(t) !== t) return;
+                    f = !1;
+                } else for (;!(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0) ;
+            } catch (r) {
+                o = !0, n = r;
+            } finally {
+                try {
+                    if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return;
+                } finally {
+                    if (o) throw n;
+                }
+            }
+            return a;
+        }
+    }
+    function _arrayWithHoles(r) {
+        if (Array.isArray(r)) return r;
+    }
+    System.register([ "./render-legacy-CAqcHxfG.js", "./Lazy-legacy-EwhyBzpS.js", "./FPSCounter-legacy-BhUGeBEH.js", "./ContentBlock-legacy-CPp-Akn0.js", "./createFocusStack-legacy-CHM3F__c.js", "./components-legacy-BePOWnfK.js", "./styles-legacy-BOzjtbic.js", "./state-legacy-xc5BISXR.js", "./dist-legacy-BPFoSfrd.js" ], function(_export, _context) {
+        "use strict";
+        var For, batch, Show, activeElement, onCleanup, createEffect, on, createElement, effect, memo, use, createComponent, insert, setProp, createSignal, createTextNode, insertNode, renderer, LazyRow, LazyColumn, resetCounter, ContentBlock, useFocusStack, TitleRow, Hero, AssetPanel, styles_default, setGlobalBackground, debounce, TOTAL_CYCLES, NAV_DELAY_MS, FRAME_TIME_SPLIT_MS, FRAME_TIME_FINE_MS, FRAME_TIME_COARSE_MS, FRAME_TIME_BUCKET_COUNT, Benchmark;
+        function frameTimeBucketLowerBound(index) {
+            return index < FRAME_TIME_SPLIT_MS ? index * FRAME_TIME_FINE_MS : FRAME_TIME_SPLIT_MS + (index - FRAME_TIME_SPLIT_MS) * FRAME_TIME_COARSE_MS;
+        }
+        function percentileMs(buckets, fraction) {
+            var total = 0;
+            for (var i = 0; i < buckets.length; i++) {
+                var _buckets$i;
+                total += (_buckets$i = buckets[i]) !== null && _buckets$i !== void 0 ? _buckets$i : 0;
+            }
+            if (total === 0) return 0;
+            var target = total * fraction;
+            var seen = 0;
+            for (var _i = 0; _i < buckets.length; _i++) {
+                var _buckets$i2;
+                seen += (_buckets$i2 = buckets[_i]) !== null && _buckets$i2 !== void 0 ? _buckets$i2 : 0;
+                if (seen >= target) return frameTimeBucketLowerBound(_i);
+            }
+            return frameTimeBucketLowerBound(buckets.length - 1);
+        }
+        return {
+            setters: [ function(_renderLegacy001Js) {
+                For = _renderLegacy001Js.A;
+                batch = _renderLegacy001Js.I;
+                Show = _renderLegacy001Js.N;
+                activeElement = _renderLegacy001Js.O;
+                onCleanup = _renderLegacy001Js.Q;
+                createEffect = _renderLegacy001Js.V;
+                on = _renderLegacy001Js.Z;
+                createElement = _renderLegacy001Js.a;
+                effect = _renderLegacy001Js.c;
+                memo = _renderLegacy001Js.d;
+                use = _renderLegacy001Js.g;
+                createComponent = _renderLegacy001Js.i;
+                insert = _renderLegacy001Js.l;
+                setProp = _renderLegacy001Js.m;
+                createSignal = _renderLegacy001Js.q;
+                createTextNode = _renderLegacy001Js.s;
+                insertNode = _renderLegacy001Js.u;
+                renderer = _renderLegacy001Js.x;
+            }, function(_LazyLegacy006Js) {
+                LazyRow = _LazyLegacy006Js.n;
+                LazyColumn = _LazyLegacy006Js.t;
+            }, function(_FPSCounterLegacy00aJs) {
+                resetCounter = _FPSCounterLegacy00aJs.n;
+            }, function(_ContentBlockLegacy00bJs) {
+                ContentBlock = _ContentBlockLegacy00bJs.t;
+            }, function(_createFocusStackLegacy00cJs) {
+                useFocusStack = _createFocusStackLegacy00cJs.n;
+            }, function(_componentsLegacy00dJs) {
+                TitleRow = _componentsLegacy00dJs.c;
+                Hero = _componentsLegacy00dJs.i;
+                AssetPanel = _componentsLegacy00dJs.t;
+            }, function(_stylesLegacy00hJs) {
+                styles_default = _stylesLegacy00hJs.r;
+            }, function(_stateLegacy00iJs) {
+                setGlobalBackground = _stateLegacy00iJs.n;
+            }, function(_distLegacy00jJs) {
+                debounce = _distLegacy00jJs.t;
+            } ],
+            execute: function execute() {
+                TOTAL_CYCLES = 2;
+                NAV_DELAY_MS = 300;
+                FRAME_TIME_SPLIT_MS = 32;
+                FRAME_TIME_FINE_MS = 1;
+                FRAME_TIME_COARSE_MS = 8;
+                FRAME_TIME_BUCKET_COUNT = 45;
+                _export("default", Benchmark = function Benchmark(props) {
+                    var _window$bundleType;
+                    var cancelled = false;
+                    onCleanup(function() {
+                        cancelled = true;
+                    });
+                    var _createSignal = createSignal({}), _createSignal2 = _slicedToArray(_createSignal, 2), heroContent = _createSignal2[0], setHeroContent = _createSignal2[1];
+                    var _createSignal3 = createSignal(false), _createSignal4 = _slicedToArray(_createSignal3, 2), openPanel = _createSignal4[0], setOpenPanel = _createSignal4[1];
+                    var _useFocusStack = useFocusStack(), storeFocus = _useFocusStack.storeFocus, restoreFocus = _useFocusStack.restoreFocus;
+                    var contentBlock, solidLogo, firstRun = true;
+                    var columnRef;
+                    var bundleType = (_window$bundleType = window.bundleType) !== null && _window$bundleType !== void 0 ? _window$bundleType : "unknown";
+                    var _createSignal5 = createSignal("Waiting for data..."), _createSignal6 = _slicedToArray(_createSignal5, 2), benchmarkStatus = _createSignal6[0], setBenchmarkStatus = _createSignal6[1];
+                    var _createSignal7 = createSignal(false), _createSignal8 = _slicedToArray(_createSignal7, 2), benchmarkRunning = _createSignal8[0], setBenchmarkRunning = _createSignal8[1];
+                    var _createSignal9 = createSignal(false), _createSignal0 = _slicedToArray(_createSignal9, 2), benchmarkDone = _createSignal0[0], setBenchmarkDone = _createSignal0[1];
+                    var _createSignal1 = createSignal(false), _createSignal10 = _slicedToArray(_createSignal1, 2), dataLoaded = _createSignal10[0], setDataLoaded = _createSignal10[1];
+                    var _createSignal11 = createSignal(null), _createSignal12 = _slicedToArray(_createSignal11, 2), renderTime = _createSignal12[0], setRenderTime = _createSignal12[1];
+                    var _createSignal13 = createSignal(null), _createSignal14 = _slicedToArray(_createSignal13, 2), capabilities = _createSignal14[0], setCapabilities = _createSignal14[1];
+                    var _createSignal15 = createSignal(null), _createSignal16 = _slicedToArray(_createSignal15, 2), perfStats = _createSignal16[0], setPerfStats = _createSignal16[1];
+                    var _createSignal17 = createSignal(null), _createSignal18 = _slicedToArray(_createSignal17, 2), drawStats = _createSignal18[0], setDrawStats = _createSignal18[1];
+                    var _createSignal19 = createSignal(null), _createSignal20 = _slicedToArray(_createSignal19, 2), contextSpy = _createSignal20[0], setContextSpy = _createSignal20[1];
+                    var fpsValues = [];
+                    var animatedFpsValues = [];
+                    var cumulativeAllBuckets = new Array(FRAME_TIME_BUCKET_COUNT).fill(0);
+                    var cumulativeAnimBuckets = new Array(FRAME_TIME_BUCKET_COUNT).fill(0);
+                    var totalRenderedFrames = 0;
+                    var totalRenderedMs = 0;
+                    var totalIdleTicks = 0;
+                    var totalAnimatedFrames = 0;
+                    var totalAnimatedMs = 0;
+                    var worstMaxFrameTime = 0;
+                    var worstAnimatedMaxFrameTime = 0;
+                    var totalUpdateMs = 0;
+                    var totalRenderMs = 0;
+                    var totalUploadMs = 0;
+                    var worstMaxUpdateMs = 0;
+                    var worstMaxRenderMs = 0;
+                    var worstMaxUploadMs = 0;
+                    var totalUploadedTextures = 0;
+                    var totalUploadFrames = 0;
+                    var worstMaxUploadQueueSize = 0;
+                    var activeAnimationsSamples = [];
+                    var worstMaxActiveAnimations = 0;
+                    var maxRenderOps = 0;
+                    var maxQuads = 0;
+                    var lastContextSpy = null;
+                    var fpsListenerAttached = false;
+                    function attachFpsListener() {
+                        if (fpsListenerAttached) return;
+                        var root = renderer;
+                        if (!root) return;
+                        fpsListenerAttached = true;
+                        if (typeof root.getCapabilities === "function" && !capabilities()) setCapabilities(root.getCapabilities());
+                        root.on("fpsUpdate", function(_target, fpsData) {
+                            var fps = typeof fpsData === "number" ? fpsData : fpsData == null ? void 0 : fpsData.fps;
+                            if ((fpsData == null ? void 0 : fpsData.capabilities) && !capabilities()) setCapabilities(fpsData.capabilities);
+                            if (fps > 5 && benchmarkRunning()) {
+                                fpsValues.push(fps);
+                                if (_typeof(fpsData) === "object" && fpsData !== null) {
+                                    var payload = fpsData;
+                                    if (typeof payload.animatedFps === "number" && payload.animatedFrames > 0) animatedFpsValues.push(payload.animatedFps);
+                                    if (Array.isArray(payload.frameTimeBuckets)) for (var i = 0; i < Math.min(payload.frameTimeBuckets.length, cumulativeAllBuckets.length); i++) cumulativeAllBuckets[i] += payload.frameTimeBuckets[i] || 0;
+                                    if (Array.isArray(payload.animatedFrameTimeBuckets)) for (var _i2 = 0; _i2 < Math.min(payload.animatedFrameTimeBuckets.length, cumulativeAnimBuckets.length); _i2++) cumulativeAnimBuckets[_i2] += payload.animatedFrameTimeBuckets[_i2] || 0;
+                                    totalRenderedFrames += payload.renderedFrames || 0;
+                                    totalRenderedMs += payload.renderedMs || 0;
+                                    totalIdleTicks += payload.idleTicks || 0;
+                                    totalAnimatedFrames += payload.animatedFrames || 0;
+                                    totalAnimatedMs += payload.animatedMs || 0;
+                                    if (typeof payload.maxFrameTime === "number") worstMaxFrameTime = Math.max(worstMaxFrameTime, payload.maxFrameTime);
+                                    if (typeof payload.animatedMaxFrameTime === "number") worstAnimatedMaxFrameTime = Math.max(worstAnimatedMaxFrameTime, payload.animatedMaxFrameTime);
+                                    totalUpdateMs += payload.updateMs || 0;
+                                    totalRenderMs += payload.renderMs || 0;
+                                    totalUploadMs += payload.uploadMs || 0;
+                                    if (typeof payload.maxUpdateMs === "number") worstMaxUpdateMs = Math.max(worstMaxUpdateMs, payload.maxUpdateMs);
+                                    if (typeof payload.maxRenderMs === "number") worstMaxRenderMs = Math.max(worstMaxRenderMs, payload.maxRenderMs);
+                                    if (typeof payload.maxUploadMs === "number") worstMaxUploadMs = Math.max(worstMaxUploadMs, payload.maxUploadMs);
+                                    totalUploadedTextures += payload.uploadedTextures || 0;
+                                    totalUploadFrames += payload.uploadFrames || 0;
+                                    if (typeof payload.maxUploadQueueSize === "number") worstMaxUploadQueueSize = Math.max(worstMaxUploadQueueSize, payload.maxUploadQueueSize);
+                                    if (typeof payload.meanActiveAnimations === "number") activeAnimationsSamples.push(payload.meanActiveAnimations);
+                                    if (typeof payload.maxActiveAnimations === "number") worstMaxActiveAnimations = Math.max(worstMaxActiveAnimations, payload.maxActiveAnimations);
+                                    if (typeof payload.renderOps === "number") maxRenderOps = Math.max(maxRenderOps, payload.renderOps);
+                                    if (typeof payload.quads === "number") maxQuads = Math.max(maxQuads, payload.quads);
+                                    if (payload.contextSpyData) lastContextSpy = payload.contextSpyData;
+                                }
+                            }
+                        });
+                    }
+                    function simulateKeyDown(key) {
+                        try {
+                            var event = document.createEvent("Event");
+                            event.initEvent("keydown", true, true);
+                            Object.defineProperty(event, "key", {
+                                value: key,
+                                enumerable: true,
+                                configurable: true
+                            });
+                            Object.defineProperty(event, "code", {
+                                value: key === "ArrowDown" ? "ArrowDown" : "ArrowUp",
+                                enumerable: true,
+                                configurable: true
+                            });
+                            document.dispatchEvent(event);
+                        } catch (e) {
+                            console.error("Failed to simulate key down:", e);
+                        }
+                    }
+                    function sleep(ms) {
+                        return new Promise(function(resolve) {
+                            return setTimeout(resolve, ms);
+                        });
+                    }
+                    function runBenchmark() {
+                        return _runBenchmark.apply(this, arguments);
+                    }
+                    function _runBenchmark() {
+                        _runBenchmark = _asyncToGenerator(_regenerator().m(function _callee() {
+                            var totalRows, cycle, i, _i3, avgAnimatedFps, avgFps, minFps, maxFps, animP95, animP99, allP95, allP99, avgActiveAnims, meanUploadCost, calculatedStats, animRateStr;
+                            return _regenerator().w(function(_context2) {
+                                while (1) switch (_context2.n) {
+                                  case 0:
+                                    resetCounter();
+                                    totalRows = props.data.rows.length;
+                                    if (!(totalRows === 0)) {
+                                        _context2.n = 1;
+                                        break;
+                                    }
+                                    setBenchmarkStatus("No rows to benchmark");
+                                    return _context2.a(2);
+
+                                  case 1:
+                                    fpsValues = [];
+                                    animatedFpsValues = [];
+                                    cumulativeAllBuckets = new Array(FRAME_TIME_BUCKET_COUNT).fill(0);
+                                    cumulativeAnimBuckets = new Array(FRAME_TIME_BUCKET_COUNT).fill(0);
+                                    totalRenderedFrames = 0;
+                                    totalRenderedMs = 0;
+                                    totalIdleTicks = 0;
+                                    totalAnimatedFrames = 0;
+                                    totalAnimatedMs = 0;
+                                    worstMaxFrameTime = 0;
+                                    worstAnimatedMaxFrameTime = 0;
+                                    totalUpdateMs = 0;
+                                    totalRenderMs = 0;
+                                    totalUploadMs = 0;
+                                    worstMaxUpdateMs = 0;
+                                    worstMaxRenderMs = 0;
+                                    worstMaxUploadMs = 0;
+                                    totalUploadedTextures = 0;
+                                    totalUploadFrames = 0;
+                                    worstMaxUploadQueueSize = 0;
+                                    activeAnimationsSamples = [];
+                                    worstMaxActiveAnimations = 0;
+                                    maxRenderOps = 0;
+                                    maxQuads = 0;
+                                    lastContextSpy = null;
+                                    setPerfStats(null);
+                                    setDrawStats(null);
+                                    setContextSpy(null);
+                                    setBenchmarkRunning(true);
+                                    setBenchmarkDone(false);
+                                    attachFpsListener();
+                                    setBenchmarkStatus("Starting benchmark...");
+                                    _context2.n = 2;
+                                    return sleep(1500);
+
+                                  case 2:
+                                    cycle = 0;
+
+                                  case 3:
+                                    if (!(cycle < TOTAL_CYCLES)) {
+                                        _context2.n = 14;
+                                        break;
+                                    }
+                                    if (!cancelled) {
+                                        _context2.n = 4;
+                                        break;
+                                    }
+                                    return _context2.a(2);
+
+                                  case 4:
+                                    i = 0;
+
+                                  case 5:
+                                    if (!(i < totalRows - 1)) {
+                                        _context2.n = 8;
+                                        break;
+                                    }
+                                    if (!cancelled) {
+                                        _context2.n = 6;
+                                        break;
+                                    }
+                                    return _context2.a(2);
+
+                                  case 6:
+                                    setBenchmarkStatus("Cycle ".concat(cycle + 1, "/").concat(TOTAL_CYCLES, " - Down ").concat(i + 1, "/").concat(totalRows - 1));
+                                    simulateKeyDown("ArrowDown");
+                                    _context2.n = 7;
+                                    return sleep(NAV_DELAY_MS);
+
+                                  case 7:
+                                    i++;
+                                    _context2.n = 5;
+                                    break;
+
+                                  case 8:
+                                    if (!cancelled) {
+                                        _context2.n = 9;
+                                        break;
+                                    }
+                                    return _context2.a(2);
+
+                                  case 9:
+                                    _i3 = 0;
+
+                                  case 10:
+                                    if (!(_i3 < totalRows - 1)) {
+                                        _context2.n = 13;
+                                        break;
+                                    }
+                                    if (!cancelled) {
+                                        _context2.n = 11;
+                                        break;
+                                    }
+                                    return _context2.a(2);
+
+                                  case 11:
+                                    setBenchmarkStatus("Cycle ".concat(cycle + 1, "/").concat(TOTAL_CYCLES, " - Up ").concat(_i3 + 1, "/").concat(totalRows - 1));
+                                    simulateKeyDown("ArrowUp");
+                                    _context2.n = 12;
+                                    return sleep(NAV_DELAY_MS);
+
+                                  case 12:
+                                    _i3++;
+                                    _context2.n = 10;
+                                    break;
+
+                                  case 13:
+                                    cycle++;
+                                    _context2.n = 3;
+                                    break;
+
+                                  case 14:
+                                    if (!cancelled) {
+                                        _context2.n = 15;
+                                        break;
+                                    }
+                                    return _context2.a(2);
+
+                                  case 15:
+                                    avgAnimatedFps = totalAnimatedMs > 0 && totalAnimatedFrames > 0 ? totalAnimatedFrames / (totalAnimatedMs / 1e3) : animatedFpsValues.length > 0 ? animatedFpsValues.reduce(function(a, b) {
+                                        return a + b;
+                                    }, 0) / animatedFpsValues.length : 0;
+                                    avgFps = totalRenderedMs > 0 && totalRenderedFrames > 0 ? totalRenderedFrames / (totalRenderedMs / 1e3) : fpsValues.length > 0 ? fpsValues.reduce(function(a, b) {
+                                        return a + b;
+                                    }, 0) / fpsValues.length : 0;
+                                    minFps = fpsValues.length > 0 ? Math.min.apply(Math, _toConsumableArray(fpsValues)) : 0;
+                                    maxFps = fpsValues.length > 0 ? Math.max.apply(Math, _toConsumableArray(fpsValues)) : 0;
+                                    animP95 = percentileMs(cumulativeAnimBuckets, .95);
+                                    animP99 = percentileMs(cumulativeAnimBuckets, .99);
+                                    allP95 = percentileMs(cumulativeAllBuckets, .95);
+                                    allP99 = percentileMs(cumulativeAllBuckets, .99);
+                                    avgActiveAnims = activeAnimationsSamples.length > 0 ? activeAnimationsSamples.reduce(function(a, b) {
+                                        return a + b;
+                                    }, 0) / activeAnimationsSamples.length : 0;
+                                    meanUploadCost = totalUploadedTextures > 0 ? totalUploadMs / totalUploadedTextures : 0;
+                                    calculatedStats = {
+                                        avgFps: avgFps,
+                                        minFps: minFps,
+                                        maxFps: maxFps,
+                                        totalRenderedFrames: totalRenderedFrames,
+                                        totalRenderedMs: totalRenderedMs,
+                                        totalIdleTicks: totalIdleTicks,
+                                        avgAnimatedFps: avgAnimatedFps,
+                                        totalAnimatedFrames: totalAnimatedFrames,
+                                        totalAnimatedMs: totalAnimatedMs,
+                                        animP95: animP95,
+                                        animP99: animP99,
+                                        animMaxFrameTime: worstAnimatedMaxFrameTime,
+                                        p95: allP95,
+                                        p99: allP99,
+                                        maxFrameTime: worstMaxFrameTime,
+                                        totalUpdateMs: totalUpdateMs,
+                                        totalRenderMs: totalRenderMs,
+                                        totalUploadMs: totalUploadMs,
+                                        maxUpdateMs: worstMaxUpdateMs,
+                                        maxRenderMs: worstMaxRenderMs,
+                                        maxUploadMs: worstMaxUploadMs,
+                                        uploadedTextures: totalUploadedTextures,
+                                        uploadFrames: totalUploadFrames,
+                                        meanUploadCostMs: meanUploadCost,
+                                        maxUploadQueueSize: worstMaxUploadQueueSize,
+                                        avgActiveAnimations: avgActiveAnims,
+                                        maxActiveAnimations: worstMaxActiveAnimations,
+                                        renderOps: maxRenderOps,
+                                        quads: maxQuads
+                                    };
+                                    batch(function() {
+                                        setPerfStats(calculatedStats);
+                                        setDrawStats({
+                                            renderOps: maxRenderOps,
+                                            quads: maxQuads
+                                        });
+                                        setContextSpy(lastContextSpy);
+                                        if (typeof (renderer == null ? void 0 : renderer.getCapabilities) === "function" && !capabilities()) setCapabilities(renderer.getCapabilities());
+                                        setBenchmarkDone(true);
+                                        setBenchmarkRunning(false);
+                                    });
+                                    if (fpsValues.length > 0 || totalRenderedFrames > 0) {
+                                        animRateStr = avgAnimatedFps > 0 ? "".concat(avgAnimatedFps.toFixed(1), " FPS") : "".concat(avgFps.toFixed(1), " FPS");
+                                        setBenchmarkStatus("Anim: ".concat(animRateStr, " (p95: ").concat(animP95, "ms, max: ").concat(worstAnimatedMaxFrameTime.toFixed(0), "ms) | All: ").concat(avgFps.toFixed(1), " FPS"));
+                                    } else setBenchmarkStatus("Done - No FPS samples collected");
+
+                                  case 16:
+                                    return _context2.a(2);
+                                }
+                            }, _callee);
+                        }));
+                        return _runBenchmark.apply(this, arguments);
+                    }
+                    createEffect(function() {
+                        var _props$data;
+                        var rows = (_props$data = props.data) == null ? void 0 : _props$data.rows;
+                        if (!rows || rows.length === 0) return;
+                        var firstItems = rows[0].items();
+                        if (firstItems && firstItems.length > 0) {
+                            if (!dataLoaded()) {
+                                var startTime = performance.now();
+                                setDataLoaded(true);
+                                renderer.on("idle", function() {
+                                    if (renderTime() === null) setRenderTime(performance.now() - startTime);
+                                });
+                            }
+                            if (!benchmarkDone() && !benchmarkRunning()) {
+                                attachFpsListener();
+                                var timeoutId = setTimeout(function() {
+                                    if (!cancelled) runBenchmark();
+                                }, 2e3);
+                                onCleanup(function() {
+                                    return clearTimeout(timeoutId);
+                                });
+                            }
+                        }
+                    });
+                    var delayedBackgrounds = debounce(setGlobalBackground, 800);
+                    var delayedHero = debounce(function(content) {
+                        return setHeroContent(content || {});
+                    }, 600);
+                    createEffect(on(activeElement, function(elm) {
+                        if (!elm) return;
+                        var item = elm.item || {};
+                        if (firstRun) {
+                            item.backdrop && setGlobalBackground(item.backdrop);
+                            item.heroContent && setHeroContent(item.heroContent);
+                            firstRun = false;
+                        } else {
+                            item.backdrop && delayedBackgrounds(item.backdrop);
+                            item.heroContent && delayedHero(item.heroContent);
+                        }
+                    }, {
+                        defer: true
+                    }));
+                    function onRowChanged(selectedIndex, column, row, lastIndex) {
+                        if (selectedIndex === lastIndex) return;
+                        var values = selectedIndex === 0 ? {
+                            y: 300,
+                            alpha: 1
+                        } : {
+                            y: 200,
+                            alpha: 0
+                        };
+                        contentBlock.animate(values, {
+                            duration: 300,
+                            easing: "ease-in-out"
+                        }).start();
+                        var values2 = selectedIndex === 0 ? {
+                            y: 80,
+                            alpha: 1
+                        } : {
+                            y: 0,
+                            alpha: 0
+                        };
+                        solidLogo.animate(values2, {
+                            duration: 300,
+                            easing: "ease-in-out"
+                        }).start();
+                    }
+                    var overlayBgStyle = {
+                        width: 700,
+                        height: 140,
+                        color: 204,
+                        borderRadius: 12
+                    };
+                    var overlayTitleStyle = {
+                        fontFamily: "Roboto",
+                        fontSize: 28,
+                        color: 4294967295,
+                        lineHeight: 34
+                    };
+                    var overlayStatusStyle = {
+                        fontFamily: "Roboto",
+                        fontSize: 22,
+                        lineHeight: 28
+                    };
+                    var resultsBgStyle = {
+                        color: 245,
+                        borderRadius: 12
+                    };
+                    var OVERLAY_WIDTH = 580;
+                    var ROW_H = 26;
+                    var resultsHeaderStyle = {
+                        fontFamily: "Roboto",
+                        fontSize: 16,
+                        lineHeight: 22,
+                        color: 14221311
+                    };
+                    var resultsLabelStyle = {
+                        fontFamily: "Roboto",
+                        fontSize: 17,
+                        lineHeight: 24,
+                        color: 2661195519
+                    };
+                    var resultsValueStyle = {
+                        fontFamily: "Roboto",
+                        fontSize: 17,
+                        lineHeight: 24,
+                        color: 4294967295
+                    };
+                    var ResultRow = function ResultRow(rowProps) {
+                        return function() {
+                            var _el$ = createElement("view"), _el$2 = createElement("text"), _el$3 = createElement("text");
+                            insertNode(_el$, _el$2);
+                            insertNode(_el$, _el$3);
+                            setProp(_el$2, "x", 24);
+                            setProp(_el$2, "style", resultsLabelStyle);
+                            insert(_el$2, function() {
+                                return rowProps.label;
+                            });
+                            setProp(_el$3, "x", 290);
+                            setProp(_el$3, "style", resultsValueStyle);
+                            insert(_el$3, function() {
+                                return rowProps.value;
+                            });
+                            effect(function(_p$) {
+                                var _rowProps$valueColor;
+                                var _v$ = rowProps.y, _v$2 = (_rowProps$valueColor = rowProps.valueColor) !== null && _rowProps$valueColor !== void 0 ? _rowProps$valueColor : 4294967295;
+                                _v$ !== _p$.e && (_p$.e = setProp(_el$, "y", _v$, _p$.e));
+                                _v$2 !== _p$.t && (_p$.t = setProp(_el$3, "color", _v$2, _p$.t));
+                                return _p$;
+                            }, {
+                                e: void 0,
+                                t: void 0
+                            });
+                            return _el$;
+                        }();
+                    };
+                    var SectionHeader = function SectionHeader(headerProps) {
+                        return function() {
+                            var _el$4 = createElement("view"), _el$5 = createElement("text");
+                            insertNode(_el$4, _el$5);
+                            setProp(_el$5, "x", 24);
+                            setProp(_el$5, "style", resultsHeaderStyle);
+                            insert(_el$5, function() {
+                                return headerProps.title;
+                            });
+                            effect(function(_$p) {
+                                return setProp(_el$4, "y", headerProps.y, _$p);
+                            });
+                            return _el$4;
+                        }();
+                    };
+                    var SectionDivider = function SectionDivider(divProps) {
+                        return function() {
+                            var _el$6 = createElement("view");
+                            setProp(_el$6, "width", OVERLAY_WIDTH - 48);
+                            setProp(_el$6, "height", 1);
+                            setProp(_el$6, "x", 24);
+                            setProp(_el$6, "color", 4294967074);
+                            effect(function(_$p) {
+                                return setProp(_el$6, "y", divProps.y, _$p);
+                            });
+                            return _el$6;
+                        }();
+                    };
+                    var webGlLabel = function webGlLabel(caps) {
+                        var _caps$webGlVersion;
+                        return caps.renderMode === "webgl" ? "WebGL ".concat((_caps$webGlVersion = caps.webGlVersion) !== null && _caps$webGlVersion !== void 0 ? _caps$webGlVersion : "?") : "Canvas2D";
+                    };
+                    var glEntries = function glEntries() {
+                        var spy = contextSpy();
+                        if (!spy) return [];
+                        return Object.entries(spy).sort(function(a, b) {
+                            return b[1] - a[1];
+                        });
+                    };
+                    var SEC_GL_Y = 486;
+                    var glStartY = 512;
+                    var glRowsCount = function glRowsCount() {
+                        return glEntries().length;
+                    };
+                    var glRowsHeight = function glRowsHeight() {
+                        return glRowsCount() > 0 ? glRowsCount() * ROW_H : ROW_H;
+                    };
+                    var dividerCapsY = function dividerCapsY() {
+                        return glStartY + glRowsHeight() + 6;
+                    };
+                    var secCapsY = function secCapsY() {
+                        return dividerCapsY() + 10;
+                    };
+                    var capsStartY = function capsStartY() {
+                        return secCapsY() + 26;
+                    };
+                    var overlayHeight = function overlayHeight() {
+                        return capsStartY() + 5 * ROW_H + 18;
+                    };
+                    var fpsColor = function fpsColor(fpsVal) {
+                        return fpsVal >= 55 ? 16746751 : fpsVal >= 30 ? 4291559679 : 4283782655;
+                    };
+                    return createComponent(Show, {
+                        get when() {
+                            return dataLoaded();
+                        },
+                        get fallback() {
+                            return function() {
+                                var _el$22 = createElement("text");
+                                insertNode(_el$22, createTextNode("Loading Data..."));
+                                setProp(_el$22, "x", 960);
+                                setProp(_el$22, "y", 540);
+                                setProp(_el$22, "fontSize", 40);
+                                setProp(_el$22, "color", 4294967295);
+                                setProp(_el$22, "mount", .5);
+                                return _el$22;
+                            }();
+                        },
+                        get children() {
+                            var _el$7 = createElement("view"), _el$8 = createElement("view"), _el$9 = createElement("text"), _el$1 = createElement("view"), _el$10 = createElement("view"), _el$11 = createElement("text"), _el$13 = createElement("view"), _el$14 = createElement("text"), _el$16 = createElement("text"), _el$17 = createElement("text"), _el$18 = createElement("text");
+                            insertNode(_el$7, _el$8);
+                            insertNode(_el$7, _el$13);
+                            setProp(_el$7, "forwardFocus", 2);
+                            insertNode(_el$8, _el$9);
+                            insertNode(_el$8, _el$1);
+                            insertNode(_el$8, _el$10);
+                            insertNode(_el$8, _el$11);
+                            var _ref$ = solidLogo;
+                            typeof _ref$ === "function" ? use(_ref$, _el$8) : solidLogo = _el$8;
+                            setProp(_el$8, "width", 300);
+                            setProp(_el$8, "height", 150);
+                            setProp(_el$8, "x", 162);
+                            setProp(_el$8, "y", 80);
+                            setProp(_el$8, "zIndex", 105);
+                            insertNode(_el$9, createTextNode("Built With:"));
+                            setProp(_el$9, "x", 80);
+                            setProp(_el$9, "fontSize", 28);
+                            setProp(_el$9, "color", 4143380121);
+                            setProp(_el$1, "y", 32);
+                            setProp(_el$1, "src", "./assets/solidWord.png");
+                            setProp(_el$1, "width", 280);
+                            setProp(_el$1, "height", 52);
+                            setProp(_el$10, "x", 0);
+                            setProp(_el$10, "y", 110);
+                            setProp(_el$10, "src", "./assets/tmdb.png");
+                            setProp(_el$10, "width", 80);
+                            setProp(_el$10, "height", 41);
+                            insertNode(_el$11, createTextNode("This product uses the TMDB API but is not endorsed or certified by TMDB."));
+                            setProp(_el$11, "x", 90);
+                            setProp(_el$11, "y", 110);
+                            setProp(_el$11, "contain", "width");
+                            setProp(_el$11, "width", 160);
+                            setProp(_el$11, "fontSize", 12);
+                            setProp(_el$11, "color", 4143380121);
+                            insert(_el$7, createComponent(ContentBlock, {
+                                ref: function ref(r$) {
+                                    var _ref$2 = contentBlock;
+                                    typeof _ref$2 === "function" ? _ref$2(r$) : contentBlock = r$;
+                                },
+                                y: 300,
+                                x: 162,
+                                get content() {
+                                    return heroContent();
+                                }
+                            }), _el$13);
+                            insert(_el$7, createComponent(LazyColumn, {
+                                ref: function ref(r$) {
+                                    var _ref$3 = columnRef;
+                                    typeof _ref$3 === "function" ? _ref$3(r$) : columnRef = r$;
+                                },
+                                y: 500,
+                                upCount: 3,
+                                get each() {
+                                    return props.data.rows;
+                                },
+                                id: "BenchmarkColumn",
+                                onSelectedChanged: onRowChanged,
+                                onEnter: function onEnter() {
+                                    return setOpenPanel(true);
+                                },
+                                get autofocus() {
+                                    return props.data.rows[0].items();
+                                },
+                                gap: 40,
+                                throttleInput: 250,
+                                get style() {
+                                    return styles_default.Column;
+                                },
+                                children: function children(row) {
+                                    return row().type === "Hero" ? createComponent(LazyRow, {
+                                        gap: 80,
+                                        upCount: 2,
+                                        bufferSize: 1,
+                                        scroll: "center",
+                                        centerScroll: true,
+                                        get each() {
+                                            return row().items();
+                                        },
+                                        y: 50,
+                                        get height() {
+                                            return row().height;
+                                        },
+                                        children: function children(item) {
+                                            return createComponent(Hero, {
+                                                get item() {
+                                                    return item();
+                                                }
+                                            });
+                                        }
+                                    }) : createComponent(TitleRow, {
+                                        get row() {
+                                            return row();
+                                        },
+                                        get title() {
+                                            return row().title;
+                                        },
+                                        get height() {
+                                            return row().height;
+                                        },
+                                        get items() {
+                                            return row().items();
+                                        }
+                                    });
+                                }
+                            }), _el$13);
+                            insertNode(_el$13, _el$14);
+                            insertNode(_el$13, _el$16);
+                            insertNode(_el$13, _el$17);
+                            insertNode(_el$13, _el$18);
+                            setProp(_el$13, "x", 610);
+                            setProp(_el$13, "y", 20);
+                            setProp(_el$13, "zIndex", 200);
+                            setProp(_el$13, "style", overlayBgStyle);
+                            insertNode(_el$14, createTextNode("Benchmark (version: ###)"));
+                            setProp(_el$14, "x", 20);
+                            setProp(_el$14, "y", 16);
+                            setProp(_el$14, "style", overlayTitleStyle);
+                            setProp(_el$16, "x", 360);
+                            setProp(_el$16, "y", 20);
+                            setProp(_el$16, "width", 320);
+                            setProp(_el$16, "contain", "width");
+                            setProp(_el$16, "textAlign", "right");
+                            setProp(_el$16, "fontSize", 24);
+                            insert(_el$16, bundleType);
+                            setProp(_el$17, "x", 20);
+                            setProp(_el$17, "y", 54);
+                            setProp(_el$17, "contain", "width");
+                            setProp(_el$17, "width", 660);
+                            setProp(_el$17, "style", overlayStatusStyle);
+                            insert(_el$17, benchmarkStatus);
+                            setProp(_el$18, "x", 20);
+                            setProp(_el$18, "y", 92);
+                            setProp(_el$18, "style", overlayStatusStyle);
+                            setProp(_el$18, "color", 16746751);
+                            insert(_el$18, function() {
+                                var _c$ = memo(function() {
+                                    return renderTime() !== null;
+                                });
+                                return function() {
+                                    var _renderTime;
+                                    return _c$() ? "Initial Render: ".concat((_renderTime = renderTime()) == null ? void 0 : _renderTime.toFixed(2), "ms") : "Rendering...";
+                                };
+                            }());
+                            insert(_el$7, createComponent(Show, {
+                                get when() {
+                                    return benchmarkDone();
+                                },
+                                get children() {
+                                    var _el$19 = createElement("view"), _el$20 = createElement("text");
+                                    insertNode(_el$19, _el$20);
+                                    setProp(_el$19, "x", 40);
+                                    setProp(_el$19, "y", 20);
+                                    setProp(_el$19, "zIndex", 8e3);
+                                    setProp(_el$19, "width", OVERLAY_WIDTH);
+                                    setProp(_el$19, "style", resultsBgStyle);
+                                    insertNode(_el$20, createTextNode("Performance Breakdown"));
+                                    setProp(_el$20, "x", 24);
+                                    setProp(_el$20, "y", 14);
+                                    setProp(_el$20, "style", overlayTitleStyle);
+                                    insert(_el$19, createComponent(SectionHeader, {
+                                        y: 50,
+                                        title: "FRAME RATE & SMOOTHNESS"
+                                    }), null);
+                                    insert(_el$19, createComponent(ResultRow, {
+                                        y: 74,
+                                        label: "Animated FPS",
+                                        get value() {
+                                            return memo(function() {
+                                                return !!perfStats();
+                                            })() ? "".concat(perfStats().avgAnimatedFps.toFixed(1), " FPS") : "—";
+                                        },
+                                        get valueColor() {
+                                            return memo(function() {
+                                                return !!perfStats();
+                                            })() ? fpsColor(perfStats().avgAnimatedFps) : void 0;
+                                        }
+                                    }), null);
+                                    insert(_el$19, createComponent(ResultRow, {
+                                        y: 100,
+                                        label: "Anim p95 / p99",
+                                        get value() {
+                                            return memo(function() {
+                                                return !!perfStats();
+                                            })() ? "".concat(perfStats().animP95, "ms / ").concat(perfStats().animP99, "ms") : "—";
+                                        }
+                                    }), null);
+                                    insert(_el$19, createComponent(ResultRow, {
+                                        y: 126,
+                                        label: "Worst Anim Frame",
+                                        get value() {
+                                            return memo(function() {
+                                                return !!perfStats();
+                                            })() ? "".concat(perfStats().animMaxFrameTime.toFixed(1), "ms") : "—";
+                                        }
+                                    }), null);
+                                    insert(_el$19, createComponent(ResultRow, {
+                                        y: 152,
+                                        label: "Overall Rendered FPS",
+                                        get value() {
+                                            return memo(function() {
+                                                return !!perfStats();
+                                            })() ? "".concat(perfStats().avgFps.toFixed(1), " FPS (").concat(perfStats().totalRenderedFrames, "f)") : "—";
+                                        }
+                                    }), null);
+                                    insert(_el$19, createComponent(ResultRow, {
+                                        y: 178,
+                                        label: "All p95 / p99 / Max",
+                                        get value() {
+                                            return memo(function() {
+                                                return !!perfStats();
+                                            })() ? "".concat(perfStats().p95, "ms / ").concat(perfStats().p99, "ms / ").concat(perfStats().maxFrameTime.toFixed(1), "ms") : "—";
+                                        }
+                                    }), null);
+                                    insert(_el$19, createComponent(ResultRow, {
+                                        y: 204,
+                                        label: "Frames / Idle Polls",
+                                        get value() {
+                                            return memo(function() {
+                                                return !!perfStats();
+                                            })() ? "".concat(perfStats().totalRenderedFrames, " drew / ").concat(perfStats().totalIdleTicks, " idle") : "—";
+                                        }
+                                    }), null);
+                                    insert(_el$19, createComponent(SectionDivider, {
+                                        y: 232
+                                    }), null);
+                                    insert(_el$19, createComponent(SectionHeader, {
+                                        y: 242,
+                                        title: "FRAME WORK SPLIT (INTERVAL / PEAK)"
+                                    }), null);
+                                    insert(_el$19, createComponent(ResultRow, {
+                                        y: 266,
+                                        label: "Scene Update (upd)",
+                                        get value() {
+                                            return memo(function() {
+                                                return !!perfStats();
+                                            })() ? "".concat(perfStats().totalUpdateMs.toFixed(1), "ms total | ").concat(perfStats().maxUpdateMs.toFixed(1), "ms peak") : "—";
+                                        }
+                                    }), null);
+                                    insert(_el$19, createComponent(ResultRow, {
+                                        y: 292,
+                                        label: "Render Pass (rnd)",
+                                        get value() {
+                                            return memo(function() {
+                                                return !!perfStats();
+                                            })() ? "".concat(perfStats().totalRenderMs.toFixed(1), "ms total | ").concat(perfStats().maxRenderMs.toFixed(1), "ms peak") : "—";
+                                        }
+                                    }), null);
+                                    insert(_el$19, createComponent(ResultRow, {
+                                        y: 318,
+                                        label: "Texture Upload (upl)",
+                                        get value() {
+                                            return memo(function() {
+                                                return !!perfStats();
+                                            })() ? "".concat(perfStats().totalUploadMs.toFixed(1), "ms total | ").concat(perfStats().maxUploadMs.toFixed(1), "ms peak") : "—";
+                                        }
+                                    }), null);
+                                    insert(_el$19, createComponent(SectionDivider, {
+                                        y: 346
+                                    }), null);
+                                    insert(_el$19, createComponent(SectionHeader, {
+                                        y: 356,
+                                        title: "ASSETS, ANIMATIONS & GEOMETRY"
+                                    }), null);
+                                    insert(_el$19, createComponent(ResultRow, {
+                                        y: 380,
+                                        label: "Draw Calls / Quads",
+                                        get value() {
+                                            return memo(function() {
+                                                return !!drawStats();
+                                            })() ? "".concat(drawStats().renderOps, " draws / ").concat(drawStats().quads, " quads") : "—";
+                                        }
+                                    }), null);
+                                    insert(_el$19, createComponent(ResultRow, {
+                                        y: 406,
+                                        label: "Texture Uploads",
+                                        get value() {
+                                            return memo(function() {
+                                                return !!perfStats();
+                                            })() ? "".concat(perfStats().uploadedTextures, " tex / ").concat(perfStats().uploadFrames, "f (").concat(perfStats().meanUploadCostMs.toFixed(1), "ms avg)") : "—";
+                                        }
+                                    }), null);
+                                    insert(_el$19, createComponent(ResultRow, {
+                                        y: 432,
+                                        label: "Upload Queue Peak",
+                                        get value() {
+                                            return memo(function() {
+                                                return !!perfStats();
+                                            })() ? "q <= ".concat(perfStats().maxUploadQueueSize) : "—";
+                                        }
+                                    }), null);
+                                    insert(_el$19, createComponent(ResultRow, {
+                                        y: 458,
+                                        label: "Active Animations",
+                                        get value() {
+                                            return memo(function() {
+                                                return !!perfStats();
+                                            })() ? "".concat(perfStats().avgActiveAnimations.toFixed(1), " avg | ").concat(perfStats().maxActiveAnimations, " peak") : "—";
+                                        }
+                                    }), null);
+                                    insert(_el$19, createComponent(SectionDivider, {
+                                        y: 486
+                                    }), null);
+                                    insert(_el$19, createComponent(SectionHeader, {
+                                        y: SEC_GL_Y,
+                                        title: "GL CALLS / INTERVAL"
+                                    }), null);
+                                    insert(_el$19, createComponent(Show, {
+                                        get when() {
+                                            return glEntries().length > 0;
+                                        },
+                                        get fallback() {
+                                            return function() {
+                                                var _el$24 = createElement("text");
+                                                insertNode(_el$24, createTextNode("off (?contextSpy=true)"));
+                                                setProp(_el$24, "x", 290);
+                                                setProp(_el$24, "y", SEC_GL_Y);
+                                                setProp(_el$24, "style", resultsValueStyle);
+                                                setProp(_el$24, "color", 2290649343);
+                                                return _el$24;
+                                            }();
+                                        },
+                                        get children() {
+                                            return createComponent(For, {
+                                                get each() {
+                                                    return glEntries();
+                                                },
+                                                children: function children(_ref, i) {
+                                                    var _ref2 = _slicedToArray(_ref, 2), name = _ref2[0], count = _ref2[1];
+                                                    return createComponent(ResultRow, {
+                                                        get y() {
+                                                            return glStartY + i() * ROW_H;
+                                                        },
+                                                        label: name,
+                                                        value: "".concat(count)
+                                                    });
+                                                }
+                                            });
+                                        }
+                                    }), null);
+                                    insert(_el$19, createComponent(SectionDivider, {
+                                        get y() {
+                                            return dividerCapsY();
+                                        }
+                                    }), null);
+                                    insert(_el$19, createComponent(SectionHeader, {
+                                        get y() {
+                                            return secCapsY();
+                                        },
+                                        title: "RENDERER CAPABILITIES"
+                                    }), null);
+                                    insert(_el$19, createComponent(Show, {
+                                        get when() {
+                                            return capabilities();
+                                        },
+                                        get fallback() {
+                                            return function() {
+                                                var _el$26 = createElement("text");
+                                                insertNode(_el$26, createTextNode("Capabilities unavailable"));
+                                                setProp(_el$26, "x", 24);
+                                                setProp(_el$26, "style", resultsLabelStyle);
+                                                effect(function(_$p) {
+                                                    return setProp(_el$26, "y", capsStartY(), _$p);
+                                                });
+                                                return _el$26;
+                                            }();
+                                        },
+                                        get children() {
+                                            return [ createComponent(ResultRow, {
+                                                get y() {
+                                                    return capsStartY();
+                                                },
+                                                label: "Render Mode",
+                                                get value() {
+                                                    return capabilities().renderMode;
+                                                }
+                                            }), createComponent(ResultRow, {
+                                                get y() {
+                                                    return capsStartY() + ROW_H;
+                                                },
+                                                label: "WebGL Version",
+                                                get value() {
+                                                    return webGlLabel(capabilities());
+                                                }
+                                            }), createComponent(ResultRow, {
+                                                get y() {
+                                                    return capsStartY() + 2 * ROW_H;
+                                                },
+                                                label: "Vertex Array Obj (VAO)",
+                                                get value() {
+                                                    return capabilities().vertexArrayObject ? "Enabled (on)" : "Disabled (off)";
+                                                },
+                                                get valueColor() {
+                                                    return capabilities().vertexArrayObject ? 16746751 : 2863311615;
+                                                }
+                                            }), createComponent(ResultRow, {
+                                                get y() {
+                                                    return capsStartY() + 3 * ROW_H;
+                                                },
+                                                label: "Max Texture Size",
+                                                get value() {
+                                                    return "".concat(capabilities().maxTextureSize, "px");
+                                                }
+                                            }), createComponent(ResultRow, {
+                                                get y() {
+                                                    return capsStartY() + 4 * ROW_H;
+                                                },
+                                                label: "Max Texture Units",
+                                                get value() {
+                                                    return "".concat(capabilities().maxTextureUnits, " units");
+                                                }
+                                            }) ];
+                                        }
+                                    }), null);
+                                    effect(function(_$p) {
+                                        return setProp(_el$19, "height", overlayHeight(), _$p);
+                                    });
+                                    return _el$19;
+                                }
+                            }), null);
+                            insert(_el$7, createComponent(AssetPanel, {
+                                onFocus: storeFocus,
+                                close: function close() {
+                                    setOpenPanel(false);
+                                    restoreFocus();
+                                    return true;
+                                },
+                                get open() {
+                                    return openPanel();
+                                },
+                                get item() {
+                                    return heroContent();
+                                }
+                            }), null);
+                            effect(function(_p$) {
+                                var _v$3 = bundleType.includes("LEGACY") ? 4291559679 : 16746751, _v$4 = benchmarkDone() ? 16746751 : benchmarkRunning() ? 4291559679 : 2863311615;
+                                _v$3 !== _p$.e && (_p$.e = setProp(_el$16, "color", _v$3, _p$.e));
+                                _v$4 !== _p$.t && (_p$.t = setProp(_el$17, "color", _v$4, _p$.t));
+                                return _p$;
+                            }, {
+                                e: void 0,
+                                t: void 0
+                            });
+                            return _el$7;
+                        }
+                    });
+                });
+            }
+        };
+    });
+})();
+//# sourceMappingURL=Benchmark-legacy-B-uoSTKQ.js.map
