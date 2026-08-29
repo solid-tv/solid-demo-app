@@ -41,4 +41,3 @@
         };
     });
 })();
-//# sourceMappingURL=ItemFormatter-legacy-DdRxF7y_.js.map
