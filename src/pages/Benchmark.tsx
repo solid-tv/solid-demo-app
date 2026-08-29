@@ -1015,7 +1015,8 @@ const Benchmark = (props) => {
           autofocus={props.data?.rows?.[0]?.items ? props.data.rows[0].items() : undefined}
           gap={40}
           throttleInput={250}
-          // delay={250}
+          delay={250}
+          eagerLoad
           style={styles.Column}
         >
           {(row) =>

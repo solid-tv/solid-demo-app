@@ -180,13 +180,26 @@ const posterStyles = {
   $focus: { scale: 1.1, color: "#fff" }
 };
 
+// No {...props} spread: with generate: 'universal' a spread compiles into
+// mergeProps plus a reactive spread effect that iterates and assigns props
+// through the merge proxy, per tile, and tiles are the hottest thing this app
+// constructs. Explicit props compile to plain setProperty calls instead. The
+// list covers every call site: the row path (TitleRow's Dynamic) passes
+// item/index/group, and Loops/Infinite pass the Tile fields flat plus
+// x/alpha/transition. `item` must keep landing on the node: Browse navigates
+// with elm.item.href and the hero/backdrop effects read elm.item.
 export function Poster(props: NodeProps) {
   return (
     <view
-      src={props.item?.src}
-      title={props.item?.shortTitle}
-      backdrop={props.item?.backdrop}
-      {...props}
+      x={props.x}
+      alpha={props.alpha}
+      transition={props.transition}
+      item={props.item}
+      index={props.index}
+      group={props.group}
+      src={props.src ?? props.item?.src}
+      title={props.title ?? props.item?.shortTitle}
+      backdrop={props.backdrop ?? props.item?.backdrop}
       onFail={(node) => (node.src = "./assets/fallback.png")}
       style={posterStyles}
     />
@@ -214,10 +227,14 @@ const posterTitleStyles = {
   }
 } as const;
 
+// Spread-free for the same reason as Poster. Only the row path renders this
+// (item/index/group), so the explicit list is short.
 export function PosterTitle(props: NodeProps & { title: string }) {
   return (
     <view
-      {...props}
+      item={props.item}
+      index={props.index}
+      group={props.group}
       src={props.item?.src}
       backdrop={props.item?.backdrop}
       onFail={(node) => (node.src = "./assets/fallback.png")}
