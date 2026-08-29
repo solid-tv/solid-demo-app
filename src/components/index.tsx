@@ -1,8 +1,43 @@
 import { type IntrinsicNodeProps, type NodeProps, Dynamic } from "@solidtv/solid";
 import { Column, Row, VirtualRow, Image, useMouse } from "@solidtv/solid/primitives";
-import { createEffect, createSignal, For, Index } from "solid-js";
+import { createEffect, createSignal, For, Index, Show } from "solid-js";
 import styles, { buttonStyles } from "../styles";
 import { type Tile } from "../api/formatters/ItemFormatter";
+
+/**
+ * `?noText=true` drops the row titles and poster titles.
+ *
+ * A benchmark switch, not a feature: text in a row that translates takes the
+ * SDF translated-quad path every scroll frame, which rewrites every vertex and
+ * dirties the shared buffer. Toggling it by URL rather than by edit keeps both
+ * arms of an A/B on one build, so a rebuild's worth of thermal drift cannot be
+ * mistaken for the effect. Read once at module scope; it never changes at
+ * runtime. Mirrors the `?disableBG=true` switch in Background.tsx.
+ */
+export const SHOW_TEXT =
+  typeof window === "undefined" ||
+  new URLSearchParams(window.location.search).get("noText") !== "true";
+
+/**
+ * `?displaySize=N` sets how many items each row keeps mounted, default 8.
+ *
+ * The other half of the benchmark's workload switch, alongside {@link SHOW_TEXT}.
+ * `bufferSize` deliberately stays fixed at 3 so a run varies one thing.
+ * Garbage and values below 1 fall back to the default rather than rendering an
+ * empty row, since a silently broken scene reads as a performance result.
+ */
+export const DISPLAY_SIZE = (() => {
+  const fallback = 8;
+  if (typeof window === "undefined") {
+    return fallback;
+  }
+  const raw = new URLSearchParams(window.location.search).get("displaySize");
+  if (raw === null) {
+    return fallback;
+  }
+  const parsed = parseInt(raw, 10);
+  return isNaN(parsed) || parsed < 1 ? fallback : parsed;
+})();
 
 export function Thumbnail(props: IntrinsicNodeProps & { item: Tile }) {
   return (
@@ -108,12 +143,14 @@ export function TitleRow(props: TileRowProps) {
   const slug = () => props.title?.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '') || 'row';
   return (
     <view height={props.height} forwardFocus={1} marginTop={30}>
-      <text skipFocus style={titleRowStyles}>
-        {props.title}
-      </text>
+      <Show when={SHOW_TEXT}>
+        <text skipFocus style={titleRowStyles}>
+          {props.title}
+        </text>
+      </Show>
       <VirtualRow
         gap={20}
-        displaySize={8}
+        displaySize={DISPLAY_SIZE}
         bufferSize={3}
         each={props.items}
         y={50}
@@ -187,7 +224,9 @@ export function PosterTitle(props: NodeProps & { title: string }) {
       style={posterStyles}
       forwardStates
     >
-      <text style={posterTitleStyles}>{props.item?.title}</text>
+      <Show when={SHOW_TEXT}>
+        <text style={posterTitleStyles}>{props.item?.title}</text>
+      </Show>
     </view>
   );
 }

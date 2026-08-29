@@ -1,14 +1,231 @@
 import { createEffect, on, createSignal, batch, Show, For, onCleanup } from "solid-js";
-import { ElementNode, activeElement, renderer } from "@solidtv/solid";
-import { LazyRow, LazyColumn, useFocusStack, VirtualRow, resetCounter } from "@solidtv/solid/primitives";
-import { Hero, TitleRow, AssetPanel } from "../components";
+import { ElementNode, activeElement, renderer, Config } from "@solidtv/solid";
+import { LazyRow, LazyColumn, useFocusStack, resetCounter } from "@solidtv/solid/primitives";
+import { Hero, TitleRow, AssetPanel, SHOW_TEXT, DISPLAY_SIZE } from "../components";
 import styles from "../styles";
 import { setGlobalBackground } from "../state";
 import ContentBlock from "../components/ContentBlock";
 import { debounce } from "@solid-primitives/scheduled";
+import type { FpsUpdatePayload, RendererCapabilities } from "@solidtv/renderer";
 
 const TOTAL_CYCLES = 2;
 const NAV_DELAY_MS = 300; // delay between simulated key presses
+
+const FRAME_TIME_SPLIT_MS = 32;
+const FRAME_TIME_FINE_MS = 1;
+const FRAME_TIME_COARSE_MS = 8;
+const FRAME_TIME_BUCKET_COUNT = 45;
+
+/**
+ * Returns the number of image workers configured for the renderer.
+ */
+function getImageWorkersCount(): number {
+  try {
+    if (typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      const param = urlParams.get("numImageWorkers");
+      if (param !== null) {
+        const parsed = parseInt(param, 10);
+        if (!isNaN(parsed)) return parsed;
+      }
+    }
+    const root = renderer as any;
+    if (root?.stage?.options?.numImageWorkers !== undefined) {
+      return root.stage.options.numImageWorkers;
+    }
+    if (root?.settings?.numImageWorkers !== undefined) {
+      return root.settings.numImageWorkers;
+    }
+    if ((Config as any)?.rendererOptions?.numImageWorkers !== undefined) {
+      return (Config as any).rendererOptions.numImageWorkers;
+    }
+  } catch (e) {
+    // fallback
+  }
+  return (typeof window !== "undefined" && (window as any).createImageBitmap) ? 1 : 0;
+}
+
+/**
+ * Returns the texture processing time limit in milliseconds configured for the renderer.
+ */
+function getTextureProcessingTimeLimit(): number {
+  try {
+    if (typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      const param = urlParams.get("textureProcessingTimeLimit");
+      if (param !== null) {
+        const parsed = parseFloat(param);
+        if (!isNaN(parsed)) return parsed;
+      }
+    }
+    const root = renderer as any;
+    if (root?.stage?.options?.textureProcessingTimeLimit !== undefined) {
+      return root.stage.options.textureProcessingTimeLimit;
+    }
+    if (root?.settings?.textureProcessingTimeLimit !== undefined) {
+      return root.settings.textureProcessingTimeLimit;
+    }
+    if ((Config as any)?.rendererOptions?.textureProcessingTimeLimit !== undefined) {
+      return (Config as any).rendererOptions.textureProcessingTimeLimit;
+    }
+  } catch (e) {
+    // fallback
+  }
+  return 4;
+}
+
+/**
+ * Returns the number of logical CPU cores on the device, if exposed by the browser.
+ */
+function getDeviceCores(): string {
+  try {
+    if (typeof navigator !== "undefined" && typeof navigator.hardwareConcurrency === "number" && navigator.hardwareConcurrency > 0) {
+      return `${navigator.hardwareConcurrency} cores`;
+    }
+  } catch (e) {
+    // fallback
+  }
+  return "cores ?";
+}
+
+/**
+ * Returns the device logical and physical pixel ratios configured for the renderer.
+ */
+function getPixelRatios(): { logical: number; physical: number; dpr: number } {
+  let logical = typeof window !== "undefined" ? window.innerHeight / 1080 : 1;
+  let physical = typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1;
+  const dpr = typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1;
+
+  try {
+    const root = renderer as any;
+    if (root?.stage?.options?.deviceLogicalPixelRatio !== undefined) {
+      logical = root.stage.options.deviceLogicalPixelRatio;
+    } else if ((Config as any)?.rendererOptions?.deviceLogicalPixelRatio !== undefined) {
+      logical = (Config as any).rendererOptions.deviceLogicalPixelRatio;
+    }
+
+    if (root?.stage?.options?.devicePhysicalPixelRatio !== undefined) {
+      physical = root.stage.options.devicePhysicalPixelRatio;
+    } else if ((Config as any)?.rendererOptions?.devicePhysicalPixelRatio !== undefined) {
+      physical = (Config as any).rendererOptions.devicePhysicalPixelRatio;
+    }
+  } catch (e) {
+    // fallback
+  }
+
+  return { logical, physical, dpr };
+}
+
+/**
+ * Creates a zero-filled array compatible with legacy JS engines without Array.prototype.fill
+ */
+function createZeroArray(length: number): number[] {
+  const arr = new Array<number>(length);
+  for (let i = 0; i < length; i++) {
+    arr[i] = 0;
+  }
+  return arr;
+}
+
+/**
+ * Calculates the lower bound millisecond threshold for a frame time bucket.
+ */
+function frameTimeBucketLowerBound(index: number): number {
+  return index < FRAME_TIME_SPLIT_MS
+    ? index * FRAME_TIME_FINE_MS
+    : FRAME_TIME_SPLIT_MS + (index - FRAME_TIME_SPLIT_MS) * FRAME_TIME_COARSE_MS;
+}
+
+/**
+ * Approximate a percentile (e.g. 0.95 for p95, 0.99 for p99) from an fpsUpdate frame time histogram.
+ */
+function percentileMs(buckets: number[], fraction: number): number {
+  if (!buckets || buckets.length === 0) return 0;
+  let total = 0;
+  for (let i = 0; i < buckets.length; i++) {
+    total += buckets[i] || 0;
+  }
+  if (total === 0) return 0;
+
+  const target = total * fraction;
+  let seen = 0;
+  for (let i = 0; i < buckets.length; i++) {
+    seen += buckets[i] || 0;
+    if (seen >= target) {
+      return frameTimeBucketLowerBound(i);
+    }
+  }
+  return frameTimeBucketLowerBound(buckets.length - 1);
+}
+
+export interface KeyPressSample {
+  /** 1-based sequence across the whole run. */
+  press: number;
+  /** 1-based cycle number. */
+  cycle: number;
+  direction: "down" | "up";
+  /** 1-based row step within this direction's sweep. */
+  index: number;
+  /** Synchronous `dispatchEvent` only. */
+  handlerMs: number;
+  /** Handler plus the microtask tail it scheduled. The real cost. */
+  taskMs: number;
+}
+
+export interface BenchmarkPerformanceStats {
+  // FPS & Frame counts
+  avgFps: number;
+  minFps: number;
+  maxFps: number;
+  totalRenderedFrames: number;
+  totalRenderedMs: number;
+  totalIdleTicks: number;
+
+  // Animation smoothness
+  avgAnimatedFps: number;
+  totalAnimatedFrames: number;
+  totalAnimatedMs: number;
+  animP95: number;
+  animP99: number;
+  animMaxFrameTime: number;
+
+  // Frame time percentiles across all frames
+  p95: number;
+  p99: number;
+  maxFrameTime: number;
+
+  // Phase timings (Interval totals)
+  totalUpdateMs: number;
+  totalRenderMs: number;
+  totalUploadMs: number;
+  // Per-frame peaks
+  maxUpdateMs: number;
+  maxRenderMs: number;
+  maxUploadMs: number;
+
+  // Texture uploads
+  uploadedTextures: number;
+  uploadFrames: number;
+  meanUploadCostMs: number;
+  maxUploadQueueSize: number;
+
+  // Animation load
+  avgActiveAnimations: number;
+  maxActiveAnimations: number;
+
+  // Draw counts
+  renderOps: number;
+  quads: number;
+
+  // App-side input cost, all of it outside drawFrame
+  keyPresses: number;
+  totalKeyHandlerMs: number;
+  maxKeyHandlerMs: number;
+  totalKeyTaskMs: number;
+  maxKeyTaskMs: number;
+  meanKeyTaskMs: number;
+  worstKeyPresses: KeyPressSample[];
+}
 
 const Benchmark = (props) => {
   let cancelled = false;
@@ -23,9 +240,12 @@ const Benchmark = (props) => {
     solidLogo,
     firstRun = true;
   let columnRef: ElementNode | undefined;
+  let relaunchBtnRef: ElementNode | undefined;
 
   // Which Vite bundle this device loaded — set as a global at startup in src/index.tsx.
-  const bundleType = window.bundleType ?? "unknown";
+  const bundleType = (typeof window !== "undefined" && (window as any).bundleType)
+    ? String((window as any).bundleType)
+    : "unknown";
 
   // ── Benchmark state ──
   const [benchmarkStatus, setBenchmarkStatus] = createSignal("Waiting for data...");
@@ -35,56 +255,162 @@ const Benchmark = (props) => {
   const [renderTime, setRenderTime] = createSignal<number | null>(null);
 
   // ── Renderer telemetry from the fpsUpdate payload ──
-  type RendererCapabilities = {
-    renderMode: "webgl" | "canvas";
-    webGlVersion: 1 | 2 | null;
-    vertexArrayObject: boolean;
-    maxTextureSize: number;
-    maxTextureUnits: number;
-  };
   const [capabilities, setCapabilities] = createSignal<RendererCapabilities | null>(null);
+  const [perfStats, setPerfStats] = createSignal<BenchmarkPerformanceStats | null>(null);
   const [drawStats, setDrawStats] = createSignal<{ renderOps: number; quads: number } | null>(null);
   // Per-frame WebGL call counts from the last sampled frame of the run
   const [contextSpy, setContextSpy] = createSignal<Record<string, number> | null>(null);
 
-  // FPS tracking
+  // FPS tracking & accumulators
   let fpsValues: number[] = [];
-  // Peak draw counts seen during the run (renderOps = draw calls, quads = quads rendered)
+  let animatedFpsValues: number[] = [];
+  let cumulativeAllBuckets: number[] = createZeroArray(FRAME_TIME_BUCKET_COUNT);
+  let cumulativeAnimBuckets: number[] = createZeroArray(FRAME_TIME_BUCKET_COUNT);
+  let totalRenderedFrames = 0;
+  // The rate's numerator, which is not `renderedFrames`: the renderer drops one
+  // frame per rendering burst from both sides of its sample (the frame that
+  // resumes after an idle stretch carries the whole idle gap), so pairing every
+  // drawn frame with a denominator that excludes some of them overstates the
+  // rate. It read ~1.2 FPS high on this app before the split existed.
+  let totalSampledFrames = 0;
+  let totalRenderedMs = 0;
+  let totalIdleTicks = 0;
+  let totalAnimatedFrames = 0;
+  let totalAnimatedMs = 0;
+  let worstMaxFrameTime = 0;
+  let worstAnimatedMaxFrameTime = 0;
+  let totalUpdateMs = 0;
+  let totalRenderMs = 0;
+  let totalUploadMs = 0;
+  let worstMaxUpdateMs = 0;
+  let worstMaxRenderMs = 0;
+  let worstMaxUploadMs = 0;
+  let totalUploadedTextures = 0;
+  let totalUploadFrames = 0;
+  let worstMaxUploadQueueSize = 0;
+  let activeAnimationsSamples: number[] = [];
+  let worstMaxActiveAnimations = 0;
   let maxRenderOps = 0;
   let maxQuads = 0;
-  // Most recent contextSpyData seen while running (the GL call breakdown)
+  // App-side cost of a simulated key press. `handler` is the synchronous
+  // dispatch; `task` adds the microtask tail it schedules. See simulateKeyDown.
+  let totalKeyHandlerMs = 0;
+  let worstKeyHandlerMs = 0;
+  let totalKeyTaskMs = 0;
+  let worstKeyTaskMs = 0;
+  let keyDispatchCount = 0;
+  let keyPressSamples: KeyPressSample[] = [];
   let lastContextSpy: Record<string, number> | null = null;
   let fpsListenerAttached = false;
 
+  function safeFetchCapabilities() {
+    try {
+      const root = renderer as any;
+      if (root && typeof root.getCapabilities === "function" && !capabilities()) {
+        const caps = root.getCapabilities();
+        if (caps) setCapabilities(caps);
+      }
+    } catch (e) {
+      console.warn("Unable to fetch capabilities:", e);
+    }
+  }
+
   function attachFpsListener() {
     if (fpsListenerAttached) return;
-    const root = renderer;
-    if (!root) return;
+    const root = renderer as any;
+    if (!root || typeof root.on !== "function") return;
     fpsListenerAttached = true;
 
+    safeFetchCapabilities();
+
     root.on('fpsUpdate', (_target: any, fpsData: any) => {
-      const fps = typeof fpsData === 'number' ? fpsData : fpsData.fps;
-      // ignore really low fps which occur during page load or transitions
-      if (fps > 5 && benchmarkRunning()) {
+      const fps = typeof fpsData === 'number' ? fpsData : fpsData?.fps;
+
+      // Also capture capabilities from the payload if passed
+      if (fpsData?.capabilities && !capabilities()) {
+        setCapabilities(fpsData.capabilities);
+      }
+
+      // Ignore low FPS which occur during initial page load / transition
+      if (typeof fps === 'number' && fps > 5 && benchmarkRunning()) {
         fpsValues.push(fps);
 
-        // The newer fpsUpdate payload is an object carrying draw counts and the
-        // (constant) renderer capabilities alongside the fps number.
-        if (typeof fpsData === 'object' && fpsData) {
-          if (typeof fpsData.renderOps === 'number') {
-            maxRenderOps = Math.max(maxRenderOps, fpsData.renderOps);
+        if (typeof fpsData === 'object' && fpsData !== null) {
+          const payload = fpsData as FpsUpdatePayload;
+
+          if (typeof payload.animatedFps === 'number' && payload.animatedFrames > 0) {
+            animatedFpsValues.push(payload.animatedFps);
           }
-          if (typeof fpsData.quads === 'number') {
-            maxQuads = Math.max(maxQuads, fpsData.quads);
+
+          // Accumulate frame time bucket distributions
+          if (Array.isArray(payload.frameTimeBuckets)) {
+            for (let i = 0; i < Math.min(payload.frameTimeBuckets.length, cumulativeAllBuckets.length); i++) {
+              cumulativeAllBuckets[i] += payload.frameTimeBuckets[i] || 0;
+            }
           }
-          // GL call breakdown for the frame (null on the Canvas backend)
-          if (fpsData.contextSpyData) {
-            lastContextSpy = fpsData.contextSpyData;
-            console.log(lastContextSpy);
+          if (Array.isArray(payload.animatedFrameTimeBuckets)) {
+            for (let i = 0; i < Math.min(payload.animatedFrameTimeBuckets.length, cumulativeAnimBuckets.length); i++) {
+              cumulativeAnimBuckets[i] += payload.animatedFrameTimeBuckets[i] || 0;
+            }
           }
-          // capabilities are fixed for the lifetime of the renderer — capture once
-          if (fpsData.capabilities && !capabilities()) {
-            setCapabilities(fpsData.capabilities);
+
+          // Frame counts & duration totals
+          totalRenderedFrames += payload.renderedFrames || 0;
+          totalSampledFrames += payload.sampledFrames || 0;
+          totalRenderedMs += payload.renderedMs || 0;
+          totalIdleTicks += payload.idleTicks || 0;
+          totalAnimatedFrames += payload.animatedFrames || 0;
+          totalAnimatedMs += payload.animatedMs || 0;
+
+          // Worst frame times
+          if (typeof payload.maxFrameTime === 'number') {
+            worstMaxFrameTime = Math.max(worstMaxFrameTime, payload.maxFrameTime);
+          }
+          if (typeof payload.animatedMaxFrameTime === 'number') {
+            worstAnimatedMaxFrameTime = Math.max(worstAnimatedMaxFrameTime, payload.animatedMaxFrameTime);
+          }
+
+          // Frame phase totals & peaks (Scene Update, Render Pass, Texture Upload)
+          totalUpdateMs += payload.updateMs || 0;
+          totalRenderMs += payload.renderMs || 0;
+          totalUploadMs += payload.uploadMs || 0;
+
+          if (typeof payload.maxUpdateMs === 'number') {
+            worstMaxUpdateMs = Math.max(worstMaxUpdateMs, payload.maxUpdateMs);
+          }
+          if (typeof payload.maxRenderMs === 'number') {
+            worstMaxRenderMs = Math.max(worstMaxRenderMs, payload.maxRenderMs);
+          }
+          if (typeof payload.maxUploadMs === 'number') {
+            worstMaxUploadMs = Math.max(worstMaxUploadMs, payload.maxUploadMs);
+          }
+
+          // Texture upload telemetry
+          totalUploadedTextures += payload.uploadedTextures || 0;
+          totalUploadFrames += payload.uploadFrames || 0;
+          if (typeof payload.maxUploadQueueSize === 'number') {
+            worstMaxUploadQueueSize = Math.max(worstMaxUploadQueueSize, payload.maxUploadQueueSize);
+          }
+
+          // Animation load metrics
+          if (typeof payload.meanActiveAnimations === 'number') {
+            activeAnimationsSamples.push(payload.meanActiveAnimations);
+          }
+          if (typeof payload.maxActiveAnimations === 'number') {
+            worstMaxActiveAnimations = Math.max(worstMaxActiveAnimations, payload.maxActiveAnimations);
+          }
+
+          // Draw operations & quads
+          if (typeof payload.renderOps === 'number') {
+            maxRenderOps = Math.max(maxRenderOps, payload.renderOps);
+          }
+          if (typeof payload.quads === 'number') {
+            maxQuads = Math.max(maxQuads, payload.quads);
+          }
+
+          // Context spy (WebGL call counts)
+          if (payload.contextSpyData) {
+            lastContextSpy = payload.contextSpyData;
           }
         }
       }
@@ -92,13 +418,75 @@ const Benchmark = (props) => {
   }
 
   // ── Simulated navigation helpers ──
-  function simulateKeyDown(key: string) {
+  function simulateKeyDown(key: string, cycle: number, index: number) {
     try {
       const event = document.createEvent("Event");
       event.initEvent("keydown", true, true);
       Object.defineProperty(event, "key", { value: key, enumerable: true, configurable: true });
       Object.defineProperty(event, "code", { value: key === "ArrowDown" ? "ArrowDown" : "ArrowUp", enumerable: true, configurable: true });
+
+      // A key press costs more than the handler that receives it. The
+      // synchronous part is focus handling and LazyColumn/LazyRow
+      // reconciliation, but the work that part *schedules* lands afterwards in
+      // the same microtask checkpoint: solid's post-mutation pass (delete-flush,
+      // layout, setActiveElement) and the renderer's queued
+      // `CoreNode.loadTextureTask` uploads. A desktop trace of the five row
+      // mounts put the handler at 108ms and that tail at another 43ms, so
+      // bracketing `dispatchEvent` alone understated a press by about a third.
+      //
+      // None of it is inside `drawFrame`, so none of it appears in the update /
+      // render / upload split; it lands in a frame's unattributed time. Timing
+      // it here is what separates "the renderer is slow" from "the frame that
+      // carried a key press was slow".
+      //
+      // The tail is captured with a microtask rather than `setTimeout(0)`: a
+      // timer fires in a later task, by which point the browser may have
+      // rendered a frame in between and folded it into the number. A microtask
+      // queued here runs at the end of the current checkpoint, after everything
+      // the handler scheduled, and before any rendering. It misses only work
+      // queued by those microtasks themselves, since the queue is FIFO.
+      const dispatchStart = performance.now();
       document.dispatchEvent(event);
+      const handlerMs = performance.now() - dispatchStart;
+
+      keyDispatchCount++;
+      const press = keyDispatchCount;
+
+      totalKeyHandlerMs += handlerMs;
+      if (handlerMs > worstKeyHandlerMs) {
+        worstKeyHandlerMs = handlerMs;
+      }
+
+      // Per-press detail, so the worst transitions can be identified rather
+      // than just counted. A single outlier press has accounted for most of the
+      // run's worst frame, and the mean alone cannot locate it. Pushed now so
+      // the run order is preserved; `taskMs` is filled in below.
+      const sample: KeyPressSample = {
+        press: press,
+        cycle: cycle,
+        direction: key === "ArrowDown" ? "down" : "up",
+        index: index,
+        handlerMs: handlerMs,
+        taskMs: handlerMs,
+      };
+      keyPressSamples.push(sample);
+
+      const closeSample = () => {
+        const taskMs = performance.now() - dispatchStart;
+        sample.taskMs = taskMs;
+        totalKeyTaskMs += taskMs;
+        if (taskMs > worstKeyTaskMs) {
+          worstKeyTaskMs = taskMs;
+        }
+      };
+
+      if (typeof queueMicrotask === "function") {
+        queueMicrotask(closeSample);
+      } else {
+        // Chrome 38 predates queueMicrotask. A resolved promise is the same
+        // checkpoint wherever Promises are native.
+        Promise.resolve().then(closeSample);
+      }
     } catch (e) {
       console.error("Failed to simulate key down:", e);
     }
@@ -112,17 +500,46 @@ const Benchmark = (props) => {
     // Reset the FPS counter
     resetCounter();
 
-    const totalRows = props.data.rows.length;
+    const totalRows = props.data?.rows?.length || 0;
     if (totalRows === 0) {
       setBenchmarkStatus("No rows to benchmark");
       return;
     }
 
-    // Reset state
+    // Reset accumulator state
     fpsValues = [];
+    animatedFpsValues = [];
+    cumulativeAllBuckets = createZeroArray(FRAME_TIME_BUCKET_COUNT);
+    cumulativeAnimBuckets = createZeroArray(FRAME_TIME_BUCKET_COUNT);
+    totalRenderedFrames = 0;
+    totalSampledFrames = 0;
+    totalRenderedMs = 0;
+    totalIdleTicks = 0;
+    totalAnimatedFrames = 0;
+    totalAnimatedMs = 0;
+    worstMaxFrameTime = 0;
+    worstAnimatedMaxFrameTime = 0;
+    totalUpdateMs = 0;
+    totalRenderMs = 0;
+    totalUploadMs = 0;
+    worstMaxUpdateMs = 0;
+    worstMaxRenderMs = 0;
+    worstMaxUploadMs = 0;
+    totalUploadedTextures = 0;
+    totalUploadFrames = 0;
+    worstMaxUploadQueueSize = 0;
+    activeAnimationsSamples = [];
+    worstMaxActiveAnimations = 0;
     maxRenderOps = 0;
     maxQuads = 0;
+    totalKeyHandlerMs = 0;
+    worstKeyHandlerMs = 0;
+    totalKeyTaskMs = 0;
+    worstKeyTaskMs = 0;
+    keyDispatchCount = 0;
+    keyPressSamples = [];
     lastContextSpy = null;
+    setPerfStats(null);
     setDrawStats(null);
     setContextSpy(null);
     setBenchmarkRunning(true);
@@ -143,7 +560,7 @@ const Benchmark = (props) => {
         setBenchmarkStatus(
           `Cycle ${cycle + 1}/${TOTAL_CYCLES} - Down ${i + 1}/${totalRows - 1}`
         );
-        simulateKeyDown("ArrowDown");
+        simulateKeyDown("ArrowDown", cycle + 1, i + 1);
         await sleep(NAV_DELAY_MS);
       }
 
@@ -154,30 +571,229 @@ const Benchmark = (props) => {
         setBenchmarkStatus(
           `Cycle ${cycle + 1}/${TOTAL_CYCLES} - Up ${i + 1}/${totalRows - 1}`
         );
-        simulateKeyDown("ArrowUp");
+        simulateKeyDown("ArrowUp", cycle + 1, i + 1);
         await sleep(NAV_DELAY_MS);
       }
     }
 
     if (cancelled) return;
 
-    // Compute results
+    // Compute comprehensive performance stats
+    const avgAnimatedFps = totalAnimatedMs > 0 && totalAnimatedFrames > 0
+      ? (totalAnimatedFrames / (totalAnimatedMs / 1000))
+      : (animatedFpsValues.length > 0 ? animatedFpsValues.reduce((a, b) => a + b, 0) / animatedFpsValues.length : 0);
+
+    const avgFps = totalRenderedMs > 0 && totalSampledFrames > 0
+      ? (totalSampledFrames / (totalRenderedMs / 1000))
+      : (fpsValues.length > 0 ? fpsValues.reduce((a, b) => a + b, 0) / fpsValues.length : 0);
+
+    const minFps = fpsValues.length > 0 ? Math.min.apply(null, fpsValues) : 0;
+    const maxFps = fpsValues.length > 0 ? Math.max.apply(null, fpsValues) : 0;
+
+    const animP95 = percentileMs(cumulativeAnimBuckets, 0.95);
+    const animP99 = percentileMs(cumulativeAnimBuckets, 0.99);
+    const allP95 = percentileMs(cumulativeAllBuckets, 0.95);
+    const allP99 = percentileMs(cumulativeAllBuckets, 0.99);
+
+    const avgActiveAnims = activeAnimationsSamples.length > 0
+      ? activeAnimationsSamples.reduce((a, b) => a + b, 0) / activeAnimationsSamples.length
+      : 0;
+
+    const meanUploadCost = totalUploadedTextures > 0
+      ? totalUploadMs / totalUploadedTextures
+      : 0;
+
+    const meanKeyTask = keyDispatchCount > 0
+      ? totalKeyTaskMs / keyDispatchCount
+      : 0;
+
+    // slice() first so the run-order array is not reordered under us. Ranked by
+    // taskMs, not handlerMs: the tail is a third of a press and does not scale
+    // with the handler, so the two orderings differ.
+    const worstKeyPresses = keyPressSamples
+      .slice()
+      .sort((a, b) => b.taskMs - a.taskMs)
+      .slice(0, 5);
+
+    const calculatedStats: BenchmarkPerformanceStats = {
+      avgFps,
+      minFps,
+      maxFps,
+      totalRenderedFrames,
+      totalRenderedMs,
+      totalIdleTicks,
+      avgAnimatedFps,
+      totalAnimatedFrames,
+      totalAnimatedMs,
+      animP95,
+      animP99,
+      animMaxFrameTime: worstAnimatedMaxFrameTime,
+      p95: allP95,
+      p99: allP99,
+      maxFrameTime: worstMaxFrameTime,
+      totalUpdateMs,
+      totalRenderMs,
+      totalUploadMs,
+      maxUpdateMs: worstMaxUpdateMs,
+      maxRenderMs: worstMaxRenderMs,
+      maxUploadMs: worstMaxUploadMs,
+      uploadedTextures: totalUploadedTextures,
+      uploadFrames: totalUploadFrames,
+      meanUploadCostMs: meanUploadCost,
+      maxUploadQueueSize: worstMaxUploadQueueSize,
+      avgActiveAnimations: avgActiveAnims,
+      maxActiveAnimations: worstMaxActiveAnimations,
+      renderOps: maxRenderOps,
+      quads: maxQuads,
+      keyPresses: keyDispatchCount,
+      totalKeyHandlerMs,
+      maxKeyHandlerMs: worstKeyHandlerMs,
+      totalKeyTaskMs,
+      maxKeyTaskMs: worstKeyTaskMs,
+      meanKeyTaskMs: meanKeyTask,
+      worstKeyPresses,
+    };
+
+    safeFetchCapabilities();
+
+    const currentCaps = capabilities();
+    const benchmarkResultsJson = {
+      benchmark: {
+        bundleType: bundleType,
+        initialRenderTimeMs: renderTime() !== null ? parseFloat(renderTime()!.toFixed(2)) : null,
+        totalCycles: TOTAL_CYCLES,
+        navDelayMs: NAV_DELAY_MS,
+      },
+      frameRateAndSmoothness: {
+        avgAnimatedFps: parseFloat(calculatedStats.avgAnimatedFps.toFixed(2)),
+        animP95Ms: calculatedStats.animP95,
+        animP99Ms: calculatedStats.animP99,
+        animMaxFrameTimeMs: parseFloat(calculatedStats.animMaxFrameTime.toFixed(2)),
+        totalAnimatedFrames: calculatedStats.totalAnimatedFrames,
+        totalAnimatedMs: parseFloat(calculatedStats.totalAnimatedMs.toFixed(2)),
+        overallRenderedFps: parseFloat(calculatedStats.avgFps.toFixed(2)),
+        minFps: parseFloat(calculatedStats.minFps.toFixed(2)),
+        maxFps: parseFloat(calculatedStats.maxFps.toFixed(2)),
+        allP95Ms: calculatedStats.p95,
+        allP99Ms: calculatedStats.p99,
+        allMaxFrameTimeMs: parseFloat(calculatedStats.maxFrameTime.toFixed(2)),
+        totalRenderedFrames: calculatedStats.totalRenderedFrames,
+        totalRenderedMs: parseFloat(calculatedStats.totalRenderedMs.toFixed(2)),
+        totalIdleTicks: calculatedStats.totalIdleTicks,
+      },
+      frameWorkSplit: {
+        totalUpdateMs: parseFloat(calculatedStats.totalUpdateMs.toFixed(2)),
+        maxUpdateMs: parseFloat(calculatedStats.maxUpdateMs.toFixed(2)),
+        totalRenderMs: parseFloat(calculatedStats.totalRenderMs.toFixed(2)),
+        maxRenderMs: parseFloat(calculatedStats.maxRenderMs.toFixed(2)),
+        totalUploadMs: parseFloat(calculatedStats.totalUploadMs.toFixed(2)),
+        maxUploadMs: parseFloat(calculatedStats.maxUploadMs.toFixed(2)),
+      },
+      inputDispatch: {
+        keyPresses: calculatedStats.keyPresses,
+        // The real per-press cost: dispatch plus the microtask tail.
+        totalMs: parseFloat(calculatedStats.totalKeyTaskMs.toFixed(2)),
+        maxMs: parseFloat(calculatedStats.maxKeyTaskMs.toFixed(2)),
+        meanMs: parseFloat(calculatedStats.meanKeyTaskMs.toFixed(2)),
+        // Dispatch alone. This is what earlier runs reported as totalMs/maxMs,
+        // so compare against those with this pair, not the one above.
+        handlerTotalMs: parseFloat(calculatedStats.totalKeyHandlerMs.toFixed(2)),
+        handlerMaxMs: parseFloat(calculatedStats.maxKeyHandlerMs.toFixed(2)),
+        worstPresses: calculatedStats.worstKeyPresses.map((sample) => ({
+          press: sample.press,
+          cycle: sample.cycle,
+          direction: sample.direction,
+          index: sample.index,
+          ms: parseFloat(sample.taskMs.toFixed(2)),
+          handlerMs: parseFloat(sample.handlerMs.toFixed(2)),
+        })),
+      },
+      assetsAnimationsGeometry: {
+        drawCalls: calculatedStats.renderOps,
+        quads: calculatedStats.quads,
+        uploadedTextures: calculatedStats.uploadedTextures,
+        uploadFrames: calculatedStats.uploadFrames,
+        meanUploadCostMs: parseFloat(calculatedStats.meanUploadCostMs.toFixed(2)),
+        maxUploadQueueSize: calculatedStats.maxUploadQueueSize,
+        avgActiveAnimations: parseFloat(calculatedStats.avgActiveAnimations.toFixed(2)),
+        maxActiveAnimations: calculatedStats.maxActiveAnimations,
+      },
+      // The scene the run measured. Recovering an arm from the query string
+      // alone failed once already (a two-variable run read as one), and a
+      // photographed overlay or a stale localStorage entry carries no URL at
+      // all. Cheap enough to always emit.
+      sceneConfig: {
+        displaySize: DISPLAY_SIZE,
+        showText: SHOW_TEXT,
+      },
+      glCallsPerInterval: lastContextSpy || null,
+      rendererCapabilities: currentCaps ? {
+        renderMode: currentCaps.renderMode,
+        webGlVersion: currentCaps.webGlVersion ?? null,
+        vertexArrayObject: currentCaps.vertexArrayObject ?? null,
+        maxTextureSize: currentCaps.maxTextureSize,
+        maxTextureUnits: currentCaps.maxTextureUnits,
+        pixelRatio: {
+          physical: parseFloat(getPixelRatios().physical.toFixed(2)),
+          logical: parseFloat(getPixelRatios().logical.toFixed(2)),
+          windowDpr: parseFloat(getPixelRatios().dpr.toFixed(2)),
+        },
+        textureProcessingTimeLimitMs: getTextureProcessingTimeLimit(),
+        imageWorkers: getImageWorkersCount(),
+        deviceCores: getDeviceCores(),
+      } : {
+        pixelRatio: {
+          physical: parseFloat(getPixelRatios().physical.toFixed(2)),
+          logical: parseFloat(getPixelRatios().logical.toFixed(2)),
+          windowDpr: parseFloat(getPixelRatios().dpr.toFixed(2)),
+        },
+        textureProcessingTimeLimitMs: getTextureProcessingTimeLimit(),
+        imageWorkers: getImageWorkersCount(),
+        deviceCores: getDeviceCores(),
+      },
+    };
+
+    console.log("=== BENCHMARK PERFORMANCE RESULTS (JSON) ===");
+    console.log(JSON.stringify(benchmarkResultsJson, null, 2));
+
+    // Also persist, so a run can be captured with devtools detached and read
+    // back afterwards. Attaching devtools inflates renderer JavaScript by
+    // 2-8x on this device (it leaves the texImage2D driver copy alone), which
+    // is large enough to invert conclusions, so any run meant to be trusted
+    // has to be captured without it. The query string rides along because the
+    // arm of an A/B is otherwise unrecoverable from the results alone.
+    // Capped at the last 12 runs; read with
+    // `JSON.parse(localStorage.getItem("benchmarkRuns"))`.
+    try {
+      const prior = JSON.parse(localStorage.getItem("benchmarkRuns") || "[]");
+      prior.push({
+        url: window.location.search,
+        results: benchmarkResultsJson,
+      });
+      localStorage.setItem("benchmarkRuns", JSON.stringify(prior.slice(-12)));
+    } catch (e) {
+      // Storage disabled or full: the console log above is still the primary
+      // path, so a failure here must not take the run down with it.
+    }
+
     batch(() => {
+      setPerfStats(calculatedStats);
+      setDrawStats({ renderOps: maxRenderOps, quads: maxQuads });
+      setContextSpy(lastContextSpy);
       setBenchmarkDone(true);
       setBenchmarkRunning(false);
     });
 
-    // Publish the peak draw counts and the GL call breakdown collected during the run
-    setDrawStats({ renderOps: maxRenderOps, quads: maxQuads });
-    setContextSpy(lastContextSpy);
+    setTimeout(() => {
+      if (relaunchBtnRef && typeof relaunchBtnRef.focus === "function") {
+        relaunchBtnRef.focus();
+      }
+    }, 100);
 
-    if (fpsValues.length > 0) {
-      const sum = fpsValues.reduce((a, b) => a + b, 0);
-      const avg = sum / fpsValues.length;
-      const min = Math.min(...fpsValues);
-      const max = Math.max(...fpsValues);
+    if (fpsValues.length > 0 || totalRenderedFrames > 0) {
+      const animRateStr = avgAnimatedFps > 0 ? `${avgAnimatedFps.toFixed(1)} FPS` : `${avgFps.toFixed(1)} FPS`;
       setBenchmarkStatus(
-        `Avg: ${avg.toFixed(1)} FPS  |  Min: ${min.toFixed(1)}  |  Max: ${max.toFixed(1)}  |  Samples: ${fpsValues.length}`
+        `Anim: ${animRateStr} (p95: ${animP95}ms, max: ${worstAnimatedMaxFrameTime.toFixed(0)}ms) | All: ${avgFps.toFixed(1)} FPS`
       );
     } else {
       setBenchmarkStatus("Done - No FPS samples collected");
@@ -190,16 +806,18 @@ const Benchmark = (props) => {
     if (!rows || rows.length === 0) return;
 
     // Wait for the first row's items to resolve (they are resources)
-    const firstItems = rows[0].items();
+    const firstItems = rows[0]?.items ? rows[0].items() : null;
     if (firstItems && firstItems.length > 0) {
       if (!dataLoaded()) {
         const startTime = performance.now();
         setDataLoaded(true);
-        renderer.on('idle', () => {
-          if (renderTime() === null) {
-            setRenderTime(performance.now() - startTime);
-          }
-        });
+        if (renderer && typeof renderer.on === "function") {
+          renderer.on('idle', () => {
+            if (renderTime() === null) {
+              setRenderTime(performance.now() - startTime);
+            }
+          });
+        }
       }
 
       if (!benchmarkDone() && !benchmarkRunning()) {
@@ -268,59 +886,106 @@ const Benchmark = (props) => {
     lineHeight: 28,
   };
 
-  // ── Top-left results overlay (shown at the end of the test) ──
+  // ── Results overlay (centered under the main benchmark banner) ──
   const resultsBgStyle = {
-    color: 0x000000ff,
+    color: 0x000000f5,
     borderRadius: 12,
   };
 
-  const OVERLAY_WIDTH = 560;
-  const ROW_H = 28;
+  const OVERLAY_WIDTH = 700;
+  const ROW_H = 26;
+
+  const resultsHeaderStyle = {
+    fontFamily: "Roboto",
+    fontSize: 16,
+    lineHeight: 22,
+    color: 0x00d8ffff,
+  };
 
   const resultsLabelStyle = {
     fontFamily: "Roboto",
-    fontSize: 20,
-    lineHeight: 28,
-    color: 0xaaaaaaff,
+    fontSize: 17,
+    lineHeight: 24,
+    color: 0x9e9e9eff,
   };
 
   const resultsValueStyle = {
     fontFamily: "Roboto",
-    fontSize: 20,
-    lineHeight: 28,
+    fontSize: 17,
+    lineHeight: 24,
     color: 0xffffffff,
   };
 
   // One label/value row in the results overlay
   const ResultRow = (rowProps: { y: number; label: string; value: string }) => (
     <view y={rowProps.y}>
-      <text x={20} style={resultsLabelStyle}>
+      <text x={28} style={resultsLabelStyle}>
         {rowProps.label}
       </text>
-      <text x={340} style={resultsValueStyle}>
+      <text x={350} style={resultsValueStyle}>
         {rowProps.value}
       </text>
     </view>
+  );
+
+  const SectionHeader = (headerProps: { y: number; title: string }) => (
+    <view y={headerProps.y}>
+      <text x={28} style={resultsHeaderStyle}>
+        {headerProps.title}
+      </text>
+    </view>
+  );
+
+  const SectionDivider = (divProps: { y: number }) => (
+    <view y={divProps.y} width={OVERLAY_WIDTH - 56} height={1} x={28} color={0xffffff22} />
   );
 
   const webGlLabel = (caps: RendererCapabilities) =>
     caps.renderMode === "webgl" ? `WebGL ${caps.webGlVersion ?? "?"}` : "Canvas2D";
 
   // contextSpyData entries (GL call → count for the sampled frame), busiest first.
-  // Empty when context spy is disabled (enable with ?contextSpy=true) or on Canvas.
   const glEntries = (): [string, number][] => {
     const spy = contextSpy();
     if (!spy) return [];
-    return Object.entries(spy).sort((a, b) => b[1] - a[1]);
+    const entries: [string, number][] = [];
+    for (const key in spy) {
+      if (Object.prototype.hasOwnProperty.call(spy, key)) {
+        entries.push([key, spy[key] || 0]);
+      }
+    }
+    return entries.sort((a, b) => b[1] - a[1]);
+  };
+
+  const relaunchBtnStyle = {
+    width: 320,
+    height: 44,
+    color: 0x333333ff,
+    borderRadius: 8,
+    $focus: {
+      color: 0x00d8ffff,
+    },
+  };
+
+  const relaunchBtnTextStyle = {
+    fontFamily: "Roboto",
+    fontSize: 18,
+    lineHeight: 24,
+    color: 0xffffffff,
+    $focus: {
+      color: 0x000000ff,
+    },
   };
 
   // ── Reactive vertical layout for the results overlay ──
-  const GL_HEADER_Y = 116;
-  const glStartY = GL_HEADER_Y + 28; // first GL row sits below its header
-  const glRowsHeight = () => Math.max(glEntries().length, 1) * ROW_H;
-  const dividerY = () => glStartY + glRowsHeight() + 8;
-  const capsStartY = () => dividerY() + 16;
-  const overlayHeight = () => capsStartY() + 5 * ROW_H + 16;
+  const SEC_GL_Y = 486;
+  const glStartY = SEC_GL_Y + 26;
+  const glRowsCount = () => glEntries().length;
+  const glRowsHeight = () => (glRowsCount() > 0 ? glRowsCount() * ROW_H : ROW_H);
+  const dividerCapsY = () => glStartY + glRowsHeight() + 6;
+  const secCapsY = () => dividerCapsY() + 10;
+  const capsStartY = () => secCapsY() + 26;
+  const relaunchBtnY = () => capsStartY() + 8 * ROW_H + 16;
+  const overlayHeight = () => relaunchBtnY() + 44 + 18;
 
   return (
     <Show when={dataLoaded()} fallback={<text x={960} y={540} fontSize={40} color={0xffffffff} mount={0.5}>Loading Data...</text>}>
@@ -342,13 +1007,14 @@ const Benchmark = (props) => {
           ref={columnRef}
           y={500}
           upCount={3}
-          each={props.data.rows}
+          each={props.data?.rows || []}
           id="BenchmarkColumn"
           onSelectedChanged={onRowChanged}
           onEnter={() => setOpenPanel(true)}
-          autofocus={props.data.rows[0].items()}
+          autofocus={props.data?.rows?.[0]?.items ? props.data.rows[0].items() : undefined}
           gap={40}
           throttleInput={250}
+          // delay={250}
           style={styles.Column}
         >
           {(row) =>
@@ -383,7 +1049,7 @@ const Benchmark = (props) => {
             contain="width"
             textAlign="right"
             fontSize={24}
-            color={bundleType.includes("LEGACY") ? 0xffcc00ff : 0x00ff88ff}
+            color={bundleType.indexOf("LEGACY") !== -1 ? 0xffcc00ff : 0x00ff88ff}
           >
             {bundleType}
           </text>
@@ -407,32 +1073,99 @@ const Benchmark = (props) => {
           </text>
         </view>
 
-        {/* ── Results Overlay (top-left, appears when the test finishes) ── */}
+        {/* ── Results Overlay (centered under the Benchmark information banner) ── */}
         <Show when={benchmarkDone()}>
-          <view x={40} y={20} zIndex={8000} width={OVERLAY_WIDTH} height={overlayHeight()} style={resultsBgStyle}>
-            <text x={20} y={16} style={overlayTitleStyle}>
-              Test Results
+          <view x={610} y={175} zIndex={8000} width={OVERLAY_WIDTH} height={overlayHeight()} style={resultsBgStyle}>
+            <text x={28} y={14} style={overlayTitleStyle}>
+              Performance Breakdown
             </text>
 
+            {/* ── Section 1: Frame Rate & Smoothness ── */}
+            <SectionHeader y={50} title="FRAME RATE & SMOOTHNESS" />
             <ResultRow
-              y={60}
-              label="Draw Calls"
-              value={drawStats() ? `${drawStats()!.renderOps}` : "—"}
+              y={74}
+              label="Animated FPS"
+              value={perfStats() ? `${perfStats()!.avgAnimatedFps.toFixed(1)} FPS` : "—"}
             />
             <ResultRow
-              y={88}
-              label="Quads"
-              value={drawStats() ? `${drawStats()!.quads}` : "—"}
+              y={100}
+              label="Anim p95 / p99"
+              value={perfStats() ? `${perfStats()!.animP95}ms / ${perfStats()!.animP99}ms` : "—"}
+            />
+            <ResultRow
+              y={126}
+              label="Worst Anim Frame"
+              value={perfStats() ? `${perfStats()!.animMaxFrameTime.toFixed(1)}ms` : "—"}
+            />
+            <ResultRow
+              y={152}
+              label="Overall Rendered FPS"
+              value={perfStats() ? `${perfStats()!.avgFps.toFixed(1)} FPS (${perfStats()!.totalRenderedFrames}f)` : "—"}
+            />
+            <ResultRow
+              y={178}
+              label="All p95 / p99 / Max"
+              value={perfStats() ? `${perfStats()!.p95}ms / ${perfStats()!.p99}ms / ${perfStats()!.maxFrameTime.toFixed(1)}ms` : "—"}
+            />
+            <ResultRow
+              y={204}
+              label="Frames / Idle Polls"
+              value={perfStats() ? `${perfStats()!.totalRenderedFrames} drew / ${perfStats()!.totalIdleTicks} idle` : "—"}
             />
 
-            {/* WebGL call breakdown (per sampled frame, from contextSpyData) */}
-            <text x={20} y={GL_HEADER_Y} style={resultsLabelStyle}>
-              GL Calls / frame
-            </text>
+            <SectionDivider y={232} />
+
+            {/* ── Section 2: Phase Work Split ── */}
+            <SectionHeader y={242} title="FRAME WORK SPLIT (INTERVAL / PEAK)" />
+            <ResultRow
+              y={266}
+              label="Scene Update (upd)"
+              value={perfStats() ? `${perfStats()!.totalUpdateMs.toFixed(1)}ms total | ${perfStats()!.maxUpdateMs.toFixed(1)}ms peak` : "—"}
+            />
+            <ResultRow
+              y={292}
+              label="Render Pass (rnd)"
+              value={perfStats() ? `${perfStats()!.totalRenderMs.toFixed(1)}ms total | ${perfStats()!.maxRenderMs.toFixed(1)}ms peak` : "—"}
+            />
+            <ResultRow
+              y={318}
+              label="Texture Upload (upl)"
+              value={perfStats() ? `${perfStats()!.totalUploadMs.toFixed(1)}ms total | ${perfStats()!.maxUploadMs.toFixed(1)}ms peak` : "—"}
+            />
+
+            <SectionDivider y={346} />
+
+            {/* ── Section 3: Texture, Animation & Draw Telemetry ── */}
+            <SectionHeader y={356} title="ASSETS, ANIMATIONS & GEOMETRY" />
+            <ResultRow
+              y={380}
+              label="Draw Calls / Quads"
+              value={drawStats() ? `${drawStats()!.renderOps} draws / ${drawStats()!.quads} quads` : "—"}
+            />
+            <ResultRow
+              y={406}
+              label="Texture Uploads"
+              value={perfStats() ? `${perfStats()!.uploadedTextures} tex / ${perfStats()!.uploadFrames}f (${perfStats()!.meanUploadCostMs.toFixed(1)}ms avg)` : "—"}
+            />
+            <ResultRow
+              y={432}
+              label="Upload Queue Peak"
+              value={perfStats() ? `q <= ${perfStats()!.maxUploadQueueSize}` : "—"}
+            />
+            <ResultRow
+              y={458}
+              label="Active Animations"
+              value={perfStats() ? `${perfStats()!.avgActiveAnimations.toFixed(1)} avg | ${perfStats()!.maxActiveAnimations} peak` : "—"}
+            />
+
+            <SectionDivider y={486} />
+
+            {/* ── Section 4: WebGL Call Breakdown (contextSpy) ── */}
+            <SectionHeader y={SEC_GL_Y} title="GL CALLS / INTERVAL" />
             <Show
               when={glEntries().length > 0}
               fallback={
-                <text x={200} y={GL_HEADER_Y} style={resultsValueStyle}>
+                <text x={350} y={SEC_GL_Y} style={resultsValueStyle}>
                   off (?contextSpy=true)
                 </text>
               }
@@ -444,12 +1177,14 @@ const Benchmark = (props) => {
               </For>
             </Show>
 
-            <view y={dividerY()} width={OVERLAY_WIDTH - 40} height={1} x={20} color={0xffffff33} />
+            <SectionDivider y={dividerCapsY()} />
 
+            {/* ── Section 5: Hardware & Renderer Capabilities ── */}
+            <SectionHeader y={secCapsY()} title="RENDERER CAPABILITIES" />
             <Show
               when={capabilities()}
               fallback={
-                <text x={20} y={capsStartY()} style={resultsLabelStyle}>
+                <text x={28} y={capsStartY()} style={resultsLabelStyle}>
                   Capabilities unavailable
                 </text>
               }
@@ -458,20 +1193,53 @@ const Benchmark = (props) => {
               <ResultRow y={capsStartY() + ROW_H} label="WebGL Version" value={webGlLabel(capabilities()!)} />
               <ResultRow
                 y={capsStartY() + 2 * ROW_H}
-                label="Vertex Array Obj"
-                value={capabilities()!.vertexArrayObject ? "Yes" : "No"}
+                label="Vertex Array Obj (VAO)"
+                value={capabilities()!.vertexArrayObject ? "Enabled (on)" : "Disabled (off)"}
               />
               <ResultRow
                 y={capsStartY() + 3 * ROW_H}
                 label="Max Texture Size"
-                value={`${capabilities()!.maxTextureSize}`}
+                value={`${capabilities()!.maxTextureSize}px`}
               />
               <ResultRow
                 y={capsStartY() + 4 * ROW_H}
                 label="Max Texture Units"
-                value={`${capabilities()!.maxTextureUnits}`}
+                value={`${capabilities()!.maxTextureUnits} units`}
+              />
+              <ResultRow
+                y={capsStartY() + 5 * ROW_H}
+                label="Pixel Ratio (Phys / Log)"
+                value={`${getPixelRatios().physical.toFixed(2)}x / ${getPixelRatios().logical.toFixed(2)}x`}
+              />
+              <ResultRow
+                y={capsStartY() + 6 * ROW_H}
+                label="Image Workers"
+                value={`${getImageWorkersCount()} (${getDeviceCores()})`}
+              />
+              <ResultRow
+                y={capsStartY() + 7 * ROW_H}
+                label="Tex Process Limit"
+                value={`${getTextureProcessingTimeLimit()}ms`}
               />
             </Show>
+
+            {/* ── Section 6: Action Button ── */}
+            <view
+              ref={relaunchBtnRef}
+              x={(OVERLAY_WIDTH - 320) / 2}
+              y={relaunchBtnY()}
+              style={relaunchBtnStyle}
+              forwardStates
+              autofocus
+              onEnter={() => {
+                document.location.reload();
+                return true;
+              }}
+            >
+              <text x={160} y={22} mount={0.5} style={relaunchBtnTextStyle}>
+                Relaunch Benchmark
+              </text>
+            </view>
           </view>
         </Show>
 

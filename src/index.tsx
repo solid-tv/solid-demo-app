@@ -101,7 +101,7 @@ const CountdownTimerPage = lazy(() => import("./pages/CountdownTimer"));
 const CustomButtonsPage = lazy(() => import("./pages/CustomButtons"));
 
 
-let numImageWorkers = (typeof window !== "undefined" && window.createImageBitmap) ? 4 : 0;
+let numImageWorkers = (typeof window !== "undefined" && window.createImageBitmap) ? 1 : 0;
 const urlParams = new URLSearchParams(window.location.search);
 const numWorkers = urlParams.get("numImageWorkers");
 const screenSize = urlParams.get("size") || "default";
@@ -142,6 +142,9 @@ Config.domRendererEnabled = false;
 Config.focusHistoryDebug = 5;
 // Config.focusDebug = true;
 
+const textureProcessingTimeLimitParam = urlParams.get("textureProcessingTimeLimit");
+const textureProcessingTimeLimit = textureProcessingTimeLimitParam ? parseFloat(textureProcessingTimeLimitParam) : 4;
+
 Config.rendererOptions = {
   fpsUpdateInterval: logFps ? 300 : 0,
   inspector: import.meta.env.DEV ? Inspector : undefined,
@@ -149,6 +152,7 @@ Config.rendererOptions = {
     criticalThreshold: 200e6,
     targetThresholdLevel: 0.8
   },
+  textureProcessingTimeLimit,
   numImageWorkers, // temp fix for renderer bug
   imageDecodeConcurrency: (typeof window !== "undefined" && window.createImageBitmap) ? 4 : 2, // limit concurrent main-thread fetches/decodes on low-end TVs
   // Set the resolution based on window height
@@ -158,7 +162,7 @@ Config.rendererOptions = {
   createImageBitmapSupport: "auto",
   boundsMargin: 100,
   targetFPS: 0,
-  enableClear: false,
+  enableClear: true,
   enableContextSpy,
   forceWebGL2
 };

@@ -1,4 +1,5 @@
 import fs from "fs";
+import path from "path";
 import { execSync } from "child_process";
 import process from "process";
 
@@ -10,10 +11,33 @@ if (pathIndex !== -1 && args.length > pathIndex + 1) {
   versionPath = args[pathIndex + 1];
 }
 
+// Find the renderer version from node_modules or relative path
+let rendererVersion = "";
+const possibleRendererPkgPaths = [
+  path.resolve("node_modules/@solidtv/renderer/package.json"),
+  path.resolve("../solid-renderer/package.json")
+];
+
+for (const pkgPath of possibleRendererPkgPaths) {
+  if (fs.existsSync(pkgPath)) {
+    try {
+      const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf8"));
+      if (pkg.version) {
+        rendererVersion = pkg.version;
+        break;
+      }
+    } catch (e) {
+      // ignore
+    }
+  }
+}
+
+const displayVersion = versionPath || rendererVersion || "unknown";
+
 const baseUrl = versionPath ? `/solid-demo-app/${versionPath}/` : "/solid-demo-app/";
 const outDir = versionPath ? `dist/${versionPath}` : "dist";
 
-console.log(`Building for ${versionPath ? "version: " + versionPath : "root"}...`);
+console.log(`Building for ${versionPath ? "version: " + versionPath : "root"} (Renderer version: ${rendererVersion})...`);
 console.log(`Base URL: ${baseUrl}`);
 console.log(`Output Directory: ${outDir}`);
 
@@ -26,10 +50,10 @@ const benchmarkPath = "src/pages/Benchmark.tsx";
 let originalBenchmarkContent = "";
 let modifiedBenchmark = false;
 
-if (versionPath && fs.existsSync(benchmarkPath)) {
-  console.log(`Injecting path "${versionPath}" into ${benchmarkPath}...`);
+if (displayVersion && fs.existsSync(benchmarkPath)) {
+  console.log(`Injecting version "${displayVersion}" into ${benchmarkPath}...`);
   originalBenchmarkContent = fs.readFileSync(benchmarkPath, "utf8");
-  const newContent = originalBenchmarkContent.replace("###", versionPath);
+  const newContent = originalBenchmarkContent.replace("###", displayVersion);
   fs.writeFileSync(benchmarkPath, newContent);
   modifiedBenchmark = true;
 }
