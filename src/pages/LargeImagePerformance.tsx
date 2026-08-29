@@ -1,6 +1,7 @@
 import { type NodeStyles } from "@solidtv/solid";
 import { createSignal, onMount, For, Show } from "solid-js";
 import api, { getImageUrl } from "../api";
+import { createImagePerfRun } from "./imagePerf";
 
 const LargeImagePerformance = () => {
   const [images, setImages] = createSignal<any[]>([]);
@@ -12,6 +13,7 @@ const LargeImagePerformance = () => {
   let startTime = 0;
   const imageLoadTimes: Record<string, number> = {};
   const totalImages = 4;
+  const perf = createImagePerfRun("image-large", totalImages);
 
   const fetchImages = async () => {
     try {
@@ -23,12 +25,13 @@ const LargeImagePerformance = () => {
 
       const newImages = combined.map(item => ({
         id: item.id,
-        src: getImageUrl(item.backdrop_path || item.poster_path, "original"), // Use backdrop if available for 16:9 1080p feel, or original poster
+        src: perf.bust(getImageUrl(item.backdrop_path || item.poster_path, "original")), // Use backdrop if available for 16:9 1080p feel, or original poster
         title: item.title
       }));
 
       // Start timing right before setting images which triggers rendering
       startTime = performance.now();
+      perf.start();
       setImages(newImages);
       setStatus(`Loading... 0/${totalImages}`);
     } catch (error) {
@@ -38,6 +41,7 @@ const LargeImagePerformance = () => {
   };
 
   const handleImageLoaded = (index: number, id: string) => {
+    perf.onLoaded();
     const now = performance.now();
     const elapsed = now - startTime;
 
