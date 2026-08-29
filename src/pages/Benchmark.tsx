@@ -71,7 +71,8 @@ function getTextureProcessingTimeLimit(): number {
   } catch (e) {
     // fallback
   }
-  return 4;
+  // Matches the renderer's own default; the app no longer pins this.
+  return 10;
 }
 
 /**
@@ -767,7 +768,7 @@ const Benchmark = (props) => {
     try {
       const prior = JSON.parse(localStorage.getItem("benchmarkRuns") || "[]");
       prior.push({
-        url: window.location.search,
+        url: window.location.pathname + window.location.search,
         results: benchmarkResultsJson,
       });
       localStorage.setItem("benchmarkRuns", JSON.stringify(prior.slice(-12)));

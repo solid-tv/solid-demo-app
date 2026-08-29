@@ -1,6 +1,7 @@
 import { type NodeStyles } from "@solidtv/solid";
 import { createSignal, onMount, For, Show } from "solid-js";
 import api, { getImageUrl } from "../api";
+import { createImagePerfRun } from "./imagePerf";
 
 const MixedImagePerformance = () => {
   const [images, setImages] = createSignal<any[]>([]);
@@ -12,6 +13,7 @@ const MixedImagePerformance = () => {
   let startTime = 0;
   const imageLoadTimes: Record<string, number> = {};
   const totalImages = 11; // 1 main + 10 posters
+  const perf = createImagePerfRun("image-mixed", totalImages);
 
   const fetchImages = async () => {
     try {
@@ -30,7 +32,7 @@ const MixedImagePerformance = () => {
 
         return {
             id: item.id,
-            src: getImageUrl(path, size),
+            src: perf.bust(getImageUrl(path, size)),
             title: item.title,
             isMain
         };
@@ -38,6 +40,7 @@ const MixedImagePerformance = () => {
 
       // Start timing right before setting images which triggers rendering
       startTime = performance.now();
+      perf.start();
       setImages(newImages);
       setStatus(`Loading... 0/${totalImages}`);
     } catch (error) {
@@ -47,6 +50,7 @@ const MixedImagePerformance = () => {
   };
 
   const handleImageLoaded = (index: number, id: string) => {
+    perf.onLoaded();
     const now = performance.now();
     const elapsed = now - startTime;
 

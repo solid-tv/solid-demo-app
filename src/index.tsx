@@ -142,8 +142,12 @@ Config.domRendererEnabled = false;
 Config.focusHistoryDebug = 5;
 // Config.focusDebug = true;
 
+// Left unset so the renderer's own default (10ms) applies rather than pinning
+// it here. The device clock is 1ms-granular, so the budget carries about +-1ms
+// of slack either way: that was ~25% of the old 4ms limit and is ~10% of 10ms.
+// Override per run with ?textureProcessingTimeLimit=N.
 const textureProcessingTimeLimitParam = urlParams.get("textureProcessingTimeLimit");
-const textureProcessingTimeLimit = textureProcessingTimeLimitParam ? parseFloat(textureProcessingTimeLimitParam) : 4;
+const textureProcessingTimeLimit = textureProcessingTimeLimitParam ? parseFloat(textureProcessingTimeLimitParam) : undefined;
 
 Config.rendererOptions = {
   fpsUpdateInterval: logFps ? 300 : 0,
