@@ -1,0 +1,1 @@
+{"version":3,"file":"state-gzcAO-7m.js","names":[],"sources":["../../src/state.ts"],"sourcesContent":["import { createSignal } from \"solid-js\";\nexport const [globalBackground, setGlobalBackground] = createSignal<string>(\"\");\n"],"mappings":";;AACA,KAAc,kBAAkB,uBAAuB,aAAqB"}
