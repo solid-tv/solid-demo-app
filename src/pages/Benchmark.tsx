@@ -7,14 +7,12 @@ import { setGlobalBackground } from "../state";
 import ContentBlock from "../components/ContentBlock";
 import { debounce } from "@solid-primitives/scheduled";
 import type { FpsUpdatePayload, RendererCapabilities } from "@solidtv/renderer";
+// Histogram layout comes from the renderer so the page cannot drift from the
+// buckets the payload was actually built with.
+import { FRAME_TIME_BUCKET_COUNT, frameTimeBucketLowerBound } from "@solidtv/renderer";
 
 const TOTAL_CYCLES = 2;
-const NAV_DELAY_MS = 300; // delay between simulated key presses
-
-const FRAME_TIME_SPLIT_MS = 32;
-const FRAME_TIME_FINE_MS = 1;
-const FRAME_TIME_COARSE_MS = 8;
-const FRAME_TIME_BUCKET_COUNT = 45;
+const NAV_DELAY_MS = 500; // delay between simulated key presses
 
 /**
  * Returns the number of image workers configured for the renderer.
@@ -126,15 +124,6 @@ function createZeroArray(length: number): number[] {
     arr[i] = 0;
   }
   return arr;
-}
-
-/**
- * Calculates the lower bound millisecond threshold for a frame time bucket.
- */
-function frameTimeBucketLowerBound(index: number): number {
-  return index < FRAME_TIME_SPLIT_MS
-    ? index * FRAME_TIME_FINE_MS
-    : FRAME_TIME_SPLIT_MS + (index - FRAME_TIME_SPLIT_MS) * FRAME_TIME_COARSE_MS;
 }
 
 /**
@@ -289,7 +278,12 @@ const Benchmark = (props) => {
   let totalUploadedTextures = 0;
   let totalUploadFrames = 0;
   let worstMaxUploadQueueSize = 0;
-  let activeAnimationsSamples: number[] = [];
+  // Sum of meanActiveAnimations * renderedFrames per interval. The payload's
+  // mean is per rendered frame, so weighting by that count and dividing by
+  // totalRenderedFrames recovers the exact run-wide mean; averaging the
+  // interval means unweighted would let a 3-frame interval count as much as a
+  // 20-frame one.
+  let activeAnimationsWeightedSum = 0;
   let worstMaxActiveAnimations = 0;
   let maxRenderOps = 0;
   let maxQuads = 0;
@@ -325,94 +319,102 @@ const Benchmark = (props) => {
     safeFetchCapabilities();
 
     root.on('fpsUpdate', (_target: any, fpsData: any) => {
+      // Only intervals inside the run count. Page load and the post-run screen
+      // are excluded here, by time, rather than by guessing from the fps value.
+      if (!benchmarkRunning()) return;
+
       const fps = typeof fpsData === 'number' ? fpsData : fpsData?.fps;
 
-      // Also capture capabilities from the payload if passed
-      if (fpsData?.capabilities && !capabilities()) {
-        setCapabilities(fpsData.capabilities);
+      // Renderer >=1.8.0: `fps` covers continuous rendering time only, so idle
+      // polls can no longer drag it down and a low value is a real measurement
+      // — a burst of >=200ms frames — exactly what min FPS exists to catch. The
+      // old `fps > 5` load filter would have discarded it (and every other
+      // field in the same payload, biasing the whole run optimistic). `0`
+      // means nothing paired-rendered this interval: no rate to record, not a
+      // slow one, so it stays out of min/max.
+      if (typeof fps === 'number' && fps > 0) {
+        fpsValues.push(fps);
       }
 
-      // Ignore low FPS which occur during initial page load / transition
-      if (typeof fps === 'number' && fps > 5 && benchmarkRunning()) {
-        fpsValues.push(fps);
+      // Everything else in the payload is accumulated regardless of the
+      // interval's fps: idle ticks, the lone burst-resume frames, and the
+      // phase totals for them exist only in intervals that report fps 0.
+      if (typeof fpsData === 'object' && fpsData !== null) {
+        const payload = fpsData as FpsUpdatePayload;
 
-        if (typeof fpsData === 'object' && fpsData !== null) {
-          const payload = fpsData as FpsUpdatePayload;
+        if (typeof payload.animatedFps === 'number' && payload.animatedFrames > 0) {
+          animatedFpsValues.push(payload.animatedFps);
+        }
 
-          if (typeof payload.animatedFps === 'number' && payload.animatedFrames > 0) {
-            animatedFpsValues.push(payload.animatedFps);
+        // Accumulate frame time bucket distributions
+        if (Array.isArray(payload.frameTimeBuckets)) {
+          for (let i = 0; i < Math.min(payload.frameTimeBuckets.length, cumulativeAllBuckets.length); i++) {
+            cumulativeAllBuckets[i] += payload.frameTimeBuckets[i] || 0;
           }
+        }
+        if (Array.isArray(payload.animatedFrameTimeBuckets)) {
+          for (let i = 0; i < Math.min(payload.animatedFrameTimeBuckets.length, cumulativeAnimBuckets.length); i++) {
+            cumulativeAnimBuckets[i] += payload.animatedFrameTimeBuckets[i] || 0;
+          }
+        }
 
-          // Accumulate frame time bucket distributions
-          if (Array.isArray(payload.frameTimeBuckets)) {
-            for (let i = 0; i < Math.min(payload.frameTimeBuckets.length, cumulativeAllBuckets.length); i++) {
-              cumulativeAllBuckets[i] += payload.frameTimeBuckets[i] || 0;
-            }
-          }
-          if (Array.isArray(payload.animatedFrameTimeBuckets)) {
-            for (let i = 0; i < Math.min(payload.animatedFrameTimeBuckets.length, cumulativeAnimBuckets.length); i++) {
-              cumulativeAnimBuckets[i] += payload.animatedFrameTimeBuckets[i] || 0;
-            }
-          }
+        // Frame counts & duration totals
+        totalRenderedFrames += payload.renderedFrames || 0;
+        totalSampledFrames += payload.sampledFrames || 0;
+        totalRenderedMs += payload.renderedMs || 0;
+        totalIdleTicks += payload.idleTicks || 0;
+        totalAnimatedFrames += payload.animatedFrames || 0;
+        totalAnimatedMs += payload.animatedMs || 0;
 
-          // Frame counts & duration totals
-          totalRenderedFrames += payload.renderedFrames || 0;
-          totalSampledFrames += payload.sampledFrames || 0;
-          totalRenderedMs += payload.renderedMs || 0;
-          totalIdleTicks += payload.idleTicks || 0;
-          totalAnimatedFrames += payload.animatedFrames || 0;
-          totalAnimatedMs += payload.animatedMs || 0;
+        // Worst frame times
+        if (typeof payload.maxFrameTime === 'number') {
+          worstMaxFrameTime = Math.max(worstMaxFrameTime, payload.maxFrameTime);
+        }
+        if (typeof payload.animatedMaxFrameTime === 'number') {
+          worstAnimatedMaxFrameTime = Math.max(worstAnimatedMaxFrameTime, payload.animatedMaxFrameTime);
+        }
 
-          // Worst frame times
-          if (typeof payload.maxFrameTime === 'number') {
-            worstMaxFrameTime = Math.max(worstMaxFrameTime, payload.maxFrameTime);
-          }
-          if (typeof payload.animatedMaxFrameTime === 'number') {
-            worstAnimatedMaxFrameTime = Math.max(worstAnimatedMaxFrameTime, payload.animatedMaxFrameTime);
-          }
+        // Frame phase totals & peaks (Scene Update, Render Pass, Texture Upload)
+        totalUpdateMs += payload.updateMs || 0;
+        totalRenderMs += payload.renderMs || 0;
+        totalUploadMs += payload.uploadMs || 0;
 
-          // Frame phase totals & peaks (Scene Update, Render Pass, Texture Upload)
-          totalUpdateMs += payload.updateMs || 0;
-          totalRenderMs += payload.renderMs || 0;
-          totalUploadMs += payload.uploadMs || 0;
+        if (typeof payload.maxUpdateMs === 'number') {
+          worstMaxUpdateMs = Math.max(worstMaxUpdateMs, payload.maxUpdateMs);
+        }
+        if (typeof payload.maxRenderMs === 'number') {
+          worstMaxRenderMs = Math.max(worstMaxRenderMs, payload.maxRenderMs);
+        }
+        if (typeof payload.maxUploadMs === 'number') {
+          worstMaxUploadMs = Math.max(worstMaxUploadMs, payload.maxUploadMs);
+        }
 
-          if (typeof payload.maxUpdateMs === 'number') {
-            worstMaxUpdateMs = Math.max(worstMaxUpdateMs, payload.maxUpdateMs);
-          }
-          if (typeof payload.maxRenderMs === 'number') {
-            worstMaxRenderMs = Math.max(worstMaxRenderMs, payload.maxRenderMs);
-          }
-          if (typeof payload.maxUploadMs === 'number') {
-            worstMaxUploadMs = Math.max(worstMaxUploadMs, payload.maxUploadMs);
-          }
+        // Texture upload telemetry
+        totalUploadedTextures += payload.uploadedTextures || 0;
+        totalUploadFrames += payload.uploadFrames || 0;
+        if (typeof payload.maxUploadQueueSize === 'number') {
+          worstMaxUploadQueueSize = Math.max(worstMaxUploadQueueSize, payload.maxUploadQueueSize);
+        }
 
-          // Texture upload telemetry
-          totalUploadedTextures += payload.uploadedTextures || 0;
-          totalUploadFrames += payload.uploadFrames || 0;
-          if (typeof payload.maxUploadQueueSize === 'number') {
-            worstMaxUploadQueueSize = Math.max(worstMaxUploadQueueSize, payload.maxUploadQueueSize);
-          }
+        // Animation load metrics
+        if (typeof payload.meanActiveAnimations === 'number') {
+          activeAnimationsWeightedSum += payload.meanActiveAnimations * (payload.renderedFrames || 0);
+        }
+        if (typeof payload.maxActiveAnimations === 'number') {
+          worstMaxActiveAnimations = Math.max(worstMaxActiveAnimations, payload.maxActiveAnimations);
+        }
 
-          // Animation load metrics
-          if (typeof payload.meanActiveAnimations === 'number') {
-            activeAnimationsSamples.push(payload.meanActiveAnimations);
-          }
-          if (typeof payload.maxActiveAnimations === 'number') {
-            worstMaxActiveAnimations = Math.max(worstMaxActiveAnimations, payload.maxActiveAnimations);
-          }
+        // Draw operations & quads
+        if (typeof payload.renderOps === 'number') {
+          maxRenderOps = Math.max(maxRenderOps, payload.renderOps);
+        }
+        if (typeof payload.quads === 'number') {
+          maxQuads = Math.max(maxQuads, payload.quads);
+        }
 
-          // Draw operations & quads
-          if (typeof payload.renderOps === 'number') {
-            maxRenderOps = Math.max(maxRenderOps, payload.renderOps);
-          }
-          if (typeof payload.quads === 'number') {
-            maxQuads = Math.max(maxQuads, payload.quads);
-          }
-
-          // Context spy (WebGL call counts)
-          if (payload.contextSpyData) {
-            lastContextSpy = payload.contextSpyData;
-          }
+        // Context spy (WebGL call counts)
+        if (payload.contextSpyData) {
+          lastContextSpy = payload.contextSpyData;
         }
       }
     });
@@ -529,7 +531,7 @@ const Benchmark = (props) => {
     totalUploadedTextures = 0;
     totalUploadFrames = 0;
     worstMaxUploadQueueSize = 0;
-    activeAnimationsSamples = [];
+    activeAnimationsWeightedSum = 0;
     worstMaxActiveAnimations = 0;
     maxRenderOps = 0;
     maxQuads = 0;
@@ -596,8 +598,8 @@ const Benchmark = (props) => {
     const allP95 = percentileMs(cumulativeAllBuckets, 0.95);
     const allP99 = percentileMs(cumulativeAllBuckets, 0.99);
 
-    const avgActiveAnims = activeAnimationsSamples.length > 0
-      ? activeAnimationsSamples.reduce((a, b) => a + b, 0) / activeAnimationsSamples.length
+    const avgActiveAnims = totalRenderedFrames > 0
+      ? activeAnimationsWeightedSum / totalRenderedFrames
       : 0;
 
     const meanUploadCost = totalUploadedTextures > 0

@@ -172,7 +172,7 @@ const posterStyles = {
   height: 278,
   scale: 1,
   color: "#b0b0b0",
-  placeholderColor: '#FF0000',
+  placeholderColor: '#252C37', // theme.card (theme not imported here)
   borderRadius: 8,
   transition: {
     scale: { duration: 200, easing: "linear" }

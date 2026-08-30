@@ -122,14 +122,22 @@ if (numWorkers) {
   numImageWorkers = parseInt(numWorkers);
 }
 
-const devicePhysicalPixelRatio = {
-  low: 0.666667,
-  medium: 0.8,
-  high: 1,
-  xhigh: 1.5,
-  ultra: 2,
-  default: window.devicePixelRatio || 1
-}[screenSize];
+// Logical ratio scales the 1080p design space to the window; physical ratio
+// controls how many real pixels back each logical one. When the window is at
+// least 1080p tall we already have enough pixels, so stay at 1 and avoid
+// rendering above the panel's needs; below that, fall back to the device's own
+// ratio. Override with ?size= for A/B runs.
+const logicalDPR = window.innerHeight / 1080;
+const devicePixelRatio = window.devicePixelRatio || 1;
+const physicalDPR =
+  {
+    low: 0.666667,
+    medium: 0.8,
+    high: 1,
+    xhigh: 1.5,
+    ultra: 2,
+    default: logicalDPR >= 1 ? 1 : devicePixelRatio
+  }[screenSize] ?? 1;
 
 const logFps = true;
 Config.debug = false;
@@ -161,10 +169,10 @@ Config.rendererOptions = {
   imageDecodeConcurrency: (typeof window !== "undefined" && window.createImageBitmap) ? 4 : 2, // limit concurrent main-thread fetches/decodes on low-end TVs
   // Set the resolution based on window height
   // 720p = 0.666667, 1080p = 1, 1440p = 1.5, 2160p = 2
-  deviceLogicalPixelRatio: window.innerHeight / 1080,
-  devicePhysicalPixelRatio: devicePhysicalPixelRatio ?? 1,
+  deviceLogicalPixelRatio: logicalDPR,
+  devicePhysicalPixelRatio: physicalDPR,
   createImageBitmapSupport: "auto",
-  boundsMargin: 100,
+  boundsMargin: 475,
   targetFPS: 0,
   enableClear: true,
   enableContextSpy,

@@ -7,7 +7,7 @@ import {
 } from "@solidtv/solid/primitives";
 import Background from "../components/Background";
 import NavDrawer from "../components/NavDrawer/NavDrawer";
-import { createEffect, createSignal, onCleanup } from "solid-js";
+import { Show, createEffect, createSignal, onCleanup } from "solid-js";
 
 declare module "@solidtv/solid" {
   // Augment the FocusManager KeyMap interface with our custom keys
@@ -102,7 +102,11 @@ const LeftNavWrapper = (props) => {
       }}
     >
       <Background />
-      <FPSCounter mountX={1} x={1910} y={10} alpha={1} />
+      {/* Hidden on /benchmark: the page has its own overlay there, and the
+          counter's 300ms text updates would land inside the measurement. */}
+      <Show when={!location.pathname.startsWith("/benchmark")}>
+        <FPSCounter mountX={1} x={1910} y={10} alpha={1} />
+      </Show>
       <view
         mountX={1}
         display="flex"
