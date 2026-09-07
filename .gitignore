@@ -15,6 +15,7 @@ tizen/fonts
 tizen/Debug
 tizen/obj
 tizen/Build
+tizen/.tizen-rds
 lg/assets
 lg/fonts
 lg/*.ipk
