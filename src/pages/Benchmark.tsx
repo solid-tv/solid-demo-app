@@ -1,7 +1,7 @@
 import { createEffect, on, createSignal, batch, Show, For, onCleanup } from "solid-js";
 import { ElementNode, activeElement, renderer, Config } from "@solidtv/solid";
 import { LazyRow, LazyColumn, useFocusStack, resetCounter } from "@solidtv/solid/primitives";
-import { Hero, TitleRow, AssetPanel, SHOW_TEXT, DISPLAY_SIZE } from "../components";
+import { Hero, TitleRow, AssetPanel, SHOW_TEXT, DISPLAY_SIZE, POSTER_SCALE, scaled } from "../components";
 import styles from "../styles";
 import { setGlobalBackground } from "../state";
 import ContentBlock from "../components/ContentBlock";
@@ -728,6 +728,7 @@ const Benchmark = (props) => {
       sceneConfig: {
         displaySize: DISPLAY_SIZE,
         showText: SHOW_TEXT,
+        posterScale: POSTER_SCALE,
       },
       glCallsPerInterval: lastContextSpy || null,
       rendererCapabilities: currentCaps ? {
@@ -1008,14 +1009,14 @@ const Benchmark = (props) => {
         <ContentBlock ref={contentBlock} y={300} x={162} content={heroContent()} />
         <LazyColumn
           ref={columnRef}
-          y={500}
+          y={scaled(500)}
           upCount={3}
           each={props.data?.rows || []}
           id="BenchmarkColumn"
           onSelectedChanged={onRowChanged}
           onEnter={() => setOpenPanel(true)}
           autofocus={props.data?.rows?.[0]?.items ? props.data.rows[0].items() : undefined}
-          gap={40}
+          gap={scaled(40)}
           throttleInput={250}
           delay={250}
           eagerLoad

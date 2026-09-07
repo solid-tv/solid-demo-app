@@ -39,6 +39,34 @@ export const DISPLAY_SIZE = (() => {
   return isNaN(parsed) || parsed < 1 ? fallback : parsed;
 })();
 
+/**
+ * `?posterScale=N` shrinks each poster and the row box around it, default 1.
+ *
+ * The third workload switch, alongside {@link SHOW_TEXT} and {@link DISPLAY_SIZE}.
+ * Mounting more items cannot raise the drawn node count on its own: a row
+ * virtualizes to what fits, so items past the edge are updated every frame but
+ * never rendered, and both quad and texture-upload counts stay flat while
+ * update cost climbs. Shrinking the tile is what puts more of them inside the
+ * 1080p design space, so this is the knob that actually scales scene size.
+ * Pair it with a larger `displaySize`, or the row runs out of mounted items
+ * before it runs out of room.
+ */
+export const POSTER_SCALE = (() => {
+  const fallback = 1;
+  if (typeof window === "undefined") {
+    return fallback;
+  }
+  const raw = new URLSearchParams(window.location.search).get("posterScale");
+  if (raw === null) {
+    return fallback;
+  }
+  const parsed = parseFloat(raw);
+  return isNaN(parsed) || parsed <= 0 ? fallback : parsed;
+})();
+
+/** Scales a 1080p-design-space length by {@link POSTER_SCALE}. */
+export const scaled = (value: number) => Math.round(value * POSTER_SCALE);
+
 export function Thumbnail(props: IntrinsicNodeProps & { item: Tile }) {
   return (
     <view
@@ -134,33 +162,46 @@ const heroTransition = {
 
 const titleRowStyles = {
   fontFamily: "Raleway",
-  fontSize: 24,
-  height: 32,
-  lineHeight: 32
+  fontSize: scaled(24),
+  height: scaled(32),
+  lineHeight: scaled(32)
 };
 
 export function TitleRow(props: TileRowProps) {
-  const slug = () => props.title?.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '') || 'row';
+  const slug = () =>
+    props.title
+      ?.toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/[^\w-]+/g, "") || "row";
   return (
-    <view height={props.height} forwardFocus={1} marginTop={30}>
+    <view
+      height={props.height === undefined ? undefined : scaled(props.height)}
+      forwardFocus={1}
+      marginTop={scaled(30)}
+    >
       <Show when={SHOW_TEXT}>
         <text skipFocus style={titleRowStyles}>
           {props.title}
         </text>
       </Show>
       <VirtualRow
-        gap={20}
+        gap={scaled(20)}
         displaySize={DISPLAY_SIZE}
         bufferSize={3}
         each={props.items}
-        y={50}
+        y={scaled(50)}
         scroll={props.scroll}
         wrap={props.wrap}
         selected={props.selected}
         debugInfo
       >
         {(item, index) => (
-          <Dynamic component={typeToComponent[props.rowType || props.row?.type]} index={index()} item={item()} group={slug()} />
+          <Dynamic
+            component={typeToComponent[props.rowType || props.row?.type]}
+            index={index()}
+            item={item()}
+            group={slug()}
+          />
         )}
       </VirtualRow>
     </view>
@@ -168,11 +209,11 @@ export function TitleRow(props: TileRowProps) {
 }
 
 const posterStyles = {
-  width: 185,
-  height: 278,
+  width: scaled(185),
+  height: scaled(278),
   scale: 1,
   color: "#b0b0b0",
-  placeholderColor: '#252C37', // theme.card (theme not imported here)
+  placeholderColor: "#252C37", // theme.card (theme not imported here)
   borderRadius: 8,
   transition: {
     scale: { duration: 200, easing: "linear" }
@@ -208,13 +249,13 @@ export function Poster(props: NodeProps) {
 
 const posterTitleStyles = {
   fontFamily: "Raleway",
-  fontSize: 22,
-  lineHeight: 22,
-  height: 22,
-  x: 10,
-  y: 288,
+  fontSize: scaled(22),
+  lineHeight: scaled(22),
+  height: scaled(22),
+  x: scaled(10),
+  y: scaled(288),
   contain: "width",
-  width: 185,
+  width: scaled(185),
   maxLines: 2,
   alpha: 1,
   // $focus: {
