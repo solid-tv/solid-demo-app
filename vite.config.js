@@ -117,7 +117,10 @@ export default defineConfig(({ mode }) => ({
       }
     },
     terserOptions: {
-      compress: false,
+      // compress stays on so build-time defines actually fold: with it off the
+      // renderer's `if (__define__)` branches survive as `if (!false || ...)`
+      // and both paths ship. mangle stays off so on-device stack traces keep
+      // real names.
       mangle: false,
       format: {
         comments: false,

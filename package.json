@@ -12,6 +12,7 @@
     "build": "vite build --sourcemap=true --emptyOutDir false",
     "build:tizen": "vite build --config vite.config.tizen.js --base=./ --outDir tizen --emptyOutDir false",
     "build:lg": "vite build --sourcemap=false --base=./ --outDir lg --emptyOutDir false && ares-package lg --outdir lg --no-minify",
+    "deploy:lg": "npm run build:lg && ./scripts/deploy-lg.sh",
     "build:github": "node scripts/build-github.js",
     "build:github:dev": "NODE_ENV=development vite build --sourcemap=true --mode development --base=/solid-demo-app/",
     "build:analyze": "vite-bundle-visualizer",

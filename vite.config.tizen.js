@@ -18,6 +18,28 @@ function queueMicrotaskPolyfillPlugin() {
   };
 }
 
+/**
+ * Rewrites the entry `<script type="module">` into a classic script.
+ *
+ * The bundle is already a single IIFE (see `rollupOptions.output.format`) with
+ * no top-level import/export, but Vite still tags the entry as a module. A
+ * widget runs from `file://`, where the response carries no MIME type, and
+ * Chromium 69 (Tizen 5.5) enforces strict MIME checking for module scripts
+ * only — so the tag fails with "non-JavaScript MIME type of ''", no app code
+ * ever runs, and the TV sits on the splash screen with nothing in the log but
+ * that one line. Dropping to a classic script is equivalent for an IIFE.
+ */
+function classicEntryScriptPlugin() {
+  return {
+    name: "classic-entry-script",
+    transformIndexHtml(html) {
+      return html.replace(/<script\b[^>]*>/g, (tag) =>
+        tag.includes('type="module"') ? tag.replace(' type="module"', "").replace(" crossorigin", "") : tag
+      );
+    }
+  };
+}
+
 export default defineConfig(({ mode }) => ({
   define: {
     __DEV__: mode !== "production",
@@ -29,6 +51,7 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [
     queueMicrotaskPolyfillPlugin(),
+    classicEntryScriptPlugin(),
     hexColorTransform({
       include: ["src/**/*.{ts,tsx,js,jsx}"]
     }),
