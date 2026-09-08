@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+
+<head>
+  <script type="module" crossorigin src="/solid-demo-app/156/assets/polyfills-C-XEc5Dp.js"></script>
+
+  <title>Solid Demo</title>
+  <meta charset="UTF-8" />
+  <script>
+    window.addEventListener('unhandledrejection', function(event) {
+      var reason = event.reason;
+      var message = reason ? (reason.message || reason) : 'No reason';
+      var stack = reason ? (reason.stack || '') : '';
+      console.error('[GLOBAL_REJECTION]', message, '\nStack:', stack);
+    });
+    window.addEventListener('error', function(event) {
+      console.error('[GLOBAL_ERROR]', event.message, '\nFile:', event.filename, '\nLine:', event.lineno, '\nStack:', event.error ? event.error.stack : '');
+    });
+  </script>
+  <!-- Don't inline styles for Tizen CSP rules -->
+  <link rel="icon" type="image/png" href="/solid-demo-app/156/assets/favicon-32x32.png" />
+  <script async type="module" crossorigin src="/solid-demo-app/156/assets/index-Do_TeboR.js"></script>
+  <link rel="modulepreload" crossorigin href="/solid-demo-app/156/assets/rolldown-runtime-Dacw0Uxr.js">
+  <link rel="modulepreload" crossorigin href="/solid-demo-app/156/assets/render-UQXSDH2t.js">
+  <link rel="modulepreload" crossorigin href="/solid-demo-app/156/assets/FPSCounter-BwrdXMx2.js">
+  <link rel="modulepreload" crossorigin href="/solid-demo-app/156/assets/utils-9p-Z_DoP.js">
+  <link rel="modulepreload" crossorigin href="/solid-demo-app/156/assets/announcer-jY9abzJn.js">
+  <link rel="modulepreload" crossorigin href="/solid-demo-app/156/assets/web-BxFxPOyO.js">
+  <link rel="modulepreload" crossorigin href="/solid-demo-app/156/assets/chainFunctions-C_8INzqg.js">
+  <link rel="modulepreload" crossorigin href="/solid-demo-app/156/assets/Column-B6a6wQRf.js">
+  <link rel="modulepreload" crossorigin href="/solid-demo-app/156/assets/Row-_H-XSkgI.js">
+  <link rel="modulepreload" crossorigin href="/solid-demo-app/156/assets/Lazy-COsAHmrj.js">
+  <link rel="modulepreload" crossorigin href="/solid-demo-app/156/assets/theme-CB9u0IsU.js">
+  <link rel="modulepreload" crossorigin href="/solid-demo-app/156/assets/ContentBlock-BpFPmsoJ.js">
+  <link rel="modulepreload" crossorigin href="/solid-demo-app/156/assets/createFocusStack-BWwTg9Pg.js">
+  <link rel="modulepreload" crossorigin href="/solid-demo-app/156/assets/styles-xHyKpT0b.js">
+  <link rel="modulepreload" crossorigin href="/solid-demo-app/156/assets/components-CC5jptLg.js">
+  <link rel="modulepreload" crossorigin href="/solid-demo-app/156/assets/Icon-RrOsCKeQ.js">
+  <link rel="modulepreload" crossorigin href="/solid-demo-app/156/assets/routing-DXTasaem.js">
+  <link rel="modulepreload" crossorigin href="/solid-demo-app/156/assets/state-B_5okeWg.js">
+  <link rel="modulepreload" crossorigin href="/solid-demo-app/156/assets/dist-DJvIJPHB.js">
+  <link rel="modulepreload" crossorigin href="/solid-demo-app/156/assets/api-BLXElZOg.js">
+  <link rel="modulepreload" crossorigin href="/solid-demo-app/156/assets/ItemFormatter-Bx-xMo5c.js">
+  <link rel="stylesheet" crossorigin href="/solid-demo-app/156/assets/index-BaqhTw_g.css">
+  <script type="module">import'data:text/javascript,if(!import.meta.resolve)throw Error("import.meta.resolve not supported")';import.meta.url;import("_").catch(()=>1);(async function*(){})().next();window.__vite_is_modern_browser=true</script>
+  <script type="module">!function(){if(window.__vite_is_modern_browser)return;console.warn("vite: loading legacy chunks, syntax error above and the same error below should be ignored");var e=document.getElementById("vite-legacy-polyfill"),n=document.createElement("script");n.src=e.src,n.onload=function(){System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))},document.body.appendChild(n)}();</script>
+</head>
+
+<body>
+  <div id="splash">
+    <img src="/solid-demo-app/156/assets/SolidTV_transparent.png" width="250" height="250" alt="SolidTV" />
+  </div>
+  <div id="app"></div>
+  <script nomodule>!function(){var e=document,t=e.createElement("script");if(!("noModule"in t)&&"onbeforeload"in t){var n=!1;e.addEventListener("beforeload",(function(e){if(e.target===t)n=!0;else if(!e.target.hasAttribute("nomodule")||!n)return;e.preventDefault()}),!0),t.type="module",t.src=".",e.head.appendChild(t),t.remove()}}();</script>
+  <script nomodule crossorigin id="vite-legacy-polyfill" src="/solid-demo-app/156/assets/polyfills-legacy-2LweuiEo.js"></script>
+  <script nomodule crossorigin id="vite-legacy-entry" data-src="/solid-demo-app/156/assets/index-legacy-CrYMomHr.js">System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))</script>
+</body>
+
+</html>
