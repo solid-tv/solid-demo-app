@@ -7,9 +7,7 @@ import { setGlobalBackground } from "../state";
 import ContentBlock from "../components/ContentBlock";
 import { debounce } from "@solid-primitives/scheduled";
 import type { FpsUpdatePayload, RendererCapabilities } from "@solidtv/renderer";
-// Histogram layout comes from the renderer so the page cannot drift from the
-// buckets the payload was actually built with.
-import { FRAME_TIME_BUCKET_COUNT, frameTimeBucketLowerBound } from "@solidtv/renderer";
+import { FRAME_TIME_BUCKET_COUNT, frameTimeBucketLowerBound } from "./frameTimeBuckets";
 
 const TOTAL_CYCLES = 2;
 const NAV_DELAY_MS = 500; // delay between simulated key presses

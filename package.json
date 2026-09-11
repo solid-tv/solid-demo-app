@@ -14,6 +14,7 @@
     "build:lg": "vite build --sourcemap=false --base=./ --outDir lg --emptyOutDir false && ares-package lg --outdir lg --no-minify",
     "deploy:lg": "npm run build:lg && ./scripts/deploy-lg.sh",
     "build:github": "node scripts/build-github.js",
+    "deploy:versions": "./scripts/deploy-solidtv-versions.sh",
     "build:github:dev": "NODE_ENV=development vite build --sourcemap=true --mode development --base=/solid-demo-app/",
     "build:analyze": "vite-bundle-visualizer",
     "build:android": "vite build && npx cap sync android",

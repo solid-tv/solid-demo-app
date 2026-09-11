@@ -174,7 +174,6 @@ Config.rendererOptions = {
   createImageBitmapSupport: "auto",
   boundsMargin: 475,
   targetFPS: 0,
-  enableClear: true,
   enableContextSpy,
   forceWebGL2
 };

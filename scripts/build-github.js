@@ -60,15 +60,23 @@ if (displayVersion && fs.existsSync(benchmarkPath)) {
 
 console.log(`Running: ${cmd}`);
 
+let failed = false;
+
 try {
   execSync(cmd, { stdio: "inherit" });
 } catch (error) {
   console.error("Build failed.");
-  process.exit(1);
+  failed = true;
 } finally {
+  // process.exit() here would skip this revert and leave the injected version
+  // baked into the source, so the exit happens after the file is restored.
   if (modifiedBenchmark) {
     console.log(`Reverting ${benchmarkPath}...`);
     fs.writeFileSync(benchmarkPath, originalBenchmarkContent);
   }
+}
+
+if (failed) {
+  process.exit(1);
 }
 

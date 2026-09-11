@@ -2,7 +2,25 @@ import { IntrinsicNodeStyleProps, IntrinsicTextNodeStyleProps } from "@solidtv/s
 import { createSignal, onMount } from "solid-js";
 import { setGlobalBackground } from "../state";
 
-const knownVersions: (number | "Current")[] = ["Current", 300, 316, 320, 321, 322, 323, 324, 325, 326, 330, 331, 340];
+// Ascending: 1xx are @solidtv/renderer releases, 3xx are @lightningtv/renderer.
+const knownVersions: (number | "Current")[] = [
+  "Current",
+  156,
+  183,
+  190,
+  300,
+  316,
+  320,
+  321,
+  322,
+  323,
+  324,
+  325,
+  326,
+  330,
+  331,
+  340
+];
 
 const RendererVersionsPage = () => {
   const [version, setVersion] = createSignal<number | "Current">("Current");
