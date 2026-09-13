@@ -99,6 +99,7 @@ const RendererVersionsPage = lazy(() => import("./pages/RendererVersions"));
 const TextCenteringPage = lazy(() => import("./pages/TextCentering"));
 const CountdownTimerPage = lazy(() => import("./pages/CountdownTimer"));
 const CustomButtonsPage = lazy(() => import("./pages/CustomButtons"));
+const FlexJustifyWidthPage = lazy(() => import("./pages/FlexJustifyWidth"));
 
 
 let numImageWorkers = (typeof window !== "undefined" && window.createImageBitmap) ? 1 : 0;
@@ -260,6 +261,7 @@ requestAnimationFrame(() => {
             <Route path="flexcolumnsize" component={FlexColumnSizePage} />
             <Route path="flexcolumn" component={FlexColumnPage} />
             <Route path="flexgrow" component={FlexGrowPage} />
+            <Route path="flexjustifywidth" component={FlexJustifyWidthPage} />
             <Route path="keepalive" component={lazy(() => import("./pages/KeepAlive.jsx"))} />
             <Route path="suspense" component={lazy(() => import("./pages/suspense.jsx"))} />
             <Route path="superflex" component={SuperFlexPage} />
