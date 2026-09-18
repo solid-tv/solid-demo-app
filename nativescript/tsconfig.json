@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "module": "esnext",
+    "target": "ES2020",
+    "moduleResolution": "bundler",
+    "experimentalDecorators": true,
+    "noEmitHelpers": true,
+    "noEmitOnError": true,
+    "skipLibCheck": true,
+    "lib": ["ESNext", "dom"],
+    "jsx": "preserve",
+    "jsxImportSource": "@solidtv/solid",
+    "preserveSymlinks": true,
+    "paths": {
+      "@solidjs/router": ["./node_modules/@solidjs/router/dist/index.d.ts"],
+      "@solidtv/renderer": ["./node_modules/@solidtv/renderer/dist/exports/index.d.ts"],
+      "@solidtv/renderer/platform": ["./node_modules/@solidtv/renderer/dist/exports/platform.d.ts"],
+      "@solidtv/renderer/utils": ["./node_modules/@solidtv/renderer/dist/exports/utils.d.ts"],
+      "@solidtv/renderer/webgl": ["./node_modules/@solidtv/renderer/dist/exports/webgl.d.ts"],
+      "@solidtv/renderer/webgl/shaders": ["./node_modules/@solidtv/renderer/dist/exports/webgl-shaders.d.ts"],
+      "solid-js": ["./node_modules/solid-js/types/index.d.ts"],
+      "solid-js/store": ["./node_modules/solid-js/store/types/index.d.ts"],
+      "solid-js/universal": ["./node_modules/solid-js/universal/types/index.d.ts"],
+      "solid-js/web": ["./node_modules/solid-js/web/types/index.d.ts"]
+    }
+  },
+  "include": ["app/**/*"],
+  "files": ["./references.d.ts"],
+  "exclude": ["node_modules", "platforms"]
+}

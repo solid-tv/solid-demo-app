@@ -1,0 +1,121 @@
+BOOT start
+ENTRY import t=64
+ENTRY loaded t=77
+[warn] [Lightning] Image worker count is 0 or workers are not supported on this browser. Image loading will be slower.
+prev=None key=— next=browse nextDiv=undefined
+RENDER created t=147
+RENDER first frame t=159
+prev=None key=— next=browse nextDiv=undefined
+prev=browse key=— next=thumbnail nextDiv=undefined
+RENDER idle {"n":1,"t":1842,"criticalThreshold":200000000,"targetThreshold":160000000,"renderableMemUsed":42133818.400000006,"memUsed":42133818.400000006,"renderableTexturesLoaded":14,"loadedTextures":14,"baselineMemoryAllocation":26000000}
+LIFECYCLE suspend t=87889
+LIFECYCLE paused=true
+LIFECYCLE resume t=88935
+RENDER idle {"n":2,"t":89025,"criticalThreshold":200000000,"targetThreshold":160000000,"renderableMemUsed":42133818.400000006,"memUsed":42133818.400000006,"renderableTexturesLoaded":14,"loadedTextures":14,"baselineMemoryAllocation":26000000}
+prev=None key=— next=browse nextDiv=undefined
+prev=browse key=— next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+RENDER idle {"n":3,"t":90792,"criticalThreshold":200000000,"targetThreshold":160000000,"renderableMemUsed":42133818.400000006,"memUsed":42133818.400000006,"renderableTexturesLoaded":14,"loadedTextures":14,"baselineMemoryAllocation":26000000}
+RENDER idle {"n":4,"t":90975,"criticalThreshold":200000000,"targetThreshold":160000000,"renderableMemUsed":42133818.400000006,"memUsed":42133818.400000006,"renderableTexturesLoaded":14,"loadedTextures":14,"baselineMemoryAllocation":26000000}
+prev=None key=— next=browse nextDiv=undefined
+prev=browse key=— next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+RENDER idle {"n":5,"t":91475,"criticalThreshold":200000000,"targetThreshold":160000000,"renderableMemUsed":42133818.400000006,"memUsed":42133818.400000006,"renderableTexturesLoaded":14,"loadedTextures":14,"baselineMemoryAllocation":26000000}
+prev=None key=— next=browse nextDiv=undefined
+prev=browse key=— next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+RENDER idle {"n":6,"t":92042,"criticalThreshold":200000000,"targetThreshold":160000000,"renderableMemUsed":42133818.400000006,"memUsed":42133818.400000006,"renderableTexturesLoaded":14,"loadedTextures":14,"baselineMemoryAllocation":26000000}
+RENDER idle {"n":7,"t":92275,"criticalThreshold":200000000,"targetThreshold":160000000,"renderableMemUsed":42133818.400000006,"memUsed":42133818.400000006,"renderableTexturesLoaded":14,"loadedTextures":14,"baselineMemoryAllocation":26000000}
+prev=browse key=— next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+RENDER idle {"n":8,"t":92709,"criticalThreshold":200000000,"targetThreshold":160000000,"renderableMemUsed":42133818.400000006,"memUsed":42133818.400000006,"renderableTexturesLoaded":14,"loadedTextures":14,"baselineMemoryAllocation":26000000}
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+RENDER idle {"n":9,"t":93375,"criticalThreshold":200000000,"targetThreshold":160000000,"renderableMemUsed":42133818.400000006,"memUsed":42133818.400000006,"renderableTexturesLoaded":14,"loadedTextures":14,"baselineMemoryAllocation":26000000}
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+RENDER idle {"n":10,"t":93942,"criticalThreshold":200000000,"targetThreshold":160000000,"renderableMemUsed":42133818.400000006,"memUsed":42133818.400000006,"renderableTexturesLoaded":14,"loadedTextures":14,"baselineMemoryAllocation":26000000}
+RENDER idle {"n":11,"t":94292,"criticalThreshold":200000000,"targetThreshold":160000000,"renderableMemUsed":42133818.400000006,"memUsed":42133818.400000006,"renderableTexturesLoaded":14,"loadedTextures":14,"baselineMemoryAllocation":26000000}
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Down next=thumbnail nextDiv=undefined
+RENDER idle {"n":12,"t":94975,"criticalThreshold":200000000,"targetThreshold":160000000,"renderableMemUsed":42133818.400000006,"memUsed":42133818.400000006,"renderableTexturesLoaded":14,"loadedTextures":14,"baselineMemoryAllocation":26000000}
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Down next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Down next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Down next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Down next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Down next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Down next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+RENDER idle {"n":20,"t":98309,"criticalThreshold":200000000,"targetThreshold":160000000,"renderableMemUsed":41228650.400000006,"memUsed":42133818.400000006,"renderableTexturesLoaded":10,"loadedTextures":14,"baselineMemoryAllocation":26000000}
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Down next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+# FPS lines, every tenth:
+FPS {"t":982,"fps":4,"rendered":4,"idle":0}
+FPS {"t":4375,"fps":0,"rendered":0,"idle":10}
+FPS {"t":7475,"fps":0,"rendered":0,"idle":9}
+FPS {"t":10625,"fps":0,"rendered":0,"idle":10}
+FPS {"t":13742,"fps":0,"rendered":0,"idle":9}
+FPS {"t":16875,"fps":0,"rendered":0,"idle":10}
+FPS {"t":19975,"fps":0,"rendered":0,"idle":9}
+FPS {"t":23109,"fps":0,"rendered":0,"idle":9}
+FPS {"t":26242,"fps":0,"rendered":0,"idle":9}
+FPS {"t":29375,"fps":0,"rendered":0,"idle":10}
+FPS {"t":32475,"fps":0,"rendered":0,"idle":9}
+FPS {"t":35609,"fps":0,"rendered":0,"idle":9}
+FPS {"t":38742,"fps":0,"rendered":0,"idle":9}
+FPS {"t":41875,"fps":0,"rendered":0,"idle":10}
+FPS {"t":44975,"fps":0,"rendered":0,"idle":9}
+FPS {"t":48109,"fps":0,"rendered":0,"idle":9}
+FPS {"t":51242,"fps":0,"rendered":0,"idle":9}
+FPS {"t":54375,"fps":0,"rendered":0,"idle":10}
+FPS {"t":57475,"fps":0,"rendered":0,"idle":9}
+FPS {"t":60609,"fps":0,"rendered":0,"idle":9}
+FPS {"t":63742,"fps":0,"rendered":0,"idle":9}
+FPS {"t":66875,"fps":0,"rendered":0,"idle":10}
+FPS {"t":69975,"fps":0,"rendered":0,"idle":9}
+FPS {"t":73109,"fps":0,"rendered":0,"idle":9}
+FPS {"t":76242,"fps":0,"rendered":0,"idle":9}
+FPS {"t":79375,"fps":0,"rendered":0,"idle":10}
+FPS {"t":82475,"fps":0,"rendered":0,"idle":9}
+FPS {"t":85609,"fps":0,"rendered":0,"idle":9}
+FPS {"t":89777,"fps":0,"rendered":0,"idle":19}
+FPS {"t":93204,"fps":11,"rendered":3,"idle":10}
+FPS {"t":96343,"fps":15,"rendered":2,"idle":7}
+FPS {"t":99742,"fps":19,"rendered":6,"idle":0}
+FPS {"t":102809,"fps":0,"rendered":0,"idle":10}

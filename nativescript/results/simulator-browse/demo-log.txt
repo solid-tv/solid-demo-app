@@ -1,0 +1,16 @@
+BOOT start
+ENTRY import t=61
+ENTRY loaded t=75
+[warn] [Lightning] Image worker count is 0 or workers are not supported on this browser. Image loading will be slower.
+prev=None key=— next=browse nextDiv=undefined
+RENDER created t=142
+RENDER first frame t=155
+prev=None key=— next=browse nextDiv=undefined
+prev=browse key=— next=thumbnail nextDiv=undefined
+RENDER idle {"n":1,"t":2606,"criticalThreshold":200000000,"targetThreshold":160000000,"renderableMemUsed":45527384.400000006,"memUsed":45527384.400000006,"renderableTexturesLoaded":29,"loadedTextures":29,"baselineMemoryAllocation":26000000}
+# FPS lines, every tenth:
+FPS {"t":1050,"fps":6,"rendered":6,"idle":0}
+FPS {"t":4457,"fps":0,"rendered":0,"idle":11}
+FPS {"t":7573,"fps":0,"rendered":0,"idle":16}
+FPS {"t":10706,"fps":0,"rendered":0,"idle":18}
+FPS {"t":13823,"fps":0,"rendered":0,"idle":18}
