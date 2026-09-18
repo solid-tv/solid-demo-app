@@ -1,7 +1,4 @@
-
-import { createTag } from "@solidtv/solid/primitives";
 import { setGlobalBackground } from "../state";
-import { onCleanup } from "solid-js";
 
 const TagsPage = () => {
   setGlobalBackground("#111");
@@ -12,7 +9,7 @@ const TagsPage = () => {
     y: 1,
   };
 
-  const ActionTag = createTag(
+  const ActionTag = () => (
     <view color={'#118322ff'} borderRadius={8} display="flex" padding={[0, 8]}>
       <text style={watchIconTextStyle}>
         Action
@@ -20,7 +17,7 @@ const TagsPage = () => {
     </view>
   );
 
-  const ComedyTag = createTag(
+  const ComedyTag = () => (
     <view color={'#250fceff'} borderRadius={8} display="flex" padding={[0, 8]}>
       <text style={watchIconTextStyle}>
         Comedy
@@ -28,7 +25,7 @@ const TagsPage = () => {
     </view>
   );
 
-  const DramaTag = createTag(
+  const DramaTag = () => (
     <view color={'#ff0000ff'} borderRadius={8} display="flex" padding={[0, 8]}>
       <text style={watchIconTextStyle}>
         Drama
@@ -36,21 +33,13 @@ const TagsPage = () => {
     </view>
   );
 
-  const NewEpisodeTag = createTag(
+  const NewEpisodeTag = () => (
     <view color={'#fff'} borderRadius={8} display="flex" padding={[0, 8]} effects={{ rounded: { radius: [ 10, 0, 10, 0 ]} }}>
       <text style={watchIconTextStyle} color={'#000'} fontWeight={400}>
         New Episode
       </text>
     </view>
   );
-
-
-  onCleanup(() => {
-    ActionTag.destroy();
-    ComedyTag.destroy();
-    DramaTag.destroy();
-    NewEpisodeTag.destroy();
-  });
 
   return (
     <>
