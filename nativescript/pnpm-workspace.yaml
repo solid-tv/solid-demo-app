@@ -1,0 +1,21 @@
+# This file makes the tvOS project its own pnpm workspace root: pnpm stops at
+# the nearest pnpm-workspace.yaml, so the demo's install above never absorbs
+# this project, its node_modules or its lockfile.
+#
+# Flat node_modules: the NativeScript CLI discovers plugins by walking
+# node_modules, and @nativescript/canvas resolves its SwiftPM header shim
+# through node_modules/@nativescript/canvas/... from the project root.
+nodeLinker: hoisted
+onlyBuiltDependencies:
+  - '@nativescript/core'
+  - '@nativescript/webpack'
+  - nativescript
+# The alpha polyfill declares '*' on its sibling packages, which resolves to
+# the 2.1.18 line (no tvOS slices, older V8 bridge). Keep every canvas package
+# on the same alpha.
+overrides:
+  '@nativescript/canvas': 3.0.0-alpha.10
+  # The svg package's xcframework has no tvOS slice (3.0.0-alpha.10), and
+  # nothing here renders SVG: a stand-in with the polyfill's imports.
+  '@nativescript/canvas-svg': file:./stubs/canvas-svg
+  '@nativescript/canvas-media': 3.0.0-alpha.10

@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "@solidjs/router";
+import { useLocation, useMatch, useNavigate } from "@solidjs/router";
 import { activeElement, renderer } from "@solidtv/solid";
 import {
   useAnnouncer,
@@ -27,6 +27,7 @@ declare module "@solidtv/solid" {
 const LeftNavWrapper = (props) => {
 
   const navigate = useNavigate();
+  const isStartPage = useMatch(() => "/browse/all");
   const announcer = useAnnouncer();
   announcer.debug = true;
   announcer.enabled = false;
@@ -86,6 +87,11 @@ const LeftNavWrapper = (props) => {
         // TVs only have one back key, so it does double duty: from page content
         // it opens the nav drawer, and from the drawer it walks history back.
         if (navDrawer.states.has("focus")) {
+          // From the drawer on the start page there is nothing to walk back
+          // to: leave the key unhandled, so a platform that exits the app on
+          // an unhandled back press (Apple TV's Menu button) does so here and
+          // nowhere else.
+          if (isStartPage()) return false;
           navigate(-1);
         } else {
           focusNavDrawer();

@@ -1,0 +1,7 @@
+{
+  "name": "@nativescript/canvas-svg",
+  "version": "0.0.0-stub",
+  "description": "tvOS build stand-in, see index.js",
+  "main": "index.js",
+  "type": "module"
+}

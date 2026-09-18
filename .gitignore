@@ -20,3 +20,7 @@ lg/assets
 lg/fonts
 lg/*.ipk
 lg/index.html
+# The tvOS project under nativescript/ is its own pnpm root: its workspace file
+# and lockfile are tracked, unlike the ones the rules above ignore.
+!nativescript/pnpm-workspace.yaml
+!nativescript/pnpm-lock.yaml

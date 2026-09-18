@@ -1,0 +1,143 @@
+BOOT start
+ENTRY import t=466
+[bundle] Loaded MODERN (module) build
+ENTRY loaded t=609
+[warn] [Lightning] Image worker count is 0 or workers are not supported on this browser. Image loading will be slower.
+prev=None key=— next=browse nextDiv=undefined
+RENDER created t=1286
+RENDER first frame t=1292
+FPS {"t":1592,"fps":20,"rendered":7,"idle":0}
+prev=None key=— next=browse nextDiv=undefined
+prev=browse key=— next=thumbnail nextDiv=undefined
+FPS {"t":1888,"fps":40,"rendered":12,"idle":0}
+FPS {"t":2189,"fps":60,"rendered":18,"idle":0}
+RENDER idle {"n":1,"t":2438,"criticalThreshold":200000000,"targetThreshold":160000000,"renderableMemUsed":43717048.400000006,"memUsed":43717048.400000006,"renderableTexturesLoaded":21,"loadedTextures":21,"baselineMemoryAllocation":26000000}
+FPS {"t":2490,"fps":60,"rendered":17,"idle":1}
+RENDER idle {"n":2,"t":2587,"criticalThreshold":200000000,"targetThreshold":160000000,"renderableMemUsed":44622216.400000006,"memUsed":44622216.400000006,"renderableTexturesLoaded":25,"loadedTextures":25,"baselineMemoryAllocation":26000000}
+RENDER idle {"n":3,"t":2687,"criticalThreshold":200000000,"targetThreshold":160000000,"renderableMemUsed":45074800.400000006,"memUsed":45074800.400000006,"renderableTexturesLoaded":27,"loadedTextures":27,"baselineMemoryAllocation":26000000}
+RENDER idle {"n":4,"t":2737,"criticalThreshold":200000000,"targetThreshold":160000000,"renderableMemUsed":45527384.400000006,"memUsed":45527384.400000006,"renderableTexturesLoaded":29,"loadedTextures":29,"baselineMemoryAllocation":26000000}
+FPS {"t":2789,"fps":60,"rendered":13,"idle":5}
+RENDER idle {"n":5,"t":2837,"criticalThreshold":200000000,"targetThreshold":160000000,"renderableMemUsed":45753676.400000006,"memUsed":45753676.400000006,"renderableTexturesLoaded":30,"loadedTextures":30,"baselineMemoryAllocation":26000000}
+FPS {"t":3088,"fps":60,"rendered":2,"idle":15}
+RENDER idle {"n":6,"t":3138,"criticalThreshold":200000000,"targetThreshold":160000000,"renderableMemUsed":45753676.400000006,"memUsed":45753676.400000006,"renderableTexturesLoaded":30,"loadedTextures":30,"baselineMemoryAllocation":26000000}
+FPS {"t":3388,"fps":60,"rendered":2,"idle":12}
+RENDER idle {"n":7,"t":3439,"criticalThreshold":200000000,"targetThreshold":160000000,"renderableMemUsed":45753676.400000006,"memUsed":45753676.400000006,"renderableTexturesLoaded":30,"loadedTextures":30,"baselineMemoryAllocation":26000000}
+FPS {"t":3705,"fps":60,"rendered":2,"idle":11}
+RENDER idle {"n":8,"t":3772,"criticalThreshold":200000000,"targetThreshold":160000000,"renderableMemUsed":45753676.400000006,"memUsed":45753676.400000006,"renderableTexturesLoaded":30,"loadedTextures":30,"baselineMemoryAllocation":26000000}
+FPS {"t":4005,"fps":60,"rendered":2,"idle":9}
+FPS {"t":4306,"fps":0,"rendered":0,"idle":13}
+FPS {"t":4622,"fps":0,"rendered":0,"idle":12}
+FPS {"t":4923,"fps":0,"rendered":0,"idle":11}
+FPS {"t":5223,"fps":0,"rendered":0,"idle":11}
+FPS {"t":5540,"fps":0,"rendered":0,"idle":13}
+FPS {"t":5840,"fps":0,"rendered":0,"idle":12}
+FPS {"t":6141,"fps":0,"rendered":0,"idle":11}
+FPS {"t":6458,"fps":0,"rendered":0,"idle":12}
+FPS {"t":6774,"fps":0,"rendered":0,"idle":12}
+FPS {"t":7092,"fps":0,"rendered":0,"idle":11}
+FPS {"t":7392,"fps":0,"rendered":0,"idle":13}
+FPS {"t":7692,"fps":0,"rendered":0,"idle":14}
+FPS {"t":7992,"fps":0,"rendered":0,"idle":11}
+FPS {"t":8293,"fps":0,"rendered":0,"idle":13}
+FPS {"t":8610,"fps":0,"rendered":0,"idle":13}
+FPS {"t":8927,"fps":0,"rendered":0,"idle":13}
+FPS {"t":9227,"fps":0,"rendered":0,"idle":18}
+FPS {"t":9544,"fps":0,"rendered":0,"idle":12}
+FPS {"t":9844,"fps":0,"rendered":0,"idle":11}
+FPS {"t":10161,"fps":0,"rendered":0,"idle":11}
+FPS {"t":10462,"fps":0,"rendered":0,"idle":11}
+FPS {"t":10762,"fps":0,"rendered":0,"idle":12}
+FPS {"t":11079,"fps":0,"rendered":0,"idle":12}
+FPS {"t":11396,"fps":0,"rendered":0,"idle":13}
+prev=None key=— next=browse nextDiv=undefined
+prev=browse key=— next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+FPS {"t":11712,"fps":0,"rendered":1,"idle":10}
+RENDER idle {"n":9,"t":11914,"criticalThreshold":200000000,"targetThreshold":160000000,"renderableMemUsed":45753676.400000006,"memUsed":45753676.400000006,"renderableTexturesLoaded":30,"loadedTextures":30,"baselineMemoryAllocation":26000000}
+FPS {"t":11997,"fps":55,"rendered":11,"idle":5}
+RENDER idle {"n":10,"t":12064,"criticalThreshold":200000000,"targetThreshold":160000000,"renderableMemUsed":45753676.400000006,"memUsed":45753676.400000006,"renderableTexturesLoaded":30,"loadedTextures":30,"baselineMemoryAllocation":26000000}
+RENDER idle {"n":11,"t":12306,"criticalThreshold":200000000,"targetThreshold":160000000,"renderableMemUsed":45753676.400000006,"memUsed":45753676.400000006,"renderableTexturesLoaded":30,"loadedTextures":30,"baselineMemoryAllocation":26000000}
+FPS {"t":12308,"fps":60,"rendered":3,"idle":12}
+prev=None key=— next=browse nextDiv=undefined
+prev=browse key=— next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+FPS {"t":12604,"fps":60,"rendered":17,"idle":0}
+RENDER idle {"n":12,"t":12648,"criticalThreshold":200000000,"targetThreshold":160000000,"renderableMemUsed":45753676.400000006,"memUsed":45753676.400000006,"renderableTexturesLoaded":30,"loadedTextures":30,"baselineMemoryAllocation":26000000}
+FPS {"t":12898,"fps":60,"rendered":2,"idle":12}
+FPS {"t":13204,"fps":60,"rendered":3,"idle":11}
+prev=None key=— next=browse nextDiv=undefined
+prev=browse key=— next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+FPS {"t":13501,"fps":60,"rendered":18,"idle":0}
+FPS {"t":13798,"fps":60,"rendered":13,"idle":4}
+FPS {"t":14114,"fps":38,"rendered":5,"idle":5}
+HD
+CC
+prev=browse key=— next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Enter next=Unknown nextDiv=undefined
+FPS {"t":14419,"fps":46,"rendered":14,"idle":0}
+FPS {"t":14733,"fps":60,"rendered":18,"idle":0}
+FPS {"t":15020,"fps":60,"rendered":16,"idle":1}
+FPS {"t":15317,"fps":60,"rendered":5,"idle":13}
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Enter next=Unknown nextDiv=undefined
+prev=Unknown key=Left next=Unknown nextDiv=undefined
+FPS {"t":15649,"fps":60,"rendered":3,"idle":12}
+FPS {"t":15918,"fps":51,"rendered":12,"idle":3}
+RENDER idle {"n":20,"t":15984,"criticalThreshold":200000000,"targetThreshold":160000000,"renderableMemUsed":48505762,"memUsed":57085828,"renderableTexturesLoaded":27,"loadedTextures":48,"baselineMemoryAllocation":26000000}
+FPS {"t":16218,"fps":60,"rendered":2,"idle":12}
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Enter next=Unknown nextDiv=undefined
+prev=Unknown key=Left next=Unknown nextDiv=undefined
+prev=Unknown key=Down next=Unknown nextDiv=undefined
+FPS {"t":16518,"fps":60,"rendered":3,"idle":11}
+prev=thumbnail key=Right next=thumbnail nextDiv=undefined
+prev=thumbnail key=Enter next=Unknown nextDiv=undefined
+prev=Unknown key=Left next=Unknown nextDiv=undefined
+prev=Unknown key=Down next=Unknown nextDiv=undefined
+prev=Unknown key=Down next=Unknown nextDiv=undefined
+FPS {"t":16827,"fps":60,"rendered":3,"idle":10}
+FPS {"t":17123,"fps":0,"rendered":0,"idle":15}
+prev=thumbnail key=Enter next=Unknown nextDiv=undefined
+prev=Unknown key=Left next=Unknown nextDiv=undefined
+prev=Unknown key=Down next=Unknown nextDiv=undefined
+prev=Unknown key=Down next=Unknown nextDiv=undefined
+prev=Unknown key=Down next=Unknown nextDiv=undefined
+FPS {"t":17419,"fps":0,"rendered":1,"idle":13}
+prev=Unknown key=Left next=Unknown nextDiv=undefined
+prev=Unknown key=Down next=Unknown nextDiv=undefined
+prev=Unknown key=Down next=Unknown nextDiv=undefined
+prev=Unknown key=Down next=Unknown nextDiv=undefined
+prev=Unknown key=Down next=Unknown nextDiv=undefined
+FPS {"t":17719,"fps":0,"rendered":1,"idle":12}
+FPS {"t":18036,"fps":0,"rendered":0,"idle":17}
+[warn] Text align requires contain:  Use LEFT / RIGHT arrows to select a known version
+[warn] Text align requires contain:  Use UP / DOWN arrows to select a custom number
+[warn] Text align requires contain:  Press ENTER to launch benchmark for this version
+prev=Unknown key=Down next=Unknown nextDiv=undefined
+prev=Unknown key=Down next=Unknown nextDiv=undefined
+prev=Unknown key=Down next=Unknown nextDiv=undefined
+prev=Unknown key=Down next=Unknown nextDiv=undefined
+prev=Unknown key=Enter next=Unknown nextDiv=undefined
+FPS {"t":18341,"fps":44,"rendered":12,"idle":2}
+FPS {"t":18637,"fps":60,"rendered":2,"idle":14}
+FPS {"t":18937,"fps":60,"rendered":2,"idle":15}
+FPS {"t":19238,"fps":0,"rendered":0,"idle":18}
+FPS {"t":19567,"fps":22,"rendered":2,"idle":14}
+[Virtual] [object Object]
+prev=Unknown key=Down next=Unknown nextDiv=undefined
+prev=Unknown key=Down next=Unknown nextDiv=undefined
+prev=Unknown key=Down next=Unknown nextDiv=undefined
+prev=Unknown key=Enter next=Unknown nextDiv=undefined
+prev=Unknown key=Enter next=Unknown nextDiv=undefined
+[Virtual] [object Object]
+FPS {"t":19873,"fps":60,"rendered":3,"idle":9}
