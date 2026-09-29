@@ -112,6 +112,18 @@ const animationsEnabled = urlParams.get("animate") || "true";
 const enableContextSpy = urlParams.get("contextSpy") === "true";
 // Off by default (renderer requests a WebGL1 context) — force WebGL2 with ?webgl2=true
 const forceWebGL2 = urlParams.get("webgl2") === "true";
+// Renderer frame cap. 0 (the default) leaves the limiter off and draws on every
+// rAF callback; pass ?targetFPS=60 to cap at the panel rate for A/B runs.
+const targetFPSParam = urlParams.get("targetFPS");
+const targetFPS = targetFPSParam ? parseFloat(targetFPSParam) : 0;
+// WebGL context power preference — ?powerPreference=default|high-performance|low-power.
+// Left unset so the renderer's own default applies.
+const powerPreference = urlParams.get("powerPreference") as WebGLPowerPreference | null;
+// How the renderer spaces frames under the targetFPS cap — ?framePacing=raf|timer.
+// 'timer' is for platforms whose rAF is not vsync-paced (e.g. Vizio); it does
+// nothing while targetFPS is 0, so pair it with ?targetFPS=60. Left unset so the
+// renderer's own default ('raf') applies.
+const framePacing = urlParams.get("framePacing") as "raf" | "timer" | null;
 const textBaseline = urlParams.get("textBaseline") as
   | "optical"
   | "cap"
@@ -174,10 +186,18 @@ Config.rendererOptions = {
   devicePhysicalPixelRatio: physicalDPR,
   createImageBitmapSupport: "auto",
   boundsMargin: 475,
-  targetFPS: 0,
+  targetFPS,
   enableContextSpy,
   forceWebGL2
 };
+
+if (powerPreference) {
+  Config.rendererOptions.powerPreference = powerPreference;
+}
+
+if (framePacing) {
+  Config.rendererOptions.framePacing = framePacing;
+}
 
 if (textBaseline) {
   Config.rendererOptions.textBaselineMode = textBaseline;

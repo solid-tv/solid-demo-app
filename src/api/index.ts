@@ -34,10 +34,24 @@ function _get(path: string, params: RequestInit = {}) {
   }).then((r) => r.json());
 }
 
+// image.tmdb.org is DNS-balanced across CDNs, and the BunnyCDN edge (most lookups)
+// chains to Let's Encrypt's ISRG Root X1, which older TV root stores (webOS 3.x)
+// lack, so https posters fail with ERR_INSECURE_RESPONSE. Use http unless the page
+// itself is https, where http images would be blocked as mixed content.
+export function pickImageBaseUrl(
+  images: { base_url?: string; secure_base_url?: string } = {},
+  protocol: string = window.location.protocol
+) {
+  if (protocol === "https:") {
+    return images.secure_base_url || images.base_url;
+  }
+  return images.base_url || images.secure_base_url;
+}
+
 function loadConfig() {
   return _get("/configuration").then((data) => {
     tmdbConfig = data;
-    baseImageUrl = data.images?.secure_base_url;
+    baseImageUrl = pickImageBaseUrl(data.images);
     return data;
   });
 }
