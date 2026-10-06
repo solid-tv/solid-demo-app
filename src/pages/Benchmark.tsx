@@ -1,5 +1,5 @@
 import { createEffect, on, createSignal, batch, Show, For, onCleanup } from "solid-js";
-import { ElementNode, activeElement, renderer, Config } from "@solidtv/solid";
+import { ElementNode, activeElement, renderer, Config, rootNode } from "@solidtv/solid";
 import { LazyRow, LazyColumn, useFocusStack, resetCounter } from "@solidtv/solid/primitives";
 import { Hero, TitleRow, AssetPanel, SHOW_TEXT, DISPLAY_SIZE, POSTER_SCALE, scaled } from "../components";
 import styles from "../styles";
@@ -8,6 +8,219 @@ import ContentBlock from "../components/ContentBlock";
 import { debounce } from "@solid-primitives/scheduled";
 import type { FpsUpdatePayload, RendererCapabilities } from "@solidtv/renderer";
 import { FRAME_TIME_BUCKET_COUNT, frameTimeBucketLowerBound } from "./frameTimeBuckets";
+
+// Texture memory from either renderer major (same fields in both):
+// 2.x renderer.memoryInfo(), 1.x renderer.stage.txMemManager.getMemoryInfo().
+function textureMemory() {
+  const r = renderer as any;
+  try {
+    const info = typeof r?.memoryInfo === "function" ? r.memoryInfo() : r?.stage?.txMemManager?.getMemoryInfo?.();
+    if (!info) return null;
+    const mb = (b: number) => parseFloat((b / 1e6).toFixed(2));
+    return {
+      memUsedMB: mb(info.memUsed),
+      renderableMemUsedMB: mb(info.renderableMemUsed),
+      loadedTextures: info.loadedTextures,
+      renderableTexturesLoaded: info.renderableTexturesLoaded
+    };
+  } catch (e) {
+    return null;
+  }
+}
+let textureMemoryAtIdle: ReturnType<typeof textureMemory> = null;
+
+// ── Startup milestones ──
+// Timed from the moment the first row's data is in (the same start as
+// initialRenderTimeMs), the same way on renderer 1.x and 2.x:
+//  - firstContentFrameMs: end of the first frame drawn after the page's
+//    nodes exist, i.e. what the viewer sees first.
+//  - visuallyCompleteMs: end of the first frame after which every page image
+//    in the viewport has loaded (or failed).
+//  - viewportTexturesLoadedAtFirstIdle: how many of those were in when the
+//    first `idle` fired. initialRenderTimeMs is that first idle, which lands
+//    before or after the images depending on the network, so it is not a
+//    render-speed figure on its own.
+// Both majors emit `frameTick` at the start of a frame, expose `renderState`
+// (8 = in viewport) on a node, and report a node's texture through its
+// `loaded` / `failed` events.
+const IN_VIEWPORT = 8;
+// How long a 1.x texture may stay "initial" in the viewport before it counts
+// as never requested.
+const NOT_REQUESTED_GRACE_MS = 1000;
+const startup = {
+  firstContentFrameMs: null as number | null,
+  visuallyCompleteMs: null as number | null,
+  stoppedBy: null as null | "complete" | "navigation" | "timeout",
+  viewportTextures: null as number | null,
+  viewportTexturesLoaded: null as number | null,
+  viewportTexturesFailed: null as number | null,
+  // 1.x only: in the viewport by renderState, but the renderer never asked
+  // for its texture (still "initial" 1s after the rest had loaded).
+  viewportTexturesNotRequested: null as number | null,
+  viewportTexturesAtFirstIdle: null as number | null,
+  viewportTexturesLoadedAtFirstIdle: null as number | null,
+  // When tracking stops before completion: the images still pending (max 5).
+  pendingAtStop: null as null | Array<Record<string, unknown>>
+};
+
+// Page images: every renderer node created with a `src` once this module
+// has loaded, with its load state from its own loaded/failed events.
+const pageImages = new WeakMap<object, "pending" | "loaded" | "failed">();
+(function trackPageImages() {
+  const r = renderer as any;
+  if (!r || typeof r.createNode !== "function" || r.__benchPageImages) return;
+  r.__benchPageImages = true;
+  const createNode = r.createNode;
+  r.createNode = function (props: any) {
+    const node = createNode.apply(this, arguments as any);
+    if (node && props && props.src && typeof node.on === "function") {
+      pageImages.set(node, "pending");
+      node.on("loaded", (_target: any, payload: any) => {
+        if (!payload || payload.type !== "text") pageImages.set(node, "loaded");
+      });
+      node.on("failed", (_target: any, payload: any) => {
+        if (!payload || payload.type !== "text") pageImages.set(node, "failed");
+      });
+    }
+    return node;
+  };
+})();
+
+// Page image nodes whose renderer node is in the viewport.
+function collectViewportImageNodes(): any[] {
+  const out: any[] = [];
+  const walk = (node: any) => {
+    const children = node && node.children;
+    if (!children) return;
+    for (let i = 0; i < children.length; i++) {
+      const child = children[i];
+      const lng = child && child.lng;
+      if (lng && pageImages.has(lng) && lng.renderState === IN_VIEWPORT) out.push(child);
+      walk(child);
+    }
+  };
+  walk(rootNode);
+  return out;
+}
+
+// One node's state: its own events first; 1.x also exposes the src texture
+// (it can emit loaded inside createNode, before the listener exists), and
+// 2.x returns no texture for a src, so "initial" is 1.x only.
+function imageState(n: any): "loaded" | "failed" | "initial" | "pending" {
+  const lng = n.lng;
+  const state = pageImages.get(lng);
+  if (state === "loaded" || state === "failed") return state;
+  const textureState = lng.texture && lng.texture.state;
+  if (textureState === "loaded" || textureState === "failed") return textureState;
+  if (textureState === "initial") return "initial";
+  return "pending";
+}
+
+function textureCounts(nodes: any[]) {
+  let loaded = 0;
+  let failed = 0;
+  let initial = 0;
+  let pending = 0;
+  for (let i = 0; i < nodes.length; i++) {
+    const s = imageState(nodes[i]);
+    if (s === "loaded") loaded++;
+    else if (s === "failed") failed++;
+    else if (s === "initial") initial++;
+    else pending++;
+  }
+  return { loaded, failed, initial, pending };
+}
+
+let stopStartupTracking: () => void = () => {};
+
+// From the moment the data is in: measure at the end of each frame (a timer
+// queued from frameTick runs after the frame's task) until every in-viewport
+// page image is loaded, the first key press, or 15s.
+function trackStartup(startTime: number) {
+  const r = renderer as any;
+  if (!r || typeof r.on !== "function") return;
+  let checkQueued = false;
+  let done = false;
+  // Frame time at which only never-requested ("initial") images remained.
+  let candidate: number | null = null;
+  const finish = (by: "complete" | "navigation" | "timeout", nodes: any[]) => {
+    if (done) return;
+    done = true;
+    const c = textureCounts(nodes);
+    startup.stoppedBy = by;
+    startup.viewportTextures = nodes.length;
+    startup.viewportTexturesLoaded = c.loaded;
+    startup.viewportTexturesFailed = c.failed;
+    startup.viewportTexturesNotRequested = c.initial;
+    if (by !== "complete") {
+      startup.pendingAtStop = nodes
+        .filter((n) => {
+          const s = imageState(n);
+          return s === "pending" || s === "initial";
+        })
+        .slice(0, 5)
+        .map((n) => {
+          const lng = n.lng;
+          return {
+            src: String(lng.src).slice(-48),
+            alpha: lng.alpha,
+            w: lng.w,
+            h: lng.h,
+            state: imageState(n)
+          };
+        });
+    }
+    r.off("frameTick", onTick);
+  };
+  const complete = (at: number, nodes: any[]) => {
+    startup.visuallyCompleteMs = parseFloat((at - startTime).toFixed(2));
+    performance.mark("bench:visuallyComplete");
+    finish("complete", nodes);
+  };
+  // Re-collected on every check: rows whose data lands later join the set.
+  const check = (now: number) => {
+    if (done) return;
+    const nodes = collectViewportImageNodes();
+    const c = textureCounts(nodes);
+    const settled = nodes.length > 0 && c.pending === 0 && c.loaded + c.failed > 0;
+    if (settled && c.initial === 0) {
+      complete(now, nodes);
+    } else if (settled) {
+      if (candidate === null) {
+        candidate = now;
+        setTimeout(() => check(performance.now()), NOT_REQUESTED_GRACE_MS + 10);
+      } else if (now - candidate >= NOT_REQUESTED_GRACE_MS) {
+        complete(candidate, nodes);
+      }
+    } else {
+      candidate = null;
+    }
+    if (!done && now - startTime > 15000) finish("timeout", nodes);
+  };
+  const afterFrame = () => {
+    checkQueued = false;
+    if (done) return;
+    const now = performance.now();
+    if (startup.firstContentFrameMs === null) {
+      startup.firstContentFrameMs = parseFloat((now - startTime).toFixed(2));
+      performance.mark("bench:firstContentFrame");
+    }
+    check(now);
+  };
+  const onTick = () => {
+    if (!checkQueued && !done) {
+      checkQueued = true;
+      setTimeout(afterFrame, 0);
+    }
+  };
+  stopStartupTracking = () => {
+    if (done) return;
+    const now = performance.now();
+    check(now);
+    if (!done) finish("navigation", collectViewportImageNodes());
+  };
+  r.on("frameTick", onTick);
+}
 
 const TOTAL_CYCLES = 2;
 const NAV_DELAY_MS = 500; // delay between simulated key presses
@@ -549,10 +762,13 @@ const Benchmark = (props) => {
     // Ensure FPS listener is attached
     attachFpsListener();
 
+    performance.mark("bench:runStart");
     // Small initial delay to let everything settle
     setBenchmarkStatus("Starting benchmark...");
     await sleep(1500);
 
+    // The first key press moves the viewport: startup tracking ends here.
+    stopStartupTracking();
     for (let cycle = 0; cycle < TOTAL_CYCLES; cycle++) {
       if (cancelled) return;
       // ── Navigate DOWN through all rows ──
@@ -723,6 +939,8 @@ const Benchmark = (props) => {
       // alone failed once already (a two-variable run read as one), and a
       // photographed overlay or a stale localStorage entry carries no URL at
       // all. Cheap enough to always emit.
+      startup: { ...startup },
+      textureMemory: { atIdle: textureMemoryAtIdle, atEnd: textureMemory() },
       sceneConfig: {
         displaySize: DISPLAY_SIZE,
         showText: SHOW_TEXT,
@@ -755,6 +973,7 @@ const Benchmark = (props) => {
       },
     };
 
+    performance.mark("bench:runEnd");
     console.log("=== BENCHMARK PERFORMANCE RESULTS (JSON) ===");
     console.log(JSON.stringify(benchmarkResultsJson, null, 2));
 
@@ -812,11 +1031,18 @@ const Benchmark = (props) => {
     if (firstItems && firstItems.length > 0) {
       if (!dataLoaded()) {
         const startTime = performance.now();
+        performance.mark("bench:dataLoaded");
+        trackStartup(startTime);
         setDataLoaded(true);
         if (renderer && typeof renderer.on === "function") {
           renderer.on('idle', () => {
             if (renderTime() === null) {
               setRenderTime(performance.now() - startTime);
+              performance.mark("bench:idle");
+              textureMemoryAtIdle = textureMemory();
+              const atIdle = collectViewportImageNodes();
+              startup.viewportTexturesAtFirstIdle = atIdle.length;
+              startup.viewportTexturesLoadedAtFirstIdle = textureCounts(atIdle).loaded;
             }
           });
         }
