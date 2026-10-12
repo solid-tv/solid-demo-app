@@ -1,8 +1,10 @@
-import { WebTrFontFaceOptions } from "@solidtv/solid";
+import type { FontLoadOptions } from "@solidtv/solid";
 
 const basePath = import.meta.env.BASE_URL;
 
-export default [
+// SDF fonts draw on the WebGL renderer (2.x renders SDF text only); the
+// fontUrl web fonts are for the DOM renderer and are skipped otherwise.
+const fonts: FontLoadOptions[] = [
   {
     type: "msdf",
     fontFamily: "Roboto",
@@ -14,7 +16,7 @@ export default [
       lineGap: 0,
       unitsPerEm: 1000
     }
-  } as const,
+  },
   {
     type: "msdf",
     fontFamily: "Roboto700",
@@ -26,25 +28,27 @@ export default [
       lineGap: 0,
       unitsPerEm: 1000
     }
-  } as const,
+  },
   {
     type: "msdf",
     fontFamily: "Arial",
     atlasDataUrl: basePath + "fonts/Roboto-Regular.msdf.json",
     atlasUrl: basePath + "fonts/Roboto-Regular.msdf.png"
-  } as const,
+  },
   {
     type: "msdf",
     fontFamily: "Raleway",
     atlasDataUrl: basePath + "fonts/Raleway-ExtraBold.msdf.json",
     atlasUrl: basePath + "fonts/Raleway-ExtraBold.msdf.png"
-  } as const,
+  },
   {
     fontFamily: "Roboto",
     fontUrl: basePath + "fonts/Roboto-Regular.ttf"
-  } as WebTrFontFaceOptions,
+  },
   {
     fontFamily: "Roboto700",
     fontUrl: basePath + "fonts/Roboto-Bold.ttf"
-  } as WebTrFontFaceOptions
+  }
 ];
+
+export default fonts;

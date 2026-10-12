@@ -43,10 +43,7 @@ function classicEntryScriptPlugin() {
 export default defineConfig(({ mode }) => ({
   define: {
     __DEV__: mode !== "production",
-    __RTT__: false,
-    __renderTextBatching__: true,
     __enableCompressedTextures__: false,
-    __calculateFps__: true,
     LIGHTNING_DOM_RENDERING: false
   },
   plugins: [

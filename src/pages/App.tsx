@@ -1,8 +1,8 @@
+import type { KeyMap } from "@solidtv/solid";
 import {
   useFocusManager,
   useMouse,
 } from "@solidtv/solid/primitives";
-import { KeyMap, KeyHoldMap } from "@solidtv/solid/focusManager";
 
 const App = (props) => {
   useFocusManager(
@@ -28,14 +28,7 @@ const App = (props) => {
         Rewind: ['Rewind', 412],
         Rewind10: ['Rewind10', 10232],
         Stop: ['Stop', 413],
-    } satisfies KeyMap,
-      {
-        userKeyHoldMap: {
-          EnterHold: ["Enter", 13],
-          BackHold: ["b", 66]
-        } as unknown as KeyHoldMap,
-        holdThreshold: 1000
-      }
+    } satisfies Partial<KeyMap>
     );
      useMouse(undefined, 100, {
       customStates: {

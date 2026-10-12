@@ -19,9 +19,7 @@
 })();
 
 import { createRenderer, Config, loadFonts } from "@solidtv/solid";
-import { WebGlCoreRenderer, SdfTextRenderer } from "@solidtv/renderer/webgl";
-import { CanvasCoreRenderer, CanvasTextRenderer } from "@solidtv/renderer/canvas";
-
+import type { RendererMain } from "@solidtv/renderer";
 import { Inspector } from "@solidtv/renderer/inspector";
 import { FocusStackProvider, lazy } from "@solidtv/solid/primitives";
 import { HashRouter, KeepAliveRoute } from "@solidtv/solid/primitives/router";
@@ -46,7 +44,7 @@ import {
   LinearGradient,
   HolePunch,
   RadialProgress
-} from "@solidtv/renderer/webgl/shaders";
+} from "@solidtv/renderer/shaders";
 
 // Which Vite bundle is this device actually running? import.meta.env.LEGACY is
 // rewritten to `true` only in the legacy (nomodule) chunk and `false` in the
@@ -106,7 +104,6 @@ let numImageWorkers = (typeof window !== "undefined" && window.createImageBitmap
 const urlParams = new URLSearchParams(window.location.search);
 const numWorkers = urlParams.get("numImageWorkers");
 const screenSize = urlParams.get("size") || "default";
-const rendererMode = urlParams.get("mode") || "webgl";
 const animationsEnabled = urlParams.get("animate") || "true";
 // Off by default — enable with ?contextSpy=true to capture per-frame WebGL call counts
 const enableContextSpy = urlParams.get("contextSpy") === "true";
@@ -119,11 +116,6 @@ const targetFPS = targetFPSParam ? parseFloat(targetFPSParam) : 0;
 // WebGL context power preference — ?powerPreference=default|high-performance|low-power.
 // Left unset so the renderer's own default applies.
 const powerPreference = urlParams.get("powerPreference") as WebGLPowerPreference | null;
-// How the renderer spaces frames under the targetFPS cap — ?framePacing=raf|timer.
-// 'timer' is for platforms whose rAF is not vsync-paced (e.g. Vizio); it does
-// nothing while targetFPS is 0, so pair it with ?targetFPS=60. Left unset so the
-// renderer's own default ('raf') applies.
-const framePacing = urlParams.get("framePacing") as "raf" | "timer" | null;
 const textBaseline = urlParams.get("textBaseline") as
   | "optical"
   | "cap"
@@ -163,9 +155,9 @@ Config.domRendererEnabled = false;
 Config.focusHistoryDebug = 5;
 // Config.focusDebug = true;
 
-// Left unset so the renderer's own default (10ms) applies rather than pinning
-// it here. The device clock is 1ms-granular, so the budget carries about +-1ms
-// of slack either way: that was ~25% of the old 4ms limit and is ~10% of 10ms.
+// Left unset so the renderer's own default (25ms in 2.x, 10ms in 1.x) applies
+// rather than pinning it here. The device clock is 1ms-granular, so the budget
+// carries about +-1ms of slack either way.
 // Override per run with ?textureProcessingTimeLimit=N.
 const textureProcessingTimeLimitParam = urlParams.get("textureProcessingTimeLimit");
 const textureProcessingTimeLimit = textureProcessingTimeLimitParam ? parseFloat(textureProcessingTimeLimitParam) : undefined;
@@ -195,21 +187,8 @@ if (powerPreference) {
   Config.rendererOptions.powerPreference = powerPreference;
 }
 
-if (framePacing) {
-  Config.rendererOptions.framePacing = framePacing;
-}
-
 if (textBaseline) {
   Config.rendererOptions.textBaselineMode = textBaseline;
-}
-
-// Ideally you'd do two separate builds for canvas and webgl to reduce bundle size.
-if (rendererMode === "canvas") {
-  Config.rendererOptions.fontEngines = [CanvasTextRenderer];
-  Config.rendererOptions.renderEngine = CanvasCoreRenderer;
-} else {
-  Config.rendererOptions.fontEngines = [SdfTextRenderer];
-  Config.rendererOptions.renderEngine = WebGlCoreRenderer;
 }
 
 // Delay initialization to allow the browser to perform a first paint of the splash screen
@@ -230,15 +209,16 @@ requestAnimationFrame(() => {
       }
     });
     loadFonts(fonts);
-    const shManager = renderer.stage.shManager;
-    shManager.registerShaderType("rounded", Rounded);
-    shManager.registerShaderType("roundedWithBorder", RoundedWithBorder);
-    shManager.registerShaderType("roundedWithShadow", RoundedWithShadow);
-    shManager.registerShaderType("roundedWithBorderWithShadow", RoundedWithBorderAndShadow);
-    shManager.registerShaderType("radialGradient", RadialGradient);
-    shManager.registerShaderType("linearGradient", LinearGradient);
-    shManager.registerShaderType("holePunch", HolePunch);
-    shManager.registerShaderType("radialProgress", RadialProgress);
+    // Shaders are WebGL-only; the DOM renderer is never enabled here.
+    const shaders = renderer as RendererMain;
+    shaders.registerShaderType("rounded", Rounded);
+    shaders.registerShaderType("roundedWithBorder", RoundedWithBorder);
+    shaders.registerShaderType("roundedWithShadow", RoundedWithShadow);
+    shaders.registerShaderType("roundedWithBorderWithShadow", RoundedWithBorderAndShadow);
+    shaders.registerShaderType("radialGradient", RadialGradient);
+    shaders.registerShaderType("linearGradient", LinearGradient);
+    shaders.registerShaderType("holePunch", HolePunch);
+    shaders.registerShaderType("radialProgress", RadialProgress);
     render(() => (
       <FocusStackProvider>
         <HashRouter root={(props) => <App {...props} />}>

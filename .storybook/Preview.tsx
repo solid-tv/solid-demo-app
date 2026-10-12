@@ -2,7 +2,6 @@
 import { Config, createRenderer, For, loadFonts, Text, View } from "@solidtv/solid";
 import type { Preview } from "storybook-solidjs-vite";
 import { Inspector } from "@solidtv/renderer/inspector";
-import { SdfTextRenderer, WebGlCoreRenderer } from "@solidtv/renderer/webgl";
 import fonts from "../src/fonts";
 import { useMouse } from "@solidtv/solid/primitives";
 import "dayjs/locale/fr";
@@ -16,16 +15,14 @@ import {
   RoundedWithBorder,
   RoundedWithBorderAndShadow,
   RoundedWithShadow
-} from "@solidtv/renderer/webgl/shaders";
+} from "@solidtv/renderer/shaders";
 
 Config.rendererOptions = {
   appWidth: 1920,
   appHeight: 1080,
   deviceLogicalPixelRatio: 2 / 3,
   inspector: Inspector,
-  devicePhysicalPixelRatio: 1,
-  fontEngines: [SdfTextRenderer],
-  renderEngine: WebGlCoreRenderer
+  devicePhysicalPixelRatio: 1
 };
 Config.animationSettings = {
   duration: 0,
@@ -98,14 +95,13 @@ const preview: Preview = {
         useMouse();
 
         render(() => {
-          const shManager = renderer.stage.shManager;
-          shManager.registerShaderType("rounded", Rounded);
-          shManager.registerShaderType("roundedWithBorder", RoundedWithBorder);
-          shManager.registerShaderType("roundedWithShadow", RoundedWithShadow);
-          shManager.registerShaderType("roundedWithBorderWithShadow", RoundedWithBorderAndShadow);
-          shManager.registerShaderType("radialGradient", RadialGradient);
-          shManager.registerShaderType("linearGradient", LinearGradient);
-          shManager.registerShaderType("holePunch", HolePunch);
+          renderer.registerShaderType("rounded", Rounded);
+          renderer.registerShaderType("roundedWithBorder", RoundedWithBorder);
+          renderer.registerShaderType("roundedWithShadow", RoundedWithShadow);
+          renderer.registerShaderType("roundedWithBorderWithShadow", RoundedWithBorderAndShadow);
+          renderer.registerShaderType("radialGradient", RadialGradient);
+          renderer.registerShaderType("linearGradient", LinearGradient);
+          renderer.registerShaderType("holePunch", HolePunch);
 
           return (
             <Show when={currentStory()}>

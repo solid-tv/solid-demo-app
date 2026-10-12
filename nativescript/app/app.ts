@@ -51,7 +51,7 @@ function attachMeasurements(main: RendererMain): void {
     }
     console.log(
       "RENDER idle " +
-        JSON.stringify(Object.assign({ n: idles, t: sinceBoot() }, main.stage.txMemManager.getMemoryInfo()))
+        JSON.stringify(Object.assign({ n: idles, t: sinceBoot() }, main.memoryInfo()))
     );
   });
   main.on("fpsUpdate", (_target: RendererMain, d: FpsUpdatePayload) => {

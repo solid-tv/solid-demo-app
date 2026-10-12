@@ -40,10 +40,7 @@ function es5PolyfillsChunkPlugin() {
 export default defineConfig(({ mode }) => ({
   define: {
     __DEV__: mode !== "production",
-    __RTT__: true,
-    __renderTextBatching__: true,
     __enableCompressedTextures__: true,
-    __calculateFps__: true,
     LIGHTNING_DOM_RENDERING: true
   },
   plugins: [

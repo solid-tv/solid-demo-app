@@ -64,8 +64,6 @@ export default () => {
         style={styleBall}
         ref={ball}
         onEvent={{
-          inBounds: (elm) => logEvent("inBounds", elm),
-          outOfBounds: (elm) => logEvent("outOfBounds", elm),
           inViewport: (elm) => logEvent("inViewport", elm),
           outOfViewport: (elm) => logEvent("outOfViewport", elm)
         }}
