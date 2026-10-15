@@ -34,7 +34,7 @@
     "@solid-primitives/list": "^0.1.2",
     "@solid-primitives/scheduled": "^1.5.2",
     "@solidjs/router": "^0.16.1",
-    "@solidtv/renderer": "2.0.5",
+    "@solidtv/renderer": "2.0.6",
     "@solidtv/solid": "1.7.0-0",
     "browserlist": "^1.0.1",
     "proxy-polyfill": "^0.3.2",

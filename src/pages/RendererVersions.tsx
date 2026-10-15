@@ -2,12 +2,14 @@ import { IntrinsicNodeStyleProps, IntrinsicTextNodeStyleProps } from "@solidtv/s
 import { createSignal, onMount } from "solid-js";
 import { setGlobalBackground } from "../state";
 
-// Ascending: 1xx are @solidtv/renderer releases, 3xx are @lightningtv/renderer.
+// Oldest first per package: 156..1101 are @solidtv/renderer releases (1101 is
+// 1.10.1), 3xx are @lightningtv/renderer. "Current" is the root (2.x) build.
 const knownVersions: (number | "Current")[] = [
   "Current",
   156,
   183,
   190,
+  1101,
   300,
   316,
   320,

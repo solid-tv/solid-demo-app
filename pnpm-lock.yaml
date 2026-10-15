@@ -24,11 +24,11 @@ importers:
         specifier: ^0.16.1
         version: 0.16.1(solid-js@1.9.9)
       '@solidtv/renderer':
-        specifier: 2.0.5
-        version: 2.0.5
+        specifier: 2.0.6
+        version: 2.0.6
       '@solidtv/solid':
         specifier: 1.7.0-0
-        version: 1.7.0-0(@solidjs/router@0.16.1(solid-js@1.9.9))(@solidtv/renderer@2.0.5)(solid-js@1.9.9)
+        version: 1.7.0-0(@solidjs/router@0.16.1(solid-js@1.9.9))(@solidtv/renderer@2.0.6)(solid-js@1.9.9)
       browserlist:
         specifier: ^1.0.1
         version: 1.0.1
@@ -2197,8 +2197,8 @@ packages:
       '@solidjs/router':
         optional: true
 
-  '@solidtv/renderer@2.0.5':
-    resolution: {integrity: sha512-Bqh8Fohji9+jy29g998i5088MWDiVw5PDxp/Fo1whr4xfcrPkCiYa2kA33LwiFsiHojKWPDfN0UScda3l7Fv2g==}
+  '@solidtv/renderer@2.0.6':
+    resolution: {integrity: sha512-G16KPGKFiWP6W3xcA3Dur394AHqM3er++sgFLdg8w1ywYewhMwHIMtmGascCEAuRyDuUSvI6TlC33X2OIa0N+Q==}
     engines: {node: '>= 18.0.0', npm: '>= 10.0.0', pnpm: '>= 10.17.0'}
 
   '@solidtv/solid@1.7.0-0':
@@ -6169,16 +6169,16 @@ snapshots:
     optionalDependencies:
       '@solidjs/router': 0.16.1(solid-js@1.9.9)
 
-  '@solidtv/renderer@2.0.5': {}
+  '@solidtv/renderer@2.0.6': {}
 
-  '@solidtv/solid@1.7.0-0(@solidjs/router@0.16.1(solid-js@1.9.9))(@solidtv/renderer@2.0.5)(solid-js@1.9.9)':
+  '@solidtv/solid@1.7.0-0(@solidjs/router@0.16.1(solid-js@1.9.9))(@solidtv/renderer@2.0.6)(solid-js@1.9.9)':
     dependencies:
       '@solid-primitives/event-listener': 2.4.6(solid-js@1.9.9)
       '@solid-primitives/list': 0.1.2(solid-js@1.9.9)
       '@solid-primitives/mouse': 2.1.7(solid-js@1.9.9)
       '@solid-primitives/scheduled': 1.5.3(solid-js@1.9.9)
       '@solidjs/router': 0.16.1(solid-js@1.9.9)
-      '@solidtv/renderer': 2.0.5
+      '@solidtv/renderer': 2.0.6
       solid-js: 1.9.9
 
   '@standard-schema/spec@1.1.0': {}
