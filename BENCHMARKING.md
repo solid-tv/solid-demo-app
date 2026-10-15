@@ -52,6 +52,35 @@ Then a plain CDP `Runtime.evaluate` of
 `localStorage.getItem("benchmarkRuns")` over Node's built-in `WebSocket` — no
 devtools UI, no dependencies. Attach **after** the run finishes, never during.
 
+### On a TV Labs cloud LG
+
+`scripts/tvlabs-lg/run.sh` A/Bs the **hosted** builds on a remote LG from
+[TV Labs](https://tvlabs.ai), with no TV on the desk. Each arm is `root` (the
+current build) or a deployed version path such as `1101`:
+
+```bash
+pnpm bench:tvlabs:lg                    # root vs 1101, 2 measured runs per arm
+pnpm bench:tvlabs:lg root 190 1101      # any deployed paths
+REPS=4 pnpm bench:tvlabs:lg             # more runs per arm
+pnpm bench:tvlabs:lg --dry-run          # print the launch plan only
+```
+
+It needs the TV Labs CLI authenticated once (`tvlabs auth`) and the ares CLI.
+Under `tvlabs execute` it installs a tiny launcher app that redirects to
+whatever URL it's launched with. It loads each arm once as a discarded warm-up,
+then alternates arms in ABBA order, with a fresh app launch per run. After each
+run it reads `localStorage.benchmarkRuns` over the inspector port that execute
+forwards to `localhost:9222`. Everything stays in one session on one TV. Results
+go to `scripts/tvlabs-lg/out/<tag>/` and a summary table prints at the end;
+rerun it with `node scripts/tvlabs-lg/summarize.js <dir>`.
+
+`TARGET` picks the device (TV Labs KQL, default `platform_key:web_os`). The
+hosted pages are https, so posters always come over https and never use the
+app's http image fallback. On older webOS, which lacks the ISRG Root X1 cert,
+they fail and the scene shrinks. Check that `uploadedTextures` is in the tens
+before trusting a run, and compare hosted arms only with each other.
+`initialRenderTimeMs` is network-bound there and not a usable metric.
+
 ---
 
 ## Samsung Tizen

@@ -3,6 +3,7 @@ node_modules/
 .vscode/
 .DS_Store
 dist/
+scripts/tvlabs-lg/out/
 src/api/key.ts
 pnpm-workspace.yaml
 # This project uses `pnpm` for package management

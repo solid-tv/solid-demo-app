@@ -15,6 +15,7 @@
     "deploy:lg": "npm run build:lg && ./scripts/deploy-lg.sh",
     "build:github": "node scripts/build-github.js",
     "deploy:versions": "./scripts/deploy-solidtv-versions.sh",
+    "bench:tvlabs:lg": "./scripts/tvlabs-lg/run.sh",
     "build:github:dev": "NODE_ENV=development vite build --sourcemap=true --mode development --base=/solid-demo-app/",
     "build:analyze": "vite-bundle-visualizer",
     "build:android": "vite build && npx cap sync android",

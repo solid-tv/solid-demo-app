@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<script>
+  // Launched as: ares-launch <id> --params '{"url":"https://..."}'.
+  // Same top-level navigation the app's own #/versions picker does.
+  var sys = window.webOSSystem || window.PalmSystem || {};
+  var params = {};
+  try { params = JSON.parse(sys.launchParams || "{}"); } catch (e) {}
+  if (params.url) {
+    location.replace(params.url);
+  }
+</script>
+</head>
+<body style="background:#000;color:#fff;font:40px sans-serif;padding:80px">
+  Solid bench launcher: no url launch param.
+</body>
+</html>
