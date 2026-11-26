@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 # Checks everything the TV Labs Tizen launch needs before a TV session is
 # started, so a session is not left idling while tools get installed.
+# Usage: preflight.sh [--sdb]
+#   --sdb  also check the Tizen tools (sdb, tizen, Rosetta, port 26099) that
+#          sdb mode needs; the default sideload path doesn't use them.
 # Exit status is the number of failed checks (0 = ready).
 set -uo pipefail
 
+SDB=0
+[ "${1:-}" = "--sdb" ] && SDB=1
 REPO_ROOT="$(git -C "$(dirname "$0")" rev-parse --show-toplevel)"
 TIZEN_HOME="${TIZEN_HOME:-$HOME/tizen-studio}"
 export PATH="$TIZEN_HOME/tools:$TIZEN_HOME/tools/ide/bin:$PATH"
@@ -22,7 +27,8 @@ else
   bad "tvlabs whoami failed: $(printf '%s' "$who" | head -1)"
 fi
 
-echo "Tizen tools"
+if [ "$SDB" -eq 1 ]; then
+echo "Tizen tools (sdb mode)"
 if [ "$(uname -m)" = "arm64" ]; then
   # sdb and the JDK bundled with Tizen Studio are x86_64-only.
   if /usr/bin/arch -x86_64 /usr/bin/true 2>/dev/null; then
@@ -51,8 +57,13 @@ elif printf '%s' "$holder" | grep -q '^tvlabs'; then
 else
   bad "localhost:26099 is held by $holder - run 'sdb kill-server' before tvlabs connect"
 fi
+else
+echo "Tizen tools"
+note "skipped: only sdb mode needs them (run with --sdb)"
+fi
 
 echo "Repo"
+command -v zip >/dev/null && ok "zip available" || bad "zip not installed - needed to package the .wgt"
 [ -f "$REPO_ROOT/src/api/key.ts" ] && ok "src/api/key.ts present" \
   || bad "src/api/key.ts missing - the app needs a TMDB read access token (see README)"
 [ -d "$REPO_ROOT/node_modules" ] && ok "node_modules installed" \

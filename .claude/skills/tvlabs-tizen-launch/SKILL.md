@@ -1,143 +1,122 @@
 ---
 name: tvlabs-tizen-launch
-description: Launch solid-demo-app's Tizen build on a real Samsung TV in TV Labs (Device.io), with the live Web UI remote open in the Claude desktop browser pane so Claude and the user both see the TV and can press keys, while Claude drives the TV over sdb through `tvlabs connect`. Use this whenever the user wants to run, test, demo, debug or try the demo app on a Samsung or Tizen TV, on TV Labs or Device.io, on a "real TV" or "cloud TV", wants sdb access to a TV Labs Tizen device, or wants to re-sign, reinstall or relaunch the Tizen .wgt on one, even if they don't spell out the steps.
+description: Launch solid-demo-app's Tizen build on a real Samsung TV in TV Labs (Device.io), with the live web remote open in the Claude desktop browser pane so Claude and the user both see the TV and can press keys. Builds an unsigned .wgt, uploads it with the tvlabs CLI and sideloads it from the web app, where TV Labs signs it for that TV, so no Tizen Studio, sdb or Rosetta is needed. An optional sdb mode covers shell access and app lifecycle commands. Use this whenever the user wants to run, test, demo, debug or try the demo app on a Samsung or Tizen TV, on TV Labs or Device.io, on a "real TV" or "cloud TV", wants to reinstall or relaunch the Tizen build on one, or wants sdb access to a TV Labs Tizen device, even if they don't spell out the steps.
 ---
 
 # Launch the demo app on a TV Labs Tizen TV
 
 The end state:
 
-- A TV Labs session on a Samsung Tizen TV, with its Web UI page (live video and remote) open in the browser pane.
-- A `tvlabs connect` tunnel running in the background, so `sdb` reaches the TV.
-- The demo app signed with that TV's certificate, installed and running.
+- A TV Labs session on a Samsung Tizen TV.
+- Its web page, with live video and the remote, open in the browser pane.
+- The demo app installed and running on the TV.
 
-Both control paths work at the same time. Grove on the sidecar shares the TV's single sdbd connection among clients. Web UI key presses go over the WebSocket remote, IR or CEC, not sdb.
+The user watches the same page and can take over the remote at any time.
 
-This was verified end to end on a 2024 Samsung DU7200F (Tizen 8.0) in Nov 2026. Where the original plan failed, these steps give the path that worked.
+The default path needs only the signed-in `tvlabs` CLI and a browser sign-in to tvlabs.ai. When a build is sideloaded, TV Labs' sidecar (Grove) re-signs it with the TV's certificate. This was verified on a 2026 Samsung M70H (Tizen 10.0) in Nov 2026.
+
+For an sdb shell, app launch/kill/list commands or files on the TV, use [sdb mode](references/sdb-mode.md) in place of steps 2 and 4. It was verified on Tizen 7.0 and 8.0 TVs.
 
 ## Ground rules
 
-- **Repo:** don't commit. The script builds and signs in a temp folder, so the repo stays clean.
-- **Sign-in:** the user signs in to the Web UI themselves, in the pane. Never type credentials.
-- **Certificate password:** never print `certificate.pwd`. The script reads it and masks it in any error output.
-- **Installs:** downloading Tizen Studio, accepting its license and installing Rosetta 2 each need the user's OK first. See [references/troubleshooting.md](references/troubleshooting.md).
+- **Repo:** don't commit. Builds go to a temp folder, so the repo stays clean.
+- **Sign-in:** the user signs in to tvlabs.ai themselves, in the pane. Never type credentials.
+- **The tab owns the session:** closing the session's tab, or navigating it away, ends the session. Keep it open until the user is done, and open anything else in a second tab.
+- **Uploads are visible:** every upload adds a build to the org's build list in TV Labs. Say so when you upload.
 - **Session type:** don't use `tvlabs execute`. Its sessions have no video.
 
-## 1. Preflight, before starting a session
+## 1. Preflight
 
 ```bash
 .claude/skills/tvlabs-tizen-launch/scripts/preflight.sh
 ```
 
-The TV session's clock starts when it's created, so fix missing tools first. The script checks:
+It checks `tvlabs whoami`, `zip`, the TMDB token in `src/api/key.ts`, `node_modules` and the app ID in `tizen/config.xml`. The CLI account must match the one the user signs in with on the web. `--sdb` also checks the Tizen tools that sdb mode needs.
 
-- `tvlabs whoami`. The CLI must use the same account the user signs in with in the Web UI.
-- `sdb` and `tizen`, on PATH or in `~/tizen-studio`.
-- Rosetta 2 on Apple Silicon.
-- That port 26099 is free.
-- The TMDB token in `src/api/key.ts`, and `node_modules`.
+## 2. Build and upload, before starting the session
 
-For any failure, follow [references/troubleshooting.md](references/troubleshooting.md).
+```bash
+.claude/skills/tvlabs-tizen-launch/scripts/build-wgt.sh --upload
+```
 
-## 2. Open the Web UI and start a session
+The script does the following:
 
-1. Open `https://tvlabs.ai/app/devices/platform/tizen`. Use `mcp__Claude_Browser__preview_start` with `url` if the pane isn't open, otherwise `navigate`. If the org uses another Device.io host, ask the user which one.
+1. Builds with `vite.config.tizen.js` into a temp folder.
+2. Adds `tizen/config.xml` and `icon.png`.
+3. Zips an unsigned `.wgt`.
+4. Uploads it with `tvlabs upload --id-only`.
+
+It ends with `wgt=`, `sha256_8=`, `app_id=`, `version=` and `build_id=` lines. Keep `sha256_8`: it picks out this upload in the sideload dialog, which also lists earlier uploads with the same file name. Every build gets a new hash, because zip stores timestamps.
+
+`tvlabs upload --help` lists `.apk/.tpk/.zip/.ipk`, but `.wgt` works. Build first, because the session's clock starts as soon as it's created.
+
+## 3. Open the web app and start a session
+
+1. Open `https://tvlabs.ai/app/devices/platform/tizen`. Use `mcp__Claude_Browser__preview_start` with `url` if the pane is closed, otherwise `navigate`. If the org uses another Device.io host, ask the user which one.
 2. If the tab lands on `tvlabs.ai/login`, ask the user to sign in in the pane, then continue.
-3. In the device picker, select **Smart TV** and click **Quick Start** to get an available TV. Use **Next: Select region** if the user wants a specific region or model.
-   - The page layout changes with the pane's width. In a narrow pane, Quick Start is a labeled button. In a wide pane, it's an icon-only rocket button at the right end of the picker's button row, and `find` for "Quick Start" returns a hidden element that can't be clicked. Take a screenshot and click the rocket button by its position.
-4. The URL becomes `/app/devices/<session_id>`. Take the ID from the tab context. Keep this tab open, because it is the video and the remote.
-5. Wait until the video shows the TV's home screen and the footer says **Connected**.
+3. In the device picker, select **Smart TV** and click **Quick Start**. Use **Select region** if the user wants a specific region or model.
+   - In a narrow pane, Quick Start is a labeled button. In a wide pane, it's an icon-only rocket button at the right end of the picker's button row, and `find` for "Quick Start" returns a hidden element. In that case, take a screenshot and click the rocket button by its position.
+4. The tab goes to `/app/devices/<number>/queue` ("Warming up candidate devices"). Once a TV is assigned, it goes to `/app/devices/<session_id>`, usually within 20 seconds. Take the ID from the tab context.
+5. Wait until the video shows the TV's home screen and the footer says **Connected**. The TV model and Tizen version are in the page header.
 
-## 3. Start the tunnel
+## 4. Sideload the build
 
-Run it with Bash `run_in_background`, with sdb on PATH in the same command:
+1. Click the build picker above the video, labeled **No build selected**. Its accessible name is "Select build to sideload". Clicking its ref landed off target in testing, so click the label by position from a screenshot.
+2. The **Sideload Build** dialog lists the org's builds, with File Name, Application ID, Version, SHA256 and Platforms columns. Click the row whose SHA256 equals `sha256_8`. Clicking the row starts the sideload right away. There's no confirm button.
+3. Close the dialog with its X at the top right.
+4. To confirm, `find` "Sideload result". Expect a line like `[Grove] Sideload result: {:ok, … install bOtIKaCrZa.tizen …}`. The app launches on its own within about 10 seconds.
 
-```bash
-export PATH="$HOME/tizen-studio/tools:$HOME/tizen-studio/tools/ide/bin:$PATH"; tvlabs connect --session <session_id> --headless
-```
+Notes:
 
-Why PATH has to be set here: `tvlabs connect` looks for `sdb` once, at startup. If it doesn't find it, the SSH tunnel still comes up, but the Tizen setup never runs:
+- The picker keeps reading "No build selected" after a sideload. Ignore it.
+- Admins also see a **Sideload build by ID** field that takes `build_id`. It hasn't been tested.
+- To reinstall after a code change, run step 2 again, then repeat this step with the new `sha256_8`.
 
-- `/status` stays `"disconnected"`.
-- `/_dev/certificate` returns 404.
-- Only `~/.tvlabs/logs/tvlabs.log` explains why.
+## 5. Drive the TV and confirm
 
-The Bash tool's shell doesn't necessarily load `~/.zshrc`, so don't rely on it.
+- **Look:** take a zoomed screenshot of the video area. Expect the Solid demo home screen: a hero title and description, rows of posters, and an FPS overlay at the top right.
+- **Keyboard (most reliable):** click a blank part of the page first, such as the area above the build picker. Don't click the video, because it can capture the mouse. Then press keys with the browser `key` action:
 
-`--headless` is required outside an interactive terminal. If an earlier tunnel is still running, stop it first (TaskStop) so port 26099 is free.
+  | Key                | TV button |
+  | ------------------ | --------- |
+  | Arrow keys         | D-pad     |
+  | `Enter` or `Space` | OK        |
+  | `Escape` or `b`    | Back      |
+  | `h`                | Home      |
+  | `p`                | Power     |
+  | `x`                | Input     |
+  | `s`                | Settings  |
 
-Then:
+  The keys work anywhere on the page except in form fields. Backspace isn't mapped.
 
-1. Read the background output for `Status API listening on port N`.
-2. Poll `curl -s localhost:N/status` until it shows `"state":"connected"`. This usually takes a few seconds.
-3. Run `sdb devices`. It should list one device, `<ip>:26101`. Don't run `sdb connect`, because the tunnel already did the equivalent.
+- **Check that it reached the app:** after pressing Right, the app's overlay shows `Last key: ArrowRight, Code: 39`, and focus moves one tile.
+- **Remote buttons also work:**
+  - The D-pad buttons are named Up, Down, Left, Right and OK. `find` "Right" and click the `button "Right"` match; the other matches are event-log lines.
+  - That D-pad is drawn over the video and stays visible while the pointer is there, so hover elsewhere before a screenshot.
+  - Power, Home and Back are unlabeled icons.
+  - A narrow pane shows a D-pad block under the video. A wide pane shows one icon bar.
+- **Event log:** the page logs each press as `[Grove] WS HID [press: :right]`.
 
-## 4. Build, sign, install and launch
+## Ending the session
 
-```bash
-.claude/skills/tvlabs-tizen-launch/scripts/build-sign-install.sh --port N
-```
-
-It takes about 30 seconds and stops with a clear error at the first step that fails:
-
-1. Checks that the tunnel is connected and finds the TV's sdb serial.
-2. Reads the app and package IDs from `tizen/config.xml`.
-3. Builds with `vite.config.tizen.js` into `$TMPDIR/tvlabs-tizen-launch/build`, then copies in `config.xml` and `icon.png`.
-4. Downloads `/_dev/certificate` and recreates the `tvlabs` signing profile. The certificate belongs to this session's TV, so a profile from an earlier session can be rejected.
-5. Packages a signed `.wgt`. Sideloaded builds aren't re-signed by the platform, so this signature is the one the TV checks.
-6. Kills the running app, pushes the `.wgt` and runs the TV's installer, `sdb shell 0 vd_appinstall <app-id> <path>`. `tizen install` fails through the tunnel with "There is no connected target", and `sdb install` only pushes the file.
-7. Launches with `0 was_execute` and confirms the app is in `0 applist`.
-
-Options:
-
-- `--skip-build` reuses the last bundle, for example after editing only `tizen/config.xml`. `config.xml` is always copied fresh.
-- `--no-launch` installs without launching.
-- `--serial` sets the sdb serial when more than one TV is listed.
-
-## 5. Confirm in the pane
-
-- Take a zoomed screenshot of the video area. Expect the Solid demo home screen: a hero title and description, rows of posters and an FPS overlay at the top right.
-- Press a key. Run `find` for "Right" and click the `button "Right"` ref. The other matches are lines in the page's event log. Focus moves one tile, and the app's overlay shows `Last key: ArrowRight, Code: 39`. That's a quick check that the remote reaches the app.
-- That ref is a D-pad drawn over the video, and it stays visible while the pointer is there. Hover somewhere else, such as the page header, before taking a screenshot to check the result.
-- The D-pad buttons are named **Up**, **Down**, **Left**, **Right** and **OK**. **Power**, **Home** and **Back** are unlabeled icon buttons in the remote below the video, so find them with a screenshot.
-- The remote's shape depends on the pane's width. A narrow pane shows a D-pad block under the video. A wide pane shows one horizontal bar of icons: power, home, up, down, left, right, OK (a check mark), back, then input and settings. The **Console**, **Logs**, **Remote**, **Camera** and **Admin** tabs sit under the bar. Finding buttons by name works the same in both layouts.
-- The page's event log records each press as `[Grove] WS HID [press: :right]`. This shows the keys go over the WebSocket remote, not sdb.
-
-## Driving the TV
-
-Pass `-s <serial>` on every sdb command. A "version of SDB client … and server … are different" banner shows on each call. It's harmless: the local client is older than the sidecar's server.
-
-| Task           | Command                                 |
-| -------------- | --------------------------------------- |
-| Launch         | `sdb -s S shell 0 was_execute <app-id>` |
-| Stop           | `sdb -s S shell 0 kill <pkg-id>`        |
-| Installed apps | `sdb -s S shell 0 applist`              |
-| Device info    | `sdb -s S capability`                   |
-| Files          | `sdb -s S push` / `pull`                |
-
-- **Navigation:** use the Web UI remote. On Tizen, sdb key events don't reliably drive the UI.
-- **Logs:** `sdb dlog` returns nothing on retail TVs (`capability` shows `log_enable:disabled`). For console output, try the Web UI's **Open DevTools for the device web app** button, or the inspector route in the troubleshooting guide. Neither has been verified yet.
+1. Close the session's tab with `mcp__Claude_Browser__tabs_close`, or click the red **Hang up** icon. Hang up is only in the wide layout's sidebar. Either one ends the session.
+2. To confirm, open `https://tvlabs.ai/app/sessions/<session_id>` and check that its status is **Completed**. Open that page, not `/app/devices/<session_id>`.
+3. If sdb mode's `tvlabs connect` is running, it exits by itself when the session ends.
 
 ## Gotchas
 
-- An `sdb shell` with no traffic for 60 seconds gets closed.
-- Plain `sdb shell <cmd>` (without `0`) may print nothing on retail firmware. The `0 <command>` vendor forms above work.
-- After connecting, the sidecar ignores `sdb kill-server`.
-- `sdb shell reboot` drops the video and the remote until the TV comes back.
-- Every install, kill or launch shows up in the Web UI right away, because the user is watching the same TV. Say what you're about to do.
-- On blank poster tiles, see the CSP section of the troubleshooting guide.
+- Blank poster tiles: see the CSP section of [references/troubleshooting.md](references/troubleshooting.md).
+- Every sideload, launch and key press shows up on the user's screen right away. Say what you're about to do.
+- The browser pane is isolated from the user's own browser, so a tvlabs.ai sign-in elsewhere doesn't carry over. Once they sign in in the pane, later runs reuse that cookie.
 
 ## Finishing
 
 Report back:
 
 - The session ID and TV model.
-- One sdb command that worked, such as `applist` showing the app.
-- One remote key press that worked, as a screenshot.
+- The sideload result line.
+- One key press, with a screenshot of the result.
 
-Then tell the user how to end the session:
+Tell the user that closing the tab or clicking Hang up ends the session. Leave it running until they're done.
 
-1. Click **End session** in the Web UI.
-2. Stop the background `tvlabs connect` with TaskStop, which also restores the local sdb key.
-
-Leave both running until the user is done with the TV.
+Not yet available: TV Labs plans an embed-based start, where an API key gets a session and a remote URL that needs no sign-in. When its request shape is known, it replaces step 3.
