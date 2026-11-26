@@ -44,6 +44,7 @@ For any failure, follow [references/troubleshooting.md](references/troubleshooti
 1. Open `https://tvlabs.ai/app/devices/platform/tizen`. Use `mcp__Claude_Browser__preview_start` with `url` if the pane isn't open, otherwise `navigate`. If the org uses another Device.io host, ask the user which one.
 2. If the tab lands on `tvlabs.ai/login`, ask the user to sign in in the pane, then continue.
 3. In the device picker, select **Smart TV** and click **Quick Start** to get an available TV. Use **Next: Select region** if the user wants a specific region or model.
+   - The page layout changes with the pane's width. In a narrow pane, Quick Start is a labeled button. In a wide pane, it's an icon-only rocket button at the right end of the picker's button row, and `find` for "Quick Start" returns a hidden element that can't be clicked. Take a screenshot and click the rocket button by its position.
 4. The URL becomes `/app/devices/<session_id>`. Take the ID from the tab context. Keep this tab open, because it is the video and the remote.
 5. Wait until the video shows the TV's home screen and the footer says **Connected**.
 
@@ -99,6 +100,7 @@ Options:
 - Press a key. Run `find` for "Right" and click the `button "Right"` ref. The other matches are lines in the page's event log. Focus moves one tile, and the app's overlay shows `Last key: ArrowRight, Code: 39`. That's a quick check that the remote reaches the app.
 - That ref is a D-pad drawn over the video, and it stays visible while the pointer is there. Hover somewhere else, such as the page header, before taking a screenshot to check the result.
 - The D-pad buttons are named **Up**, **Down**, **Left**, **Right** and **OK**. **Power**, **Home** and **Back** are unlabeled icon buttons in the remote below the video, so find them with a screenshot.
+- The remote's shape depends on the pane's width. A narrow pane shows a D-pad block under the video. A wide pane shows one horizontal bar of icons: power, home, up, down, left, right, OK (a check mark), back, then input and settings. The **Console**, **Logs**, **Remote**, **Camera** and **Admin** tabs sit under the bar. Finding buttons by name works the same in both layouts.
 - The page's event log records each press as `[Grove] WS HID [press: :right]`. This shows the keys go over the WebSocket remote, not sdb.
 
 ## Driving the TV
